@@ -1,8 +1,6 @@
 /*
 * Board
 * Models the 2d board in the sliding puzzle. It contains n x n cells.
-* 
-* 
 */
 
 #ifndef EIGHT_PUZZLE_MODEL_BOARD_H_
@@ -12,26 +10,25 @@
 
 #include "cell.h"
 
-#define DEFAULT_BOARD_SIZE 3
-
 class Board
 {
 public:
-	Board();
-	Board(unsigned int);
+	Board(unsigned int n = 3);
 	Board(const Board& b);
 	~Board();
 	Board& operator = (const Board& b);
 
 	inline unsigned int Size() const { return n_; }
-	unsigned int* GetBlankCoordinates();
-	unsigned int* ReAssignBlank();
+	inline unsigned int* GetBlankCoordinates();
 	std::string ToString();
 
 private:
 	Cell** board_;
 	unsigned int n_;
 	unsigned int* blank_coordinates_;
+	Cell* blank_;
+
+	inline void SetBlankCoordinates(unsigned int, unsigned int);
 };
 
 #endif // EIGHT_PUZZLE_MODEL_BOARD_H_

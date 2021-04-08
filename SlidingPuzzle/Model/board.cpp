@@ -1,21 +1,9 @@
 #include <sstream>
+#include <time.h>
+#include <stdlib.h>
+
 #include "board.h"
-#include <random>
-
-Board::Board()
-	: n_(DEFAULT_BOARD_SIZE)
-	, blank_coordinates_(nullptr)
-{
-	board_ = new Cell* [n_];
-	for (unsigned int i = 0; i < n_; i++) {
-		board_[i] = new Cell[n_];
-		for (unsigned int j = 0; j < n_; j++) {
-			board_[i][j] = Cell();
-		}
-	}
-
-	this->GetBlankCoordinates();
-}
+#include "utils.h"
 
 Board::Board(unsigned int n)
 	: n_(n)
@@ -23,14 +11,25 @@ Board::Board(unsigned int n)
 {
 	board_ = new Cell* [n_];
 	
+	// Temporary solution: Generate a random permutation of an array of size n_ * n_
+	// 	containing numbers from 0 to (n_ * n_ - 1) and copy them to the board_.
+	// 	   A better solution would be extending a random permutation of an 2d array of
+	// 	   dimension n_ x n_. But this should do for now.
+	// Masked off with 64 - bits to avoid overflow.
+	unsigned int* random_array = RandomPermutation(n_ * n_ & 0xFFFFFFFF);
+
+	// PrintIntArray(random_array, (size_t) (n_ * n_ & 0xFFFFFFFF));
 
 	for (unsigned int i = 0; i < n_; i++) {
 		board_[i] = new Cell[n_];
 		for (unsigned int j = 0; j < n_; j++) {
-			board_[i][j] = Cell();
+			board_[i][j] = Cell(random_array[i * n_ + j]);
+			if (random_array[i * n_ + j] == 0)
+				this->SetBlankCoordinates(i, j);
 		}
 	}
-	this->GetBlankCoordinates();
+	
+	delete[] random_array;
 }
 
 Board::Board(const Board& b)
@@ -44,16 +43,11 @@ Board::Board(const Board& b)
 		board_[i] = new Cell[n_];
 		for (unsigned int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
+			if (board_[i][j].GetValue() == 0)
+				this->SetBlankCoordinates(i, j);
 		}
 	}
 
-	// Also copy the coordinates of the blank and assign blank
-	// to this board using its coordinate.
-	blank_coordinates_ = new unsigned int[2];
-	blank_coordinates_[0] = b.blank_coordinates_[0];
-	blank_coordinates_[1] = b.blank_coordinates_[1];
-	board_[blank_coordinates_[0]] = b.board_[blank_coordinates_[0]];
-	board_[blank_coordinates_[1]] = b.board_[blank_coordinates_[1]];
 }
 
 Board& Board::operator=(const Board& b)
@@ -61,6 +55,7 @@ Board& Board::operator=(const Board& b)
 	for (unsigned int i = 0; i < n_; i++)
 		delete[] board_[i];
 	delete[] blank_coordinates_;
+	blank_coordinates_ = nullptr;
 	delete[] board_;
 
 	n_ = b.n_;
@@ -70,13 +65,11 @@ Board& Board::operator=(const Board& b)
 		board_[i] = new Cell[n_];
 		for (unsigned int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
+			if (board_[i][j].GetValue() == 0)
+				this->SetBlankCoordinates(i, j);
 		}
 	}
 	
-	blank_coordinates_ = new unsigned int[2];
-	blank_coordinates_[0] = b.blank_coordinates_[0];
-	blank_coordinates_[1] = b.blank_coordinates_[1];
-
 	return *this;
 }
 
@@ -91,24 +84,16 @@ Board::~Board()
 
 unsigned int* Board::GetBlankCoordinates()
 {
-	if (this->blank_coordinates_ == nullptr) {
-		this->blank_coordinates_ = new unsigned int[2];
-		this->blank_coordinates_[0] = (unsigned int) rand() % n_;
-		this->blank_coordinates_[1] = (unsigned int) rand() % n_;
-		board_[blank_coordinates_[0]][blank_coordinates_[1]].SetValue(0);
-	}
 	return this->blank_coordinates_;
 }
 
-unsigned int* Board::ReAssignBlank()
+void Board::SetBlankCoordinates(unsigned int i, unsigned int j)
 {
 	if (this->blank_coordinates_ == nullptr)
 		this->blank_coordinates_ = new unsigned int[2];
 
-	this->blank_coordinates_[0] = (unsigned int) rand() % n_;
-	this->blank_coordinates_[1] = (unsigned int) rand() % n_;
-	board_[blank_coordinates_[0]][blank_coordinates_[1]].SetValue(0);
-	return this->blank_coordinates_;
+	this->blank_coordinates_[0] = i;
+	this->blank_coordinates_[1] = j;
 }
 
 std::string Board::ToString()

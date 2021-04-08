@@ -7,7 +7,7 @@
 #include <crtdbg.h>
 
 
-#include "./Tests/eight_puzzle_tests.hpp"
+#include "./Tests/puzzle_tests.hpp"
 
 int main()
 {

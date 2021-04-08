@@ -21,15 +21,8 @@ namespace Test
 
 	void BoardTest2()
 	{
-		Board b(4);
-		printf("%s\n", b.ToString().c_str());
-
-		b.ReAssignBlank();
-		printf("%s\n", b.ToString().c_str());
-
-		b.ReAssignBlank();
-		printf("%s\n", b.ToString().c_str());
-
+		//Board b(4);
+		//printf("%s\n", b.ToString().c_str());
 	}
 
 	void RunBoardTests()
