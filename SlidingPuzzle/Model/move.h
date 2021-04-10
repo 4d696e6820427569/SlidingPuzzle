@@ -8,18 +8,11 @@
 
 #endif // SLIDING_PUZZLE_MODEL_MOVE_H_
 
-enum Moves
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
-};
-
 class Move
 {
 public:
+
 private:
-	Cell* cell_;
-	Moves move_;
+	Point start_;
+	Point end_;
 };

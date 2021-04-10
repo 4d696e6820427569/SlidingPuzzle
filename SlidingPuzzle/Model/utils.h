@@ -6,7 +6,7 @@
 *
 * Utility function to swap 2 unsigned integers.
 */
-void Swap(unsigned int* a, unsigned int* b);
+void Swap(int* a, int* b);
 
 /*
 * RandomPermutation(n) --
@@ -14,8 +14,8 @@ void Swap(unsigned int* a, unsigned int* b);
 * Generate a random permutation of 0 to N-1 using the Fisher-Yates shuffle algorithm.
 * Time complexity: O(n).
 */
-unsigned int* RandomPermutation(unsigned int n);
+int* RandomPermutation(int n);
 
-void PrintIntArray(unsigned int* arr, size_t n);
+void PrintIntArray(int* arr, size_t n);
 
 #endif // SLIDING_PUZZLE_MODEL_UTILS_H_

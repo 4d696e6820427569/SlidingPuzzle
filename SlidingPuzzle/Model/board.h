@@ -13,20 +13,26 @@
 class Board
 {
 public:
-	Board(unsigned int n = 3);
+	Board(int n = 3);
 	Board(const Board& b);
 	~Board();
 	Board& operator = (const Board& b);
 
-	inline unsigned int Size() const { return n_; }
+	bool operator == (const Board& b);
+	inline int Size() const { return n_; }
 	inline Cell* GetBlankCell() const { return blank_; }
 	void GetPossibleMoves();
-	std::string ToString();
+	std::string CurrentBoardToString();
+	std::string SolutionBoardToString();
 
 private:
 	Cell** board_;
-	unsigned int n_;
+	Cell** solution_;
+	int n_;
 	Cell* blank_;
+
+	void GenerateSolutionBoard();
+	void PrintBoard(Cell** b);
 };
 
 #endif // EIGHT_PUZZLE_MODEL_BOARD_H_

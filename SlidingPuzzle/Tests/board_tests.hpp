@@ -11,21 +11,25 @@ namespace Test
 		Board b;
 		assert(b.Size() == 3);
 
-		printf("%s\n", b.ToString().c_str());
+		printf("%s\n", b.CurrentBoardToString().c_str());
 		printf("Blank position: (%d, %d)\n", b.GetBlankCell()->GetX(), b.GetBlankCell()->GetY());
+		printf("%s\n\n", b.SolutionBoardToString().c_str());
+
 
 		b = Board(5);
 		assert(b.Size() == 5);
 
-		printf("%s\n", b.ToString().c_str());
+		printf("%s\n", b.CurrentBoardToString().c_str());
 		printf("Blank position: (%d, %d)\n", b.GetBlankCell()->GetX(), b.GetBlankCell()->GetY());
+		printf("%s\n\n", b.SolutionBoardToString().c_str());
 	}
 
 	void BoardTest2()
 	{
 		Board b(4);
-		printf("%s\n", b.ToString().c_str());
+		printf("%s\n", b.CurrentBoardToString().c_str());
 		printf("Blank position: (%d, %d)\n", b.GetBlankCell()->GetX(), b.GetBlankCell()->GetY());
+		printf("%s\n\n", b.SolutionBoardToString().c_str());
 	}
 
 	void RunBoardTests()
