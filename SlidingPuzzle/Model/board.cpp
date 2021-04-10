@@ -47,7 +47,6 @@ Board::Board(const Board& b)
 				this->SetBlankCoordinates(i, j);
 		}
 	}
-
 }
 
 Board& Board::operator=(const Board& b)
@@ -94,6 +93,11 @@ void Board::SetBlankCoordinates(unsigned int i, unsigned int j)
 
 	this->blank_coordinates_[0] = i;
 	this->blank_coordinates_[1] = j;
+}
+
+void Board::GetPossibleMoves()
+{
+
 }
 
 std::string Board::ToString()

@@ -11,7 +11,8 @@
 
 int main()
 {
-	Test::RunAllTests();
+	if (DEBUG) Test::RunAllTests();
+	printf("%llu\n", sizeof(Board));
 	if (DEBUG) _CrtDumpMemoryLeaks();
 	return 0;
 }

@@ -7,19 +7,24 @@
 #ifndef EIGHT_PUZZLE_MODEL_CELL_H_
 #define EIGHT_PUZZLE_MODEL_CELL_H_
 
+#include "Point.hpp"
+
 class Cell
 {
 public:
 	Cell()
 		: value_(0)
+		, coordinates_(nullptr)
 	{}
 
 	Cell(unsigned int v)
 		: value_(v)
+		, coordinates_(nullptr)
 	{}
 
 	Cell(Cell& c)
 		: value_(c.GetValue())
+		, coordinates_(nullptr)
 	{}
 
 	~Cell()
@@ -35,16 +40,15 @@ public:
 
 	inline unsigned int GetValue() { return value_; }
 	inline void SetValue(unsigned int v) { value_ = v; }
-	inline void SetX(unsigned int x) { x_ = x; }
-	inline unsigned int GetX() { return x_; }
-	inline void SetY(unsigned int y) { y_ = y; }
-	inline unsigned int GetY() { return y_; }
+	inline void SetX(unsigned int x) const { coordinates_->SetX(x); }
+	inline unsigned int GetX() const { return coordinates_->GetX(); }
+	inline void SetY(unsigned int y) const { coordinates_->SetY(y); }
+	inline unsigned int GetY() const { coordinates_->GetY(); }
 	inline std::string ToString() { return std::to_string(value_); }
 
 private:
 	unsigned int value_;
-	unsigned int x_;
-	unsigned int y_;
+	Point* coordinates_;
 };
 
 #endif // EIGHT_PUZZLE_MODEL_CELL_H_

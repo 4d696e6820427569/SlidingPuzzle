@@ -20,6 +20,7 @@ public:
 
 	inline unsigned int Size() const { return n_; }
 	inline unsigned int* GetBlankCoordinates();
+	void GetPossibleMoves();
 	std::string ToString();
 
 private:

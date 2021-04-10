@@ -10,7 +10,7 @@
 class IView
 {
 public:
-	~IView();
+	virtual ~IView() = 0;
 private:
 };
 
