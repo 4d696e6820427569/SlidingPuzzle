@@ -12,17 +12,20 @@ namespace Test
 		assert(b.Size() == 3);
 
 		printf("%s\n", b.ToString().c_str());
+		printf("Blank position: (%d, %d)\n", b.GetBlankCell()->GetX(), b.GetBlankCell()->GetY());
 
-		b = Board(9);
-		assert(b.Size() == 9);
+		b = Board(5);
+		assert(b.Size() == 5);
 
 		printf("%s\n", b.ToString().c_str());
+		printf("Blank position: (%d, %d)\n", b.GetBlankCell()->GetX(), b.GetBlankCell()->GetY());
 	}
 
 	void BoardTest2()
 	{
-		//Board b(4);
-		//printf("%s\n", b.ToString().c_str());
+		Board b(4);
+		printf("%s\n", b.ToString().c_str());
+		printf("Blank position: (%d, %d)\n", b.GetBlankCell()->GetX(), b.GetBlankCell()->GetY());
 	}
 
 	void RunBoardTests()

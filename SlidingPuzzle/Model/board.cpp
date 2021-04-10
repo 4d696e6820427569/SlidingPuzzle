@@ -7,7 +7,7 @@
 
 Board::Board(unsigned int n)
 	: n_(n)
-	, blank_coordinates_(nullptr)
+	, blank_(nullptr)
 {
 	board_ = new Cell* [n_];
 	
@@ -23,9 +23,8 @@ Board::Board(unsigned int n)
 	for (unsigned int i = 0; i < n_; i++) {
 		board_[i] = new Cell[n_];
 		for (unsigned int j = 0; j < n_; j++) {
-			board_[i][j] = Cell(random_array[i * n_ + j]);
-			if (random_array[i * n_ + j] == 0)
-				this->SetBlankCoordinates(i, j);
+			board_[i][j] = Cell(random_array[i * n_ + j], i, j);
+			if (random_array[i * n_ + j] == 0) blank_ = &board_[i][j];
 		}
 	}
 	
@@ -34,7 +33,7 @@ Board::Board(unsigned int n)
 
 Board::Board(const Board& b)
 	: n_(b.n_)
-	, blank_coordinates_(nullptr)
+	, blank_(nullptr)
 {
 	board_ = new Cell * [n_];
 
@@ -43,8 +42,7 @@ Board::Board(const Board& b)
 		board_[i] = new Cell[n_];
 		for (unsigned int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
-			if (board_[i][j].GetValue() == 0)
-				this->SetBlankCoordinates(i, j);
+			if (board_[i][j].GetValue() == 0) blank_ = &board_[i][j];
 		}
 	}
 }
@@ -53,8 +51,7 @@ Board& Board::operator=(const Board& b)
 {
 	for (unsigned int i = 0; i < n_; i++)
 		delete[] board_[i];
-	delete[] blank_coordinates_;
-	blank_coordinates_ = nullptr;
+	
 	delete[] board_;
 
 	n_ = b.n_;
@@ -64,8 +61,7 @@ Board& Board::operator=(const Board& b)
 		board_[i] = new Cell[n_];
 		for (unsigned int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
-			if (board_[i][j].GetValue() == 0)
-				this->SetBlankCoordinates(i, j);
+			if (board_[i][j].GetValue() == 0) blank_ = &board_[i][j];
 		}
 	}
 	
@@ -78,21 +74,6 @@ Board::~Board()
 		delete[] board_[i];
 
 	delete[] board_;
-	delete[] blank_coordinates_;
-}
-
-unsigned int* Board::GetBlankCoordinates()
-{
-	return this->blank_coordinates_;
-}
-
-void Board::SetBlankCoordinates(unsigned int i, unsigned int j)
-{
-	if (this->blank_coordinates_ == nullptr)
-		this->blank_coordinates_ = new unsigned int[2];
-
-	this->blank_coordinates_[0] = i;
-	this->blank_coordinates_[1] = j;
 }
 
 void Board::GetPossibleMoves()

@@ -19,17 +19,14 @@ public:
 	Board& operator = (const Board& b);
 
 	inline unsigned int Size() const { return n_; }
-	inline unsigned int* GetBlankCoordinates();
+	inline Cell* GetBlankCell() const { return blank_; }
 	void GetPossibleMoves();
 	std::string ToString();
 
 private:
 	Cell** board_;
 	unsigned int n_;
-	unsigned int* blank_coordinates_;
 	Cell* blank_;
-
-	inline void SetBlankCoordinates(unsigned int, unsigned int);
 };
 
 #endif // EIGHT_PUZZLE_MODEL_BOARD_H_
