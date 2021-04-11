@@ -16,7 +16,7 @@ public:
 	inline ISearch* GetStrategy() const;
 
 	// Generate new instance of the puzzle.
-	void GenerateNewBoard(unsigned int n = 3);
+	void GenerateNewBoard(int n = 3);
 
 private:
 	Board* board_;

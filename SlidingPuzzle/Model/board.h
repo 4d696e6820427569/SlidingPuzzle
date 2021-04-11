@@ -28,8 +28,8 @@ public:
 private:
 	Cell** board_;
 	Cell** solution_;
-	int n_;
 	Cell* blank_;
+	int n_;
 
 	void GenerateSolutionBoard();
 	void PrintBoard(Cell** b);

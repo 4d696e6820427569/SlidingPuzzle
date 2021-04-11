@@ -23,7 +23,7 @@ PuzzleController::PuzzleController(Board* b, ISearch* s)
 
 }
 
-void PuzzleController::GenerateNewBoard(unsigned int n)
+void PuzzleController::GenerateNewBoard(int n)
 {
 	if (board_ != nullptr) {
 		delete board_;
