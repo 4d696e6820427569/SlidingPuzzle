@@ -13,7 +13,7 @@ public:
 		: x_(0)
 		, y_(0) {};
 
-	Point(unsigned int x, unsigned int y)
+	Point(int x, int y)
 		: x_(x)
 		, y_(y) {};
 
@@ -30,14 +30,14 @@ public:
 
 	~Point() {}
 
-	inline void SetX(unsigned int x) { this->x_ = x; }
-	inline unsigned int GetX() const { return this->x_; }
-	inline void SetY(unsigned int y) { this->y_ = y; }
-	inline unsigned int GetY() const { return this->y_; }
+	inline void SetX(int x) { this->x_ = x; }
+	inline int GetX() const { return this->x_; }
+	inline void SetY(int y) { this->y_ = y; }
+	inline int GetY() const { return this->y_; }
 
 private:
-	unsigned int x_;
-	unsigned int y_;
+	int x_;
+	int y_;
 };
 
 #endif // SLIDING_PUZZLE_MODEL_POINT_HPP_

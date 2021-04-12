@@ -11,8 +11,10 @@ public:
 	PuzzleController(Board*);
 	PuzzleController(Board*, ISearch*);
 
-	void MoveCell();
+	// Move cells according to Move object.
+	void MoveBlankCell(const Move&);
 	inline void SetStrategy(ISearch&);
+
 	inline ISearch* GetStrategy() const;
 
 	// Generate new instance of the puzzle.

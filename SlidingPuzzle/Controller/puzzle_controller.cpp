@@ -41,3 +41,8 @@ ISearch* PuzzleController::GetStrategy() const
 {
 	return this->strategy_;
 }
+
+void PuzzleController::MoveBlankCell(const Move& move)
+{
+	board_->MoveBlank(move);
+}

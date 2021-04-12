@@ -1,6 +1,9 @@
 #ifndef SLIDING_PUZZLE_MODEL_UTILS_H_
 #define SLIDING_PUZZLE_MODEL_UTILS_H_
 
+#include <vector>
+#include "move.hpp"
+
 /*
 * Swap(a, b) --
 *
@@ -17,5 +20,7 @@ void Swap(int* a, int* b);
 int* RandomPermutation(int n);
 
 void PrintIntArray(int* arr, size_t n);
+
+void PrintMovesVector(std::vector<Move> &vm);
 
 #endif // SLIDING_PUZZLE_MODEL_UTILS_H_

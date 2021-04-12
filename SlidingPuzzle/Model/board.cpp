@@ -7,7 +7,6 @@
 
 Board::Board(int n)
 	: n_(n)
-	, blank_(nullptr)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
@@ -26,7 +25,7 @@ Board::Board(int n)
 		board_[i] = new Cell[n_];
 		for (int j = 0; j < n_; j++) {
 			board_[i][j] = Cell(random_array[i * n_ + j], i, j);
-			if (random_array[i * n_ + j] == 0) blank_ = &board_[i][j];
+			if (random_array[i * n_ + j] == 0) blank_ = Point(i, j);
 		}
 	}
 	
@@ -36,7 +35,6 @@ Board::Board(int n)
 
 Board::Board(const Board& b)
 	: n_(b.n_)
-	, blank_(nullptr)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
@@ -47,7 +45,7 @@ Board::Board(const Board& b)
 		board_[i] = new Cell[n_];
 		for (int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
-			if (board_[i][j].GetValue() == 0) blank_ = &board_[i][j];
+			if (board_[i][j].GetValue() == 0) blank_ = Point(i, j);
 		}
 	}
 	GenerateSolutionBoard();
@@ -70,7 +68,7 @@ Board& Board::operator=(const Board& b)
 		board_[i] = new Cell[n_];
 		for (int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
-			if (board_[i][j].GetValue() == 0) blank_ = &board_[i][j];
+			if (board_[i][j].GetValue() == 0) blank_ = Point(i, j);
 		}
 	}
 
@@ -91,9 +89,29 @@ Board::~Board()
 	delete[] solution_;
 }
 
-void Board::GetPossibleMoves()
+std::vector<Move> Board::GetPossibleMoves()
 {
+	std::vector<Move> possible_moves;
+
+	int blank_x = blank_.GetX();
+	int blank_y = blank_.GetY();
+
+	if (blank_x > 0)
+		possible_moves.push_back(Move(blank_x, blank_y, blank_x - 1, blank_y));
+
+	if (blank_x < n_ - 1)
+		possible_moves.push_back(Move(blank_x, blank_y,
+			blank_x + 1, blank_y));
+
+	if (blank_y > 0)
+		possible_moves.push_back(Move(blank_x, blank_y,
+			blank_x, blank_y - 1));
+
+	if (blank_y < n_ - 1)
+		possible_moves.push_back(Move(blank_x, blank_y,
+			blank_x, blank_y + 1));
 	
+	return possible_moves;
 }
 
 std::string Board::CurrentBoardToString()
@@ -209,4 +227,32 @@ void Board::GenerateSolutionBoard()
 	}
 
 	delete[] arr;
+}
+
+void Board::MoveBlank(const Move &m)
+{
+	int start_x = m.GetStartPoint().GetX();
+	int start_y = m.GetStartPoint().GetY();
+
+	int end_x = m.GetEndPoint().GetX();
+	int end_y = m.GetEndPoint().GetY();
+
+	board_[start_x][start_y].SetValue(board_[end_x][end_y].GetValue());
+	board_[end_x][end_y].SetValue(0);
+	blank_.SetX(end_x);
+	blank_.SetY(end_y);
+}
+
+void Board::ReverseMove(const Move& m)
+{
+	int start_x = m.GetStartPoint().GetX();
+	int start_y = m.GetStartPoint().GetY();
+
+	int end_x = m.GetEndPoint().GetX();
+	int end_y = m.GetEndPoint().GetY();
+
+	board_[end_x][end_y].SetValue(board_[start_x][start_y].GetValue());
+	board_[start_x][start_y].SetValue(0);
+	blank_.SetX(start_x);
+	blank_.SetY(start_y);
 }

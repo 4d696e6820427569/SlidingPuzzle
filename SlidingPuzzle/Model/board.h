@@ -7,8 +7,10 @@
 #define EIGHT_PUZZLE_MODEL_BOARD_H_
 
 #include <string>
+#include <vector>
 
 #include "cell.h"
+#include "move.hpp"
 
 class Board
 {
@@ -20,15 +22,17 @@ public:
 
 	bool operator == (const Board& b);
 	inline int Size() const { return n_; }
-	inline Cell* GetBlankCell() const { return blank_; }
-	void GetPossibleMoves();
+	inline Point GetBlankCoordinates() const { return blank_; }
+	void MoveBlank(const Move&);
+	void ReverseMove(const Move&);
+	std::vector<Move> GetPossibleMoves();
 	std::string CurrentBoardToString();
 	std::string SolutionBoardToString();
 
 private:
 	Cell** board_;
 	Cell** solution_;
-	Cell* blank_;
+	Point blank_;
 	int n_;
 
 	void GenerateSolutionBoard();

@@ -39,3 +39,12 @@ void PrintIntArray(int* arr, size_t n)
 	}
 	printf("\n");
 }
+
+void PrintMovesVector(std::vector<Move> &vm)
+{
+	for (std::vector<Move>::iterator it = vm.begin(); it != vm.end(); it++) {
+		printf("%s", (*it).ToString().c_str());
+	}
+
+	printf("\n");
+}

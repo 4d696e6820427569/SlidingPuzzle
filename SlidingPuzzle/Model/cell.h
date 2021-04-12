@@ -57,6 +57,10 @@ public:
 	inline void SetY(int y) const { coordinates_->SetY(y); }
 	inline unsigned int GetY() const { return coordinates_->GetY(); }
 	inline std::string ToString() { return std::to_string(value_); }
+	inline void MoveCellTo(Point coor) {
+		this->SetX(coor.GetX());
+		this->SetY(coor.GetY());
+	}
 
 	bool operator != (const Cell& c) { 
 		return value_ != c.value_ || GetX() != c.GetX() || GetY() != c.GetY();
