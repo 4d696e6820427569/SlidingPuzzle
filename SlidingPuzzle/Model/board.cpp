@@ -10,8 +10,8 @@ Board::Board(int n)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
-	board_ = new Cell* [n_];
-	
+	board_ = new Cell * [n_];
+
 	// Temporary solution: Generate a random permutation of an array of size n_ * n_
 	// 	containing numbers from 0 to (n_ * n_ - 1) and copy them to the board_.
 	// 	   A better solution would be extending a random permutation of an 2d array of
@@ -28,9 +28,11 @@ Board::Board(int n)
 			if (random_array[i * n_ + j] == 0) blank_ = Point(i, j);
 		}
 	}
-	
+
 	GenerateSolutionBoard();
+
 	delete[] random_array;
+
 }
 
 Board::Board(const Board& b)
@@ -126,6 +128,16 @@ std::string Board::CurrentBoardToString()
 		result.append("\n");
 	}
 
+	result.append("Blank position: (");
+	result.append(std::to_string(blank_.GetX()));
+	result.append(", ");
+	result.append(std::to_string(blank_.GetY()));
+	result.append(")\nPossible moves: \n");
+
+	std::vector<Move> possibleMove = GetPossibleMoves();
+	for (std::vector<Move>::iterator it = possibleMove.begin();
+		it != possibleMove.end(); ++it)
+		result.append((*it).ToString().c_str());
 	return result;
 }
 
@@ -227,6 +239,17 @@ void Board::GenerateSolutionBoard()
 	}
 
 	delete[] arr;
+}
+
+bool Board::IsSolved() const
+{
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			if (board_[i][j].GetValue() != solution_[i][j].GetValue())
+				return false;
+		}
+	}
+	return true;
 }
 
 void Board::MoveBlank(const Move &m)

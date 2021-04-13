@@ -21,6 +21,7 @@ public:
 	Board& operator = (const Board& b);
 
 	bool operator == (const Board& b);
+	bool IsSolved() const;
 	inline int Size() const { return n_; }
 	inline Point GetBlankCoordinates() const { return blank_; }
 	void MoveBlank(const Move&);
