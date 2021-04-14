@@ -18,20 +18,17 @@ public:
 
 	void Execute(Board * b)
 	{
-		std::stack<Move>* moves_stack = new std::stack<Move>();
+		// Need a way to store state.
+		std::stack<State>* states_queue = new std::stack<State>();
+		std::vector<State*> cur_possible_states = State::GetPossibleStatesFromBoard(*b);
+		for (std::vector<State*>::iterator it = cur_possible_states.begin();
+			it != cur_possible_states.end(); ++it)
+			states_queue->push(**it);
 
-		do {
-			std::vector<Move> possible_moves = b->GetPossibleMoves();
-			for (std::vector<Move>::iterator it = possible_moves.begin();
-				it != possible_moves.end(); it++) {
-				moves_stack->push(*it);
-			}
-
-			Move m = moves_stack->top();
-			moves_stack->pop();
-			b->MoveBlank(m);
-		} while (!b->IsSolved());
-		delete moves_stack;
+		while (!states_queue->empty()) {
+			State front_state = states_queue->top();
+			states_queue->pop();
+		}
 	}
 
 };

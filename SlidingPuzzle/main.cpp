@@ -6,12 +6,11 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-
-#include "./Tests/puzzle_tests.hpp"
 #include "./Controller/puzzle_controller.h"
 #include "./Model/search_breadth_first.h"
 #include "./Model/isearch.h"
 #include "./Model/search_depth_first.h"
+#include "./Model/utils.hpp"
 
 int main()
 {
@@ -21,6 +20,10 @@ int main()
 	controller.SetStrategy(init_strategy);*/
 	//controller.Solve();
 	
+	printf("%s\n", b.CurrentBoardToString().c_str());
+	std::vector<State*> v = State::GetPossibleStatesFromBoard(b);
+	printf("Number of possible states: %d\n", v.size());
+	PrintVector(v);
 
 	//if (DEBUG) Test::RunAllTests();
 	//printf("%llu\n", sizeof(Board));

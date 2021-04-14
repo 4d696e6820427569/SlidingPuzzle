@@ -4,7 +4,7 @@
 
 #include "board.h"
 #include "state.h"
-#include "utils.h"
+#include "utils.hpp"
 
 Board::Board(int n)
 	: n_(n)

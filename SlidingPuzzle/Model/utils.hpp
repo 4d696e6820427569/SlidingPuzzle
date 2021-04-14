@@ -1,8 +1,7 @@
-#ifndef SLIDING_PUZZLE_MODEL_UTILS_H_
-#define SLIDING_PUZZLE_MODEL_UTILS_H_
+#ifndef SLIDING_PUZZLE_MODEL_UTILS_HPP_
+#define SLIDING_PUZZLE_MODEL_UTILS_HPP_
 
 #include <vector>
-#include "move.hpp"
 
 /*
 * Swap(a, b) --
@@ -21,6 +20,12 @@ int* RandomPermutation(int n);
 
 void PrintIntArray(int* arr, size_t n);
 
-void PrintMovesVector(std::vector<Move> &vm);
-
-#endif // SLIDING_PUZZLE_MODEL_UTILS_H_
+template <typename T>
+void PrintVector(std::vector<T> v)
+{
+	for (std::vector<T>::iterator it = v.begin(); it != v.end(); ++it) {
+		printf("%s\n", (**it).ToString().c_str());
+	}
+	printf("\n");
+};
+#endif // SLIDING_PUZZLE_MODEL_UTILS_HPP_

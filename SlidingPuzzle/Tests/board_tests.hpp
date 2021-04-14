@@ -2,7 +2,7 @@
 #define BOARD_TESTS_H_
 
 #include "../Model/board.h"
-#include "../Model/utils.h"
+#include "../Model/utils.hpp"
 #include <assert.h>
 
 namespace Test

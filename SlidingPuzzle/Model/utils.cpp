@@ -1,9 +1,13 @@
-
 #include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
 
-#include "utils.h"
+#include "utils.hpp"
+
+void Swap(int* a, int* b)
+{
+	unsigned int tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
 
 int* RandomPermutation(int n)
 {
@@ -14,7 +18,7 @@ int* RandomPermutation(int n)
 
 	// Set different seed each time so we don't get the same result
 	// each time we run this program.
-	srand( (unsigned int) time(NULL));
+	srand((unsigned int)time(NULL));
 
 	// Start from the last element and swap one-by-one.
 	for (int i = n - 1; i > 0; i--) {
@@ -25,26 +29,10 @@ int* RandomPermutation(int n)
 	return arr;
 }
 
-void Swap(int* a, int* b)
-{
-	unsigned int tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
 void PrintIntArray(int* arr, size_t n)
 {
 	for (size_t i = 0; i < n; i++) {
 		printf("%d ", arr[i]);
 	}
-	printf("\n");
-}
-
-void PrintMovesVector(std::vector<Move> &vm)
-{
-	for (std::vector<Move>::iterator it = vm.begin(); it != vm.end(); it++) {
-		printf("%s", (*it).ToString().c_str());
-	}
-
 	printf("\n");
 }
