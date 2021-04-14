@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 
-#include "cell.h"
 #include "move.hpp"
 
 class Board
@@ -22,22 +21,23 @@ public:
 
 	bool operator == (const Board& b);
 	bool IsSolved() const;
-	inline int Size() const { return n_; }
-	inline Point GetBlankCoordinates() const { return blank_; }
+	int Size() const { return n_; }
+	Point GetBlankCoordinates() const { return blank_; }
 	void MoveBlank(const Move&);
 	void ReverseMove(const Move&);
 	std::vector<Move> GetPossibleMoves();
+	std::vector<int**>* GetPossibleStates();
 	std::string CurrentBoardToString();
 	std::string SolutionBoardToString();
 
 private:
-	Cell** board_;
-	Cell** solution_;
+	int** board_;
+	int** solution_;
 	Point blank_;
 	int n_;
 
 	void GenerateSolutionBoard();
-	void PrintBoard(Cell** b);
+	void PrintBoard(int** b);
 };
 
 #endif // EIGHT_PUZZLE_MODEL_BOARD_H_

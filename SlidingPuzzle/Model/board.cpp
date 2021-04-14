@@ -10,7 +10,7 @@ Board::Board(int n)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
-	board_ = new Cell * [n_];
+	board_ = new int * [n_];
 
 	// Temporary solution: Generate a random permutation of an array of size n_ * n_
 	// 	containing numbers from 0 to (n_ * n_ - 1) and copy them to the board_.
@@ -22,9 +22,9 @@ Board::Board(int n)
 	// PrintIntArray(random_array, (size_t) (n_ * n_ & 0xFFFFFFFF));
 
 	for (int i = 0; i < n_; i++) {
-		board_[i] = new Cell[n_];
+		board_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
-			board_[i][j] = Cell(random_array[i * n_ + j], i, j);
+			board_[i][j] = random_array[i * n_ + j];
 			if (random_array[i * n_ + j] == 0) blank_ = Point(i, j);
 		}
 	}
@@ -40,14 +40,14 @@ Board::Board(const Board& b)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
-	board_ = new Cell * [n_];
+	board_ = new int * [n_];
 
 	// Perform a deep copy of the board.
 	for (int i = 0; i < n_; i++) {
-		board_[i] = new Cell[n_];
+		board_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
-			if (board_[i][j].GetValue() == 0) blank_ = Point(i, j);
+			if (board_[i][j] == 0) blank_ = Point(i, j);
 		}
 	}
 	GenerateSolutionBoard();
@@ -64,13 +64,13 @@ Board& Board::operator=(const Board& b)
 	delete[] solution_;
 	
 	n_ = b.n_;
-	board_ = new Cell * [n_];
+	board_ = new int * [n_];
 
 	for (int i = 0; i < n_; i++) {
-		board_[i] = new Cell[n_];
+		board_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
-			if (board_[i][j].GetValue() == 0) blank_ = Point(i, j);
+			if (board_[i][j] == 0) blank_ = Point(i, j);
 		}
 	}
 
@@ -122,7 +122,7 @@ std::string Board::CurrentBoardToString()
 	
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
-			result.append(board_[i][j].ToString());
+			result.append(std::to_string(board_[i][j]));
 			result.append("\t");
 		}
 		result.append("\n");
@@ -147,7 +147,7 @@ std::string Board::SolutionBoardToString()
 
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
-			result.append(solution_[i][j].ToString());
+			result.append(std::to_string(solution_[i][j]));
 			result.append("\t");
 		}
 		result.append("\n");
@@ -170,11 +170,11 @@ bool Board::operator == (const Board& b)
 	return true;
 }
 
-void Board::PrintBoard(Cell** b)
+void Board::PrintBoard(int** b)
 {
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
-			printf("%d ", b[i][j].GetValue());
+			printf("%d ", b[i][j]);
 		}
 		printf("\n");
 	}
@@ -196,11 +196,11 @@ void Board::GenerateSolutionBoard()
 	arr[totalSize - 1] = 0;
 
 	// Initialize solution board if it's not already initialized.
-	solution_ = new Cell * [n_];
+	solution_ = new int * [n_];
 	for (int i = 0; i < n_; i++) {
-		solution_[i] = new Cell[n_];
+		solution_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
-			solution_[i][j] = Cell(0, i, j);
+			solution_[i][j] = 0;
 		}
 	}
 	
@@ -209,7 +209,7 @@ void Board::GenerateSolutionBoard()
 
 		// Fill out the top row.
 		for (int i = left; i <= right; i++) {
-			solution_[top][i].SetValue(arr[index++]);
+			solution_[top][i] = arr[index++];
 		}	
 		top++;
 		
@@ -217,7 +217,7 @@ void Board::GenerateSolutionBoard()
 
 		// Fil out the right column.
 		for (int i = top; i <= bottom; i++) {
-			solution_[i][right].SetValue(arr[index++]);
+			solution_[i][right] = arr[index++];
 		}
 		right--;
 		
@@ -225,14 +225,14 @@ void Board::GenerateSolutionBoard()
 
 		// Fill out the bottom row.
 		for (int i = right; i >= left; i--) {
-			solution_[bottom][i].SetValue(arr[index++]);
+			solution_[bottom][i] = arr[index++];
 		}
 		bottom--;
 		if (top > bottom) break;
 
 		// Fill out the left column.
 		for (int i = bottom; i >= top; i--) {
-			solution_[i][left].SetValue(arr[index++]);
+			solution_[i][left] = arr[index++];
 		}
 		left++;
 		
@@ -245,7 +245,7 @@ bool Board::IsSolved() const
 {
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
-			if (board_[i][j].GetValue() != solution_[i][j].GetValue())
+			if (board_[i][j] != solution_[i][j])
 				return false;
 		}
 	}
@@ -260,8 +260,8 @@ void Board::MoveBlank(const Move &m)
 	int end_x = m.GetEndPoint().GetX();
 	int end_y = m.GetEndPoint().GetY();
 
-	board_[start_x][start_y].SetValue(board_[end_x][end_y].GetValue());
-	board_[end_x][end_y].SetValue(0);
+	board_[start_x][start_y] = board_[end_x][end_y];
+	board_[end_x][end_y] = 0;
 	blank_.SetX(end_x);
 	blank_.SetY(end_y);
 }
@@ -274,8 +274,24 @@ void Board::ReverseMove(const Move& m)
 	int end_x = m.GetEndPoint().GetX();
 	int end_y = m.GetEndPoint().GetY();
 
-	board_[end_x][end_y].SetValue(board_[start_x][start_y].GetValue());
-	board_[start_x][start_y].SetValue(0);
+	board_[end_x][end_y] = board_[start_x][start_y];
+	board_[start_x][start_y] = 0;
 	blank_.SetX(start_x);
 	blank_.SetY(start_y);
+}
+
+std::vector<int**>* Board::GetPossibleStates()
+{
+	std::vector<int**> * possible_states = new std::vector<int**>();
+
+	std::vector<Move> possible_moves = GetPossibleMoves();
+
+	for (std::vector<Move>::iterator it = possible_moves.begin();
+		it != possible_moves.end(); ++it) {
+
+		
+
+	}
+
+	return possible_states;
 }

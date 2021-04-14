@@ -16,9 +16,13 @@ public:
 
 	void Execute(Board* b)
 	{
+		// Need a way to store state.
 		std::queue<Move>* moves_queue = new std::queue<Move>();
 		
-		while (!b->IsSolved()) {
+		while (!moves_queue->empty()) {
+			Move front_move = moves_queue->front();
+			moves_queue->pop();
+
 
 		}
 	}

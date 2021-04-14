@@ -29,7 +29,7 @@ public:
 
 	std::string ToString()
 	{
-		// THis is so bad. Temporary solution.
+		// This is so bad. Temporary solution.
 		std::string result("");
 		result.append("(");
 		result.append(std::to_string(start_.GetX()));

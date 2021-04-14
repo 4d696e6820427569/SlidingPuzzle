@@ -11,14 +11,14 @@ public:
 		, time_(0)
 		, queue_size_(0) {};
 
+	virtual ~ISearch() = default;
+
 	virtual void Execute(Board* b) = 0;
 
-	virtual inline unsigned int GetSolutionPathLength() { return solution_path_length_; }
-	virtual inline unsigned int GetSolutionCost() { return solution_cost_; }
-	virtual inline unsigned int GetTime() { return time_; }
-	virtual inline unsigned int GetMaxQueueSize() {
-		return queue_size_;
-	}
+	virtual unsigned int GetSolutionPathLength() { return solution_path_length_; }
+	virtual unsigned int GetSolutionCost() { return solution_cost_; }
+	virtual unsigned int GetTime() { return time_; }
+	virtual unsigned int GetMaxQueueSize() { return queue_size_; }
 
 private:
 	unsigned int solution_path_length_;
