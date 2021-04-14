@@ -3,11 +3,12 @@
 * 
 */
 
-#ifndef EIGHT_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
-#define EIGHT_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
+#ifndef SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
+#define SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
 
 #include <queue>
 #include "board.h"
+#include "state.h"
 
 class Bfs : public ISearch
 {
@@ -17,11 +18,16 @@ public:
 	void Execute(Board* b)
 	{
 		// Need a way to store state.
-		std::queue<Move>* moves_queue = new std::queue<Move>();
+		std::queue<State>* states_queue = new std::queue<State>();
+		std::vector<State>* cur_possible_states = b->GetPossibleStates();
+		for (std::vector<State>::iterator it = cur_possible_states->begin();
+			it != cur_possible_states->end(); ++it)
+			states_queue->push(*it);
 		
-		while (!moves_queue->empty()) {
-			Move front_move = moves_queue->front();
-			moves_queue->pop();
+		while (!states_queue->empty()) {
+			State front_state = states_queue->front();
+			states_queue->pop();
+
 
 
 		}
@@ -29,4 +35,4 @@ public:
 
 private:
 };
-#endif // EIGHT_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
+#endif // SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_

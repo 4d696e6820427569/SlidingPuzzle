@@ -3,13 +3,14 @@
 * Models the 2d board in the sliding puzzle. It contains n x n cells.
 */
 
-#ifndef EIGHT_PUZZLE_MODEL_BOARD_H_
-#define EIGHT_PUZZLE_MODEL_BOARD_H_
+#ifndef SLIDING_PUZZLE_MODEL_BOARD_H_
+#define SLIDING_PUZZLE_MODEL_BOARD_H_
 
 #include <string>
 #include <vector>
 
 #include "move.hpp"
+#include "state.h"
 
 class Board
 {
@@ -22,20 +23,25 @@ public:
 	bool operator == (const Board& b);
 	bool IsSolved() const;
 	int Size() const { return n_; }
+
+	int** GetBoard() const { return board_; }
 	Point GetBlankCoordinates() const { return blank_; }
+
 	void MoveBlank(const Move&);
 	void ReverseMove(const Move&);
+
 	std::vector<Move> GetPossibleMoves();
-	std::vector<int**>* GetPossibleStates();
+	std::vector<State>* GetPossibleStates();
 	std::string CurrentBoardToString();
 	std::string SolutionBoardToString();
-
-private:
+	
+protected:
 	int** board_;
 	int** solution_;
-	Point blank_;
 	int n_;
+	Point blank_;
 
+private:
 	void GenerateSolutionBoard();
 	void PrintBoard(int** b);
 };

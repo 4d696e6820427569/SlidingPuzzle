@@ -3,8 +3,8 @@
 *
 */
 
-#ifndef EIGHT_PUZZLE_MODEL_SEARCH_A_STAR_H_
-#define EIGHT_PUZZLE_MODEL_SEARCH_A_STAR_H_
+#ifndef SLIDING_PUZZLE_MODEL_SEARCH_A_STAR_H_
+#define SLIDING_PUZZLE_MODEL_SEARCH_A_STAR_H_
 
 class AStarSearch : public ISearch
 {

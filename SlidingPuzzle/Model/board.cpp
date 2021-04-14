@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "board.h"
+#include "state.h"
 #include "utils.h"
 
 Board::Board(int n)
@@ -280,17 +281,18 @@ void Board::ReverseMove(const Move& m)
 	blank_.SetY(start_y);
 }
 
-std::vector<int**>* Board::GetPossibleStates()
+std::vector<State>* Board::GetPossibleStates()
 {
-	std::vector<int**> * possible_states = new std::vector<int**>();
+	std::vector<State>* possible_states = new std::vector<State>();
 
 	std::vector<Move> possible_moves = GetPossibleMoves();
 
 	for (std::vector<Move>::iterator it = possible_moves.begin();
 		it != possible_moves.end(); ++it) {
-
-		
-
+		Move cur_move = *it;
+		this->MoveBlank(cur_move);
+		possible_states->push_back(State(*this, cur_move));
+		this->ReverseMove(cur_move);
 	}
 
 	return possible_states;

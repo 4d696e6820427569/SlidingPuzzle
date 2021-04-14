@@ -21,7 +21,12 @@ public:
 	Move(const Move& m)
 		: start_(m.start_)
 		, end_(m.end_) {}
-	Move& operator=(const Move & m) = delete;
+	Move& operator=(const Move& m)
+	{
+		start_ = m.start_;
+		end_ = m.end_;
+	}
+
 	~Move() = default;
 
 	inline Point GetStartPoint() const { return this->start_; }

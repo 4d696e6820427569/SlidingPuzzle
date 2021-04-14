@@ -4,8 +4,8 @@
 * Interface for View in MVC model.
 */
 
-#ifndef EIGHT_PUZZLE_VIEWS_IVIEW_H_
-#define EIGHT_PUZZLE_VIEWS_IVIEW_H_
+#ifndef SLIDING_PUZZLE_VIEWS_IVIEW_H_
+#define SLIDING_PUZZLE_VIEWS_IVIEW_H_
 
 class IView
 {
@@ -14,4 +14,4 @@ public:
 private:
 };
 
-#endif // EIGHT_PUZZLE_VIEWS_IVIEW_H_
+#endif // SLIDING_PUZZLE_VIEWS_IVIEW_H_
