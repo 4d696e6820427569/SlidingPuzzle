@@ -14,6 +14,8 @@ public:
 	bool IsVisited() { return visited_; };
 	void SetVisit(bool b) { visited_ = b; }
 
+	static std::vector<State>* GetPossibleStatesFromBoard(Board&);
+
 private:
 	int** board_;
 	int n_;

@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "move.hpp"
-#include "state.h"
 
 class Board
 {
@@ -31,7 +30,7 @@ public:
 	void ReverseMove(const Move&);
 
 	std::vector<Move> GetPossibleMoves();
-	std::vector<State>* GetPossibleStates();
+
 	std::string CurrentBoardToString();
 	std::string SolutionBoardToString();
 	

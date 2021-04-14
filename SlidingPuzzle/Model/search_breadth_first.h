@@ -19,7 +19,7 @@ public:
 	{
 		// Need a way to store state.
 		std::queue<State>* states_queue = new std::queue<State>();
-		std::vector<State>* cur_possible_states = b->GetPossibleStates();
+		std::vector<State>* cur_possible_states = State::GetPossibleStatesFromBoard(*b);
 		for (std::vector<State>::iterator it = cur_possible_states->begin();
 			it != cur_possible_states->end(); ++it)
 			states_queue->push(*it);

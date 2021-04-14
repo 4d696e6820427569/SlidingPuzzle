@@ -68,3 +68,19 @@ State::~State()
 	}
 }
 
+std::vector<State>* State::GetPossibleStatesFromBoard(Board& b)
+{
+	std::vector<State>* possible_states = new std::vector<State>();
+
+	std::vector<Move> possible_moves = b.GetPossibleMoves();
+
+	for (std::vector<Move>::iterator it = possible_moves.begin();
+		it != possible_moves.end(); ++it) {
+		Move cur_move = *it;
+		b.MoveBlank(cur_move);
+		possible_states->push_back(State(b, cur_move));
+		b.ReverseMove(cur_move);
+	}
+
+	return possible_states;
+}
