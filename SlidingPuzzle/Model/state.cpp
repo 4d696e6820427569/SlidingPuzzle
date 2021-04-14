@@ -1,7 +1,6 @@
 #include "state.h"
 
 State::State(const Board& b, const Move& m)
-	:visited_(false)
 {
 	this->n_ = b.Size();
 	this->board_ = new int* [this->n_];
@@ -16,8 +15,7 @@ State::State(const Board& b, const Move& m)
 	this->moves_.push_back(m);
 }
 
-State::State(const State& s, const Move& m)
-	: visited_(false)
+State::State(State& s, const Move& m)
 {
 	this->n_ = s.n_;
 	this->board_ = new int* [this->n_];
@@ -28,6 +26,11 @@ State::State(const State& s, const Move& m)
 			if (this->board_[i][j] == 0) blank_ = Point(i, j);
 		}
 	}
+
+	// Copy the previous moves onto this state's move to keep track of the path.
+	for (std::vector<Move>::iterator it = s.moves_.begin();
+		it != s.moves_.end(); ++it)
+		this->moves_.push_back(*it);
 	this->moves_.push_back(m);
 }
 
@@ -51,8 +54,6 @@ State& State::operator=(State& s)
 		it != s.moves_.end(); ++it) {
 		moves_.push_back(*it);
 	}
-
-	this->visited_ = s.visited_;
 
 	return *this;
 }
@@ -82,26 +83,26 @@ std::vector<State*> State::GetPossibleStatesFromBoard(Board& b)
 	return possible_states;
 }
 
-std::vector<State> State::GetPossibleStates()
+std::vector<State*> State::GetPossibleStates()
 {
-	std::vector<State> possible_moves;
+	std::vector<State*> possible_moves;
 
 	int blank_x = blank_.GetX();
 	int blank_y = blank_.GetY();
 
 	if (blank_x > 0)
-		possible_moves.push_back(State(*this, Move(blank_x, blank_y, blank_x - 1, blank_y)));
+		possible_moves.push_back(new State(*this, Move(blank_x, blank_y, blank_x - 1, blank_y)));
 
 	if (blank_x < n_ - 1)
-		possible_moves.push_back(State(*this, Move(blank_x, blank_y,
+		possible_moves.push_back(new State(*this, Move(blank_x, blank_y,
 			blank_x + 1, blank_y)));
 
 	if (blank_y > 0)
-		possible_moves.push_back(State(*this, Move(blank_x, blank_y,
+		possible_moves.push_back(new State(*this, Move(blank_x, blank_y,
 			blank_x, blank_y - 1)));
 
 	if (blank_y < n_ - 1)
-		possible_moves.push_back(State(*this, Move(blank_x, blank_y,
+		possible_moves.push_back(new State(*this, Move(blank_x, blank_y,
 			blank_x, blank_y + 1)));
 
 	return possible_moves;
@@ -120,4 +121,28 @@ std::string State::ToString()
 		result.append("\n");
 	}
 	return result;
+}
+
+bool State::IsGoalState(Board& b)
+{
+	int** solution = b.GetSolutionBoard();
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			if (board_[i][j] != solution[i][j])
+				return false;
+		}
+	}
+	return true;
+}
+
+bool State::operator==(const State& s)
+{
+	if (this->n_ != s.n_) return false;
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			if (board_[i][j] != s.board_[i][j])
+				return false;
+		}
+	}
+	return true;
 }

@@ -14,19 +14,20 @@
 
 int main()
 {
-	Board b(3);
-	PuzzleController controller(&b, new Dfs());
-	/*ISearch* init_strategy = new Bfs();
-	controller.SetStrategy(init_strategy);*/
-	//controller.Solve();
-	
-	printf("%s\n", b.CurrentBoardToString().c_str());
-	std::vector<State*> v = State::GetPossibleStatesFromBoard(b);
-	printf("Number of possible states: %d\n", v.size());
-	PrintVector(v);
+	{
+		Board b(3);
+		PuzzleController controller(&b, new Dfs());
+		/*ISearch* init_strategy = new Bfs();
+		controller.SetStrategy(init_strategy);*/
 
-	//if (DEBUG) Test::RunAllTests();
-	//printf("%llu\n", sizeof(Board));
+		printf("%s\n", b.CurrentBoardToString().c_str());
+		controller.Solve();
+
+		
+
+		//if (DEBUG) Test::RunAllTests();
+		//printf("%llu\n", sizeof(Board));
+	}
 	if (DEBUG) _CrtDumpMemoryLeaks();
 	return 0;
 }

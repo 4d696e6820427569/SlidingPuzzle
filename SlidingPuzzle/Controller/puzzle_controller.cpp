@@ -30,6 +30,7 @@ PuzzleController::PuzzleController(Board* b, ISearch* s)
 PuzzleController::~PuzzleController()
 {
 	delete moves_stack_;
+	if (strategy_ != nullptr) delete strategy_;
 }
 
 void PuzzleController::GenerateNewBoard(int n)

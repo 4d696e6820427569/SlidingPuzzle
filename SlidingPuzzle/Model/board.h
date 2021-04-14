@@ -24,6 +24,7 @@ public:
 	int Size() const { return n_; }
 
 	int** GetBoard() const { return board_; }
+	int** GetSolutionBoard() const { return solution_; }
 	Point GetBlankCoordinates() const { return blank_; }
 
 	void MoveBlank(const Move&);

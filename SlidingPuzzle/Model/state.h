@@ -8,14 +8,16 @@ class State
 {
 public:
 	State(const Board&, const Move&);
-	State(const State&, const Move&);
+	State(State&, const Move&);
 	State& operator=(State&);
 	~State();
-	bool IsVisited() { return visited_; };
-	void SetVisit(bool b) { visited_ = b; }
+	bool operator==(const State&);
 
 	static std::vector<State*> GetPossibleStatesFromBoard(Board&);
-	std::vector<State> GetPossibleStates();
+	std::vector<State*> GetPossibleStates();
+	bool IsGoalState(Board& b);
+
+	std::vector<Move> TotalMoves() { return moves_;  }
 
 	std::string ToString();
 
@@ -23,7 +25,6 @@ private:
 	int** board_;
 	int n_;
 	Point blank_;
-	bool visited_;
 	std::vector<Move> moves_;
 };
 

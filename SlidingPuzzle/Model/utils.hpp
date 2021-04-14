@@ -28,4 +28,12 @@ void PrintVector(std::vector<T> v)
 	}
 	printf("\n");
 };
+
+template <typename T>
+void DeleteObjectsVector(std::vector<T*> v)
+{
+	for (std::vector<T*>::iterator it = v.begin(); it != v.end(); ++it) {
+		delete *it;
+	}
+}
 #endif // SLIDING_PUZZLE_MODEL_UTILS_HPP_
