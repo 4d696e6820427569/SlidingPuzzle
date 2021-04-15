@@ -15,34 +15,89 @@
 int main()
 {
 	{
+		printf("Extremely easy problem:\n");
 		Board b(3, true);
 		PuzzleController controller(&b, new Bfs());
-		/*ISearch* init_strategy = new Bfs();
-		controller.SetStrategy(init_strategy);*/
-
 		printf("%s\n", b.CurrentBoardToString().c_str());
 		controller.Solve();
 
-		int** m = new int*[3];
+		/// <summary>
+		/// EZ Problem
+		/// </summary>
+		/// <returns></returns>
+		int** ez = new int*[3];
 		for (int i = 0; i < 3; i++)
-			m[i] = new int[3];
+			ez[i] = new int[3];
+
+
+		ez[0][0] = 1;
+		ez[0][1] = 2;
+		ez[0][2] = 3;
+		ez[1][2] = 4;
+		ez[2][2] = 5;
+		ez[2][1] = 6;
+		ez[2][0] = 7;
+		ez[1][0] = 0;
+		ez[1][1] = 8;
+
+		Board b_ez(ez, 3);
+		PuzzleController controller_ez(&b_ez, new Bfs());
+		printf("%s\n", b_ez.CurrentBoardToString().c_str());
+		controller_ez.Solve();
+
+		/// <summary>
+		/// EZ problem 2
+		/// </summary>
+		/// <returns></returns>
+
+		printf("\nAnother easy problem:\n");
+		int** ez1 = new int* [3];
+		for (int i = 0; i < 3; i++)
+			ez1[i] = new int[3];
+
+
+		ez1[0][0] = 1;
+		ez1[0][1] = 3;
+		ez1[0][2] = 4;
+		ez1[1][2] = 2;
+		ez1[2][2] = 5;
+		ez1[2][1] = 0;
+		ez1[2][0] = 7;
+		ez1[1][0] = 8;
+		ez1[1][1] = 6;
+
+		Board b_ez1(ez1, 3);
+		PuzzleController controller_ez1(&b_ez1, new Bfs());
+		printf("%s\n", b_ez1.CurrentBoardToString().c_str());
+		controller_ez1.Solve();
+
+
+		/// <summary>
+		/// Medium problem.
+		/// </summary>
+		/// <returns></returns>
+
+		printf("\nMedium problem.\n");
+		int** m = new int* [3];
+		for (int i = 0; i < 3; i++)
+			ez1[i] = new int[3];
+
 
 		m[0][0] = 1;
-		m[0][1] = 2;
-		m[0][2] = 3;
-		m[1][2] = 4;
+		m[0][1] = 3;
+		m[0][2] = 4;
+		m[1][2] = 2;
 		m[2][2] = 5;
-		m[2][1] = 6;
+		m[2][1] = 0;
 		m[2][0] = 7;
-		m[1][0] = 0;
-		m[1][1] = 8;
+		m[1][0] = 8;
+		m[1][1] = 6;
 
-		Board b_(m, 3);
-		PuzzleController controller_(&b_, new Dfs());
+		Board b_m(m, 3);
+		PuzzleController controller_m(&b_m, new Bfs());
+		printf("%s\n", b_m.CurrentBoardToString().c_str());
+		controller_m.Solve();
 
-		printf("%s\n", b_.CurrentBoardToString().c_str());
-		controller_.Solve();
-		
 
 		//if (DEBUG) Test::RunAllTests();
 		//printf("%llu\n", sizeof(Board));
