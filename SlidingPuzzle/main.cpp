@@ -80,7 +80,7 @@ int main()
 		printf("\nMedium problem.\n");
 		int** m = new int* [3];
 		for (int i = 0; i < 3; i++)
-			ez1[i] = new int[3];
+			m[i] = new int[3];
 
 
 		m[0][0] = 1;
@@ -97,6 +97,13 @@ int main()
 		PuzzleController controller_m(&b_m, new Bfs());
 		printf("%s\n", b_m.CurrentBoardToString().c_str());
 		controller_m.Solve();
+
+		printf("\nRandom problem.\n");
+		
+		Board b_random(3, false);
+		PuzzleController controller_random(&b_random, new Bfs());
+		printf("%s\n", b_random.CurrentBoardToString().c_str());
+		controller_random.Solve();
 
 
 		//if (DEBUG) Test::RunAllTests();

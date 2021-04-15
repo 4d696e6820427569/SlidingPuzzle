@@ -14,6 +14,7 @@ public:
 	State& operator=(State&);
 	~State();
 	bool operator==(const State&);
+	bool operator!=(const State&);
 
 	static std::vector<State*>* GetPossibleStatesFromBoard(Board&);
 	std::vector<State*>* GetPossibleStates();

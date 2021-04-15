@@ -34,13 +34,14 @@ public:
 		State* cur_visited_state = nullptr;
 
 		while (!states_queue.empty()) {
-			printf("Queue size: %d\n", static_cast<int>(states_queue.size()));
+			//printf("Queue size: %d\n", static_cast<int>(states_queue.size()));
 			State* front_state = states_queue.front();
 
 			states_queue.pop();
 
 			if (front_state->IsGoalState(*b)) {
 				printf("Total moves: %d\n", front_state->TotalMoves().size());
+				printf("%s\n", front_state->ToString().c_str());
 				break;
 			}
 			else {
@@ -50,19 +51,19 @@ public:
 					it1 != cur_possible_states->end(); ++it1) {
 
 					cur_state = *it1;
+					bool IsVisited = false;
 
 					// Check if it's already visited. If it is, don't add it to the queue.
-					for (std::list<State*>::iterator it2 = visited.begin();
-						it2 != visited.end(); ++it2) {
-						cur_visited_state = *it2;
-						
+					for (const auto cur_visited_state : visited) {
 						if (*cur_visited_state == *cur_state) {
-							
+							IsVisited = true;
+							break;
 						}
-						else {
-							visited.push_back(cur_state);
-							states_queue.push(cur_state);
-						}
+					}
+
+					if (!IsVisited) {
+						visited.push_back(cur_state);
+						states_queue.push(cur_state);
 					}
 				}
 			}

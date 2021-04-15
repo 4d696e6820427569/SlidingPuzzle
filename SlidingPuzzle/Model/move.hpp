@@ -10,6 +10,14 @@
 
 #include "point.hpp"
 
+enum Direction
+{
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN
+};
+
 class Move
 {
 public:

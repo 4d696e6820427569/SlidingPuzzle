@@ -172,6 +172,19 @@ bool State::operator==(const State& s)
 	return true;
 }
 
+bool State::operator!=(const State& s)
+{
+	if (this->n_ != s.n_) return true;
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			if (board_[i][j] != s.board_[i][j]) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void State::MoveBlank(const Move& m)
 {
 	int start_x = m.GetStartPoint().GetX();
