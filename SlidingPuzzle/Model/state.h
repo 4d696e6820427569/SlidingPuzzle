@@ -7,14 +7,16 @@
 class State
 {
 public:
+	State();
 	State(const Board&, const Move&);
 	State(State&, const Move&);
+	State(const Board&);
 	State& operator=(State&);
 	~State();
 	bool operator==(const State&);
 
-	static std::vector<State*> GetPossibleStatesFromBoard(Board&);
-	std::vector<State*> GetPossibleStates();
+	static std::vector<State*>* GetPossibleStatesFromBoard(Board&);
+	std::vector<State*>* GetPossibleStates();
 	bool IsGoalState(Board& b);
 
 	std::vector<Move> TotalMoves() { return moves_;  }
@@ -26,6 +28,11 @@ private:
 	int n_;
 	Point blank_;
 	std::vector<Move> moves_;
+
+	void State::MoveBlank(const Move& m);
+	
+	void State::ReverseMove(const Move& m);
+	
 };
 
 #endif // SLIDING_PUZZLE_MODEL_STATE_H_

@@ -14,8 +14,9 @@
 class Board
 {
 public:
-	Board(int n = 3);
+	Board(int n = 3, bool solved = false);
 	Board(const Board& b);
+	Board(int** matrix, int n);
 	~Board();
 	Board& operator = (const Board& b);
 
@@ -34,14 +35,12 @@ public:
 
 	std::string CurrentBoardToString();
 	std::string SolutionBoardToString();
-	
-protected:
+
+private:
 	int** board_;
 	int** solution_;
 	int n_;
 	Point blank_;
-
-private:
 	void GenerateSolutionBoard();
 	void PrintBoard(int** b);
 };

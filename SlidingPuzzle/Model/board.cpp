@@ -6,7 +6,7 @@
 #include "state.h"
 #include "utils.hpp"
 
-Board::Board(int n)
+Board::Board(int n, bool solved)
 	: n_(n)
 	, board_(nullptr)
 	, solution_(nullptr)
@@ -18,21 +18,31 @@ Board::Board(int n)
 	// 	   A better solution would be extending a random permutation of an 2d array of
 	// 	   dimension n_ x n_. But this should do for now.
 	// Masked off with 64 - bits to avoid overflow.
-	int* random_array = RandomPermutation(n_ * n_);
-
-	// PrintIntArray(random_array, (size_t) (n_ * n_ & 0xFFFFFFFF));
-
-	for (int i = 0; i < n_; i++) {
-		board_[i] = new int[n_];
-		for (int j = 0; j < n_; j++) {
-			board_[i][j] = random_array[i * n_ + j];
-			if (random_array[i * n_ + j] == 0) blank_ = Point(i, j);
+	GenerateSolutionBoard();
+	if (solved) {
+		for (int i = 0; i < n_; i++) {
+			board_[i] = new int[n_];
+			for (int j = 0; j < n_; j++) {
+				board_[i][j] = solution_[i][j];
+				if (board_[i][j] == 0) blank_ = Point(i, j);
+			}
 		}
 	}
+	else {
+		int* random_array = RandomPermutation(n_ * n_);
 
-	GenerateSolutionBoard();
+		// PrintIntArray(random_array, (size_t) (n_ * n_ & 0xFFFFFFFF));
 
-	delete[] random_array;
+		for (int i = 0; i < n_; i++) {
+			board_[i] = new int[n_];
+			for (int j = 0; j < n_; j++) {
+				board_[i][j] = random_array[i * n_ + j];
+				if (random_array[i * n_ + j] == 0) blank_ = Point(i, j);
+			}
+		}
+
+		delete[] random_array;
+	}
 
 }
 
@@ -48,6 +58,24 @@ Board::Board(const Board& b)
 		board_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
 			board_[i][j] = b.board_[i][j];
+			if (board_[i][j] == 0) blank_ = Point(i, j);
+		}
+	}
+	GenerateSolutionBoard();
+}
+
+Board::Board(int** m, int n)
+	: n_(n)
+	, board_(nullptr)
+	, solution_(nullptr)
+{
+	board_ = new int* [n_];
+
+	// Perform a deep copy of the board.
+	for (int i = 0; i < n_; i++) {
+		board_[i] = new int[n_];
+		for (int j = 0; j < n_; j++) {
+			board_[i][j] = m[i][j];
 			if (board_[i][j] == 0) blank_ = Point(i, j);
 		}
 	}

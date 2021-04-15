@@ -8,6 +8,8 @@
 
 #include <stack>
 #include <vector>
+#include <chrono>
+#include <thread>
 
 #include "move.hpp"
 #include "utils.hpp"
@@ -19,54 +21,55 @@ public:
 
 	void Execute(Board * b)
 	{
-		// Need a way to store state.
-		std::vector<State*> states_queue;
-		std::vector<State*> cur_possible_states = State::GetPossibleStatesFromBoard(*b);
+		std::stack<State*> states_stack;
 		std::vector<State*> visited;
-		for (std::vector<State*>::iterator it = cur_possible_states.begin();
-			it != cur_possible_states.end(); ++it)
-			states_queue.push_back(*it);
+		
+		states_stack.push(new State(*b));
 
-		while (!states_queue.empty()) {
-			State* front_state = states_queue.front();
+		std::vector<State*>* cur_possible_states;
+		
+		while (!states_stack.empty()) {		
+			printf("Stack size: %d\n", static_cast<int>(states_stack.size()));
+			State* front_state = states_stack.top();
 
-			states_queue.erase(states_queue.begin()+0);
+			states_stack.pop();
 
 			visited.push_back(front_state);
-
-			//printf("%s", front_state->ToString().c_str());
-
+			
+			State* cur_state;
+			State* cur_visited_state = nullptr;
 			if (front_state->IsGoalState(*b)) {
 				printf("Total moves: %d\n", front_state->TotalMoves().size());
 				break;
 			}
 			else {
 				cur_possible_states = front_state->GetPossibleStates();
-				for (std::vector<State*>::iterator it1 = cur_possible_states.begin();
-					it1 != cur_possible_states.end(); ++it1) {
 
-					State* cur_state = *it1;
-					bool visited_state = false;
+				for (std::vector<State*>::iterator it1 = cur_possible_states->begin();
+					it1 != cur_possible_states->end(); ++it1) {
 
+					cur_state = *it1;
+				
 					// Check if it's already visited. If it is, don't add it to the stack.
 					for (std::vector<State*>::iterator it2 = visited.begin();
 						it2 != visited.end(); it2++) {
-						if (**it2 == *cur_state) {
-							visited_state = true;
-							break;
+						cur_visited_state = *it2;
+						//printf("%s\n", cur_visited_state->ToString().c_str());
+						if (*cur_visited_state == *cur_state) {
+							//printf("A state has been visited.\n");
+						}
+						else {
+							states_stack.push(cur_state);
 						}
 					}
-
-					if (!visited_state) {
-						states_queue.push_back(cur_state);
-					}
 				}
+				
 			}
 		}
 
 		// Clean up.
-		DeleteObjectsVector(cur_possible_states);
-		DeleteObjectsVector(visited);
+		//DeleteObjectsVector(*cur_possible_states);
+		//DeleteObjectsVector(visited);
 	}
 
 };
