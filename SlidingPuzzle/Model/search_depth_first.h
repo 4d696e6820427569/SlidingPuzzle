@@ -22,10 +22,14 @@ public:
 
 	void Execute(Board * b)
 	{
+		using sec = std::chrono::seconds;
+		auto start = std::chrono::high_resolution_clock::now();
+
 		std::stack<State*> states_stack;
-		std::vector<State*> visited;
+		std::set<std::string> visited;
 		
 		states_stack.push(new State(*b));
+		this->queue_size_ = 1;
 
 		std::vector<State*>* cur_possible_states;
 		
@@ -35,12 +39,13 @@ public:
 
 			states_stack.pop();
 
-			visited.push_back(front_state);
+			visited.insert(front_state->GetStateId());
 			
 			State* cur_state;
 			State* cur_visited_state = nullptr;
 			if (front_state->IsGoalState(*b)) {
-				printf("Total moves: %d\n", front_state->TotalMoves().size());
+				this->solution_path_length_ = front_state->TotalMoves().size();
+				printf("Total moves: %d\n", this->solution_path_length_);
 				break;
 			}
 			else {
@@ -51,18 +56,24 @@ public:
 					it1 != cur_possible_states->end(); ++it1) {
 
 					cur_state = *it1;
-					bool IsVisited = false;
-					for (const auto cur_visited_state : visited) {
-						if (*cur_visited_state == *cur_state) {
-							IsVisited = true;
-							break;
-						}
-					}
 
-					if (!IsVisited) states_stack.push(cur_state);
+					auto cur_visited_state = visited.find(cur_state->GetStateId());
+					if (cur_visited_state != visited.end()) {
+
+					}
+					else {
+						states_stack.push(cur_state);
+						if (states_stack.size() > this->queue_size_) this->queue_size_ = states_stack.size();
+					}
 				}
 			}
 		}
+
+		this->solution_cost_ = 0;
+		
+		auto finish = std::chrono::high_resolution_clock::now();
+		this->solution_cost_ = 0;
+		this->time_ = std::chrono::duration_cast<sec>(finish - start).count();
 
 		// Clean up.
 		//DeleteObjectsVector(*cur_possible_states);

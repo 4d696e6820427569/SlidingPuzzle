@@ -44,6 +44,7 @@ int main()
 		PuzzleController controller_ez(&b_ez, new Bfs());
 		printf("%s\n", b_ez.CurrentBoardToString().c_str());
 		controller_ez.Solve();
+		DeleteIntArray(ez, 3);
 
 		/// <summary>
 		/// EZ problem 2
@@ -70,6 +71,7 @@ int main()
 		PuzzleController controller_ez1(&b_ez1, new Bfs());
 		printf("%s\n", b_ez1.CurrentBoardToString().c_str());
 		controller_ez1.Solve();
+		DeleteIntArray(ez1, 3);
 
 
 		/// <summary>
@@ -97,6 +99,30 @@ int main()
 		PuzzleController controller_m(&b_m, new Bfs());
 		printf("%s\n", b_m.CurrentBoardToString().c_str());
 		controller_m.Solve();
+		DeleteIntArray(m, 3);
+
+		printf("\nHard problem.\n");
+		int** h = new int* [3];
+		for (int i = 0; i < 3; i++)
+			h[i] = new int[3];
+
+
+		h[0][0] = 5;
+		h[0][1] = 6;
+		h[0][2] = 7;
+		h[1][2] = 8;
+		h[2][2] = 1;
+		h[2][1] = 2;
+		h[2][0] = 3;
+		h[1][0] = 4;
+		h[1][1] = 0;
+
+		Board b_h(h, 3);
+		PuzzleController controller_h(&b_h, new Bfs());
+		printf("%s\n", b_h.CurrentBoardToString().c_str());
+		controller_h.Solve();
+		DeleteIntArray(h, 3);
+
 
 		printf("\nRandom problem.\n");
 		
@@ -104,6 +130,7 @@ int main()
 		PuzzleController controller_random(&b_random, new Bfs());
 		printf("%s\n", b_random.CurrentBoardToString().c_str());
 		controller_random.Solve();
+		DeleteIntArray(h, 3);
 
 
 		//if (DEBUG) Test::RunAllTests();

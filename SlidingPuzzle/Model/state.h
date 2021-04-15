@@ -20,18 +20,20 @@ public:
 	std::vector<State*>* GetPossibleStates();
 	bool IsGoalState(Board& b);
 
-	std::vector<Move> TotalMoves() { return moves_;  }
+	std::vector<Move> TotalMoves() { return moves_; }
 
 	std::string ToString();
+
+	std::string GetStateId() { return this->state_id_; }
 
 private:
 	int** board_;
 	int n_;
+	std::string state_id_;
 	Point blank_;
 	std::vector<Move> moves_;
 
 	void State::MoveBlank(const Move& m);
-	
 	void State::ReverseMove(const Move& m);
 	
 };

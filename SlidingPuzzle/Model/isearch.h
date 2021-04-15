@@ -20,7 +20,7 @@ public:
 	virtual unsigned int GetTime() { return time_; }
 	virtual unsigned int GetMaxQueueSize() { return queue_size_; }
 
-private:
+protected:
 	unsigned int solution_path_length_;
 	unsigned int solution_cost_;
 	unsigned int time_;

@@ -36,4 +36,6 @@ void DeleteObjectsVector(std::vector<T*> v)
 		delete *it;
 	}
 }
+
+void DeleteIntArray(int** arr, size_t n);
 #endif // SLIDING_PUZZLE_MODEL_UTILS_HPP_

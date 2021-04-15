@@ -36,3 +36,12 @@ void PrintIntArray(int* arr, size_t n)
 	}
 	printf("\n");
 }
+
+void DeleteIntArray(int** arr, size_t n)
+{
+	for (int i = 0; i < n; i++) {
+		delete[] arr[i];
+	}
+
+	delete[] arr;
+}

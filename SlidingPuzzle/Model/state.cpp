@@ -9,6 +9,7 @@ State::State()
 
 State::State(const Board& b, const Move& m)
 {
+	std::string state_id_str("");
 	this->n_ = b.Size();
 	this->board_ = new int* [this->n_];
 	for (int i = 0; i < n_; i++) {
@@ -20,11 +21,21 @@ State::State(const Board& b, const Move& m)
 	}
 
 	this->MoveBlank(m);
+
+	// Set the state ID.
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			state_id_str.append(std::to_string(this->board_[i][j]));
+		}
+	}
+
+	this->state_id_ = state_id_str;
 	this->moves_.push_back(m);
 }
 
 State::State(State& s, const Move& m)
 {
+	std::string state_id_str("");
 	this->n_ = s.n_;
 	this->board_ = new int* [this->n_];
 	for (int i = 0; i < n_; i++) {
@@ -41,6 +52,15 @@ State::State(State& s, const Move& m)
 		this->moves_.push_back(*it);
 
 	this->MoveBlank(m);
+
+	// Set the state ID.
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			state_id_str.append(std::to_string(this->board_[i][j]));
+		}
+	}
+	this->state_id_ = state_id_str;
+
 	this->moves_.push_back(m);
 }
 
@@ -67,11 +87,14 @@ State& State::operator=(State& s)
 		moves_.push_back(*it);
 	}
 
+	this->state_id_ = s.state_id_;
+
 	return *this;
 }
 
 State::State(const Board& b)
 {
+	std::string state_id_str("");
 	this->n_ = b.Size();
 	this->board_ = new int* [this->n_];
 	for (int i = 0; i < n_; i++) {
@@ -79,8 +102,10 @@ State::State(const Board& b)
 		for (int j = 0; j < n_; j++) {
 			this->board_[i][j] = b.GetBoard()[i][j];
 			if (this->board_[i][j] == 0) blank_ = Point(i, j);
+			state_id_str.append(std::to_string(this->board_[i][j]));
 		}
 	}
+	this->state_id_ = state_id_str;
 }
 
 State::~State()
@@ -162,6 +187,7 @@ bool State::IsGoalState(Board& b)
 
 bool State::operator==(const State& s)
 {
+	/*
 	if (this->n_ != s.n_) return false;
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
@@ -170,10 +196,13 @@ bool State::operator==(const State& s)
 		}
 	}
 	return true;
+	*/
+	return (this->state_id_ == s.state_id_);
 }
 
 bool State::operator!=(const State& s)
 {
+	/*
 	if (this->n_ != s.n_) return true;
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
@@ -183,6 +212,8 @@ bool State::operator!=(const State& s)
 		}
 	}
 	return false;
+	*/
+	return (this->state_id_ != s.state_id_);
 }
 
 void State::MoveBlank(const Move& m)

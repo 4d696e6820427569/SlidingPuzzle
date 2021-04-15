@@ -31,7 +31,7 @@ public:
 private:
 	Board* board_;
 	ISearch* strategy_;
-	std::stack<Move>* moves_stack_;
+	//std::stack<Move>* moves_stack_;
 };
 
 #endif // EIGHT_PUZZLE_CONTROLLER_PUZZLE_CONTROLLER_H_

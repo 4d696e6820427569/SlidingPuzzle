@@ -6,7 +6,6 @@
 PuzzleController::PuzzleController()
 	: board_(nullptr)
 	, strategy_(nullptr)
-	, moves_stack_(new std::stack<Move>())
 {
 
 }
@@ -14,22 +13,18 @@ PuzzleController::PuzzleController()
 PuzzleController::PuzzleController(Board* b)
 	: board_(b)
 	, strategy_(nullptr)
-	, moves_stack_(new std::stack<Move>())
 {
 
 }
 
 PuzzleController::PuzzleController(Board* b, ISearch* s)
 	: board_(b)
-	, strategy_(s)
-	, moves_stack_(new std::stack<Move>())
-{
+	, strategy_(s){
 
 }
 
 PuzzleController::~PuzzleController()
 {
-	delete moves_stack_;
 	if (strategy_ != nullptr) delete strategy_;
 }
 
@@ -52,6 +47,7 @@ ISearch* PuzzleController::GetStrategy() const
 	return this->strategy_;
 }
 
+/*
 void PuzzleController::MoveBlankCell(const Move& move)
 {
 	moves_stack_->push(move);
@@ -65,6 +61,8 @@ void PuzzleController::UndoMoveBlankCell()
 		moves_stack_->pop();
 	}
 }
+*/
+
 
 void PuzzleController::Solve()
 {
