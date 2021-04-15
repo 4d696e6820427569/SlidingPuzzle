@@ -9,7 +9,7 @@ namespace Test
 {
 	void RunAllTests()
 	{
-		Test::RunBoardTests();
+		Test::RunTests();
 	}
 }
 
