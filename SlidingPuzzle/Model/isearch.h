@@ -19,6 +19,9 @@ public:
 	virtual unsigned int GetSolutionCost() { return solution_cost_; }
 	virtual unsigned int GetTime() { return time_; }
 	virtual unsigned int GetMaxQueueSize() { return queue_size_; }
+	virtual void PrintExecutionStats() {
+
+	}
 
 protected:
 	unsigned int solution_path_length_;

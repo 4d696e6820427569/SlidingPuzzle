@@ -3,7 +3,8 @@
 
 State::State(int n, bool solved)
 	: n_(n)
-	, cost_(0)
+	, recent_move_cost_(0)
+	, total_move_cost_(0)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
@@ -56,7 +57,8 @@ State::State(int** b, int n)
 	: n_(n)
 	, board_(nullptr)
 	, solution_(nullptr)
-	, cost_(0)
+	, recent_move_cost_(0)
+	, total_move_cost_(0)
 {
 	std::string state_id_str("");
 	board_ = new int* [n_];
@@ -71,38 +73,10 @@ State::State(int** b, int n)
 	GenerateSolutionState();
 }
 
-//State::State(const Board& b, const Move& m)
-//{
-//	std::string state_id_str("");
-//	this->n_ = b.Size();
-//	this->board_ = new int* [this->n_];
-//	for (int i = 0; i < n_; i++) {
-//		this->board_[i] = new int[n_];
-//		for (int j = 0; j < n_; j++) {
-//			this->board_[i][j] = b.GetBoard()[i][j];
-//			if (this->board_[i][j] == 0) blank_ = Point(i, j);
-//		}
-//	}
-//
-//	//this->cost_ = this->MoveBlank(m);
-//	this->MoveBlank(m);
-//	this->cost_ = m.GetCost();
-//
-//	// Set the state ID.
-//	for (int i = 0; i < n_; i++) {
-//		for (int j = 0; j < n_; j++) {
-//			state_id_str.append(std::to_string(this->board_[i][j]));
-//		}
-//	}
-//
-//	this->state_id_ = state_id_str;
-//	this->moves_.push_back(m);
-//	GenerateSolutionState();
-//}
-
 State::State(State& s, const Move& m) 
 	: n_(s.n_)
-	, cost_(0)
+	, recent_move_cost_(0)
+	, total_move_cost_(0)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
@@ -123,7 +97,8 @@ State::State(State& s, const Move& m)
 
 	//this->cost_ = this->MoveBlank(m);
 	this->MoveBlank(m);
-	this->cost_ = m.GetCost();
+	this->recent_move_cost_ = m.GetCost();
+	this->total_move_cost_ = s.total_move_cost_ + this->recent_move_cost_;
 
 	// Set the state ID.
 	for (int i = 0; i < n_; i++) {
@@ -132,7 +107,6 @@ State::State(State& s, const Move& m)
 		}
 	}
 	this->state_id_ = state_id_str;
-
 	this->moves_.push_back(m);
 	GenerateSolutionState();
 }
@@ -161,6 +135,8 @@ State& State::operator=(State& s)
 	}
 
 	this->state_id_ = s.state_id_;
+	this->recent_move_cost_ = s.recent_move_cost_;
+	this->total_move_cost_ = s.total_move_cost_;
 
 	return *this;
 }
@@ -169,7 +145,8 @@ State::State(const State& b)
 	: n_(b.n_)
 	, board_(nullptr)
 	, solution_(nullptr)
-	, cost_(0)
+	, recent_move_cost_(0)
+	, total_move_cost_(0)
 {
 	std::string state_id_str("");
 	this->board_ = new int* [this->n_];
@@ -181,6 +158,8 @@ State::State(const State& b)
 			state_id_str.append(std::to_string(this->board_[i][j]));
 		}
 	}
+	this->recent_move_cost_ = b.recent_move_cost_;
+	this->total_move_cost_ = b.total_move_cost_;
 	this->state_id_ = state_id_str;
 	GenerateSolutionState();
 }
@@ -259,6 +238,7 @@ std::string State::CurrentStateToString()
 
 bool State::IsGoalState()
 {
+	if (solution_ == nullptr) GenerateSolutionState();
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
 			if (board_[i][j] != solution_[i][j])
@@ -280,12 +260,12 @@ bool State::operator!=(const State& s)
 
 bool State::operator>(const State& s)
 {
-	return this->cost_ > s.cost_;
+	return this->total_move_cost_ > s.total_move_cost_;
 }
 
 bool State::operator<(const State& s)
 {
-	return this->cost_ < s.cost_;
+	return this->total_move_cost_ < s.total_move_cost_;
 }
 
 int State::MoveBlank(const Move& m)
@@ -321,11 +301,7 @@ void State::ReverseMove(const Move& m)
 
 unsigned long State::GetTotalCostToThisState()
 {
-	unsigned long total_cost = 0;
-	for (auto move : this->moves_) {
-		total_cost += move.GetCost();
-	}
-	return total_cost;
+	return this->total_move_cost_;
 }
 
 void State::GenerateSolutionState()

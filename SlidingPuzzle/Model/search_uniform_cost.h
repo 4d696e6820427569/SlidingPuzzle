@@ -8,6 +8,7 @@
 
 #include <queue>
 #include <set>
+#include <unordered_map>
 #include <chrono>
 
 #include "state.h"
@@ -34,11 +35,15 @@ public:
 		auto start = std::chrono::high_resolution_clock::now();
 
 		std::priority_queue<State*, std::vector<State*>, StateComparator> states_queue;
-		std::set<std::string> visited;
+		//std::set<std::string> visited;
+
+		std::unordered_map<std::string, unsigned long> visited_and_cost;
 
 		// Mark the current state as visited.
 		State* init_state = new State(*b);
-		visited.insert(init_state->GetStateId());
+		//visited.insert(init_state->GetStateId());
+
+		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 		
@@ -57,7 +62,6 @@ public:
 				this->solution_cost_ = front_state->GetTotalCostToThisState();
 				printf("Total moves: %lu\n", this->solution_path_length_);
 				printf("Solution cost: %d\n", this->solution_cost_);
-				printf("%s\n", front_state->CurrentStateToString().c_str());
 				break;
 			}
 			else {
@@ -69,14 +73,43 @@ public:
 					cur_state = *it1;
 
 					// Check if it's already visited. If it is, don't add it to the queue.
-					auto visited_it = visited.find(cur_state->GetStateId());
-					if (visited_it != visited.end()) {
-					}
-					else {
-						visited.insert(cur_state->GetStateId());
+					//auto visited_it = visited.find(cur_state->GetStateId());
+
+					//auto visited_it_map = visited_and_cost.find(cur_state->GetStateId());
+					//if (visited_it != visited.end()) {
+					//	// If this state has been visited, check for the current expanded state's cost.
+					//	// If it's less than the visited one's cost, add it to the priority queue.
+					//}
+					//else {
+					//	visited.insert(cur_state->GetStateId());
+					//	states_queue.push(cur_state);
+					//	if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
+					//}
+
+
+					std::string cur_state_id = cur_state->GetStateId();
+					unsigned long total_cost_to_cur_state = cur_state->GetTotalCostToThisState();
+
+					auto visited_it = visited_and_cost.find(cur_state->GetStateId());
+
+					
+					if (visited_it == visited_and_cost.end()) {
+						// If it's not in the map.
+						visited_and_cost.insert(std::make_pair(cur_state_id, total_cost_to_cur_state));
 						states_queue.push(cur_state);
 						if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
 					}
+					else {
+						// If it's in the visited map, check if the cost of the visited state is larger than
+						// the expanded state's total cost. If it's larger, push the expanded state onto the stack.
+						if (visited_it->second > total_cost_to_cur_state) {
+							visited_and_cost[visited_it->first] = total_cost_to_cur_state;
+							states_queue.push(cur_state);
+							if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
+						}
+					}
+
+
 				}
 			}
 		}

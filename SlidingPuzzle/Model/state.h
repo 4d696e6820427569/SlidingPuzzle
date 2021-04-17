@@ -40,8 +40,10 @@ public:
 
 	std::vector<Move> TotalMoves() const { return moves_; }
 	std::string GetStateId() const { return this->state_id_; }
-	unsigned long GetCostToThisState() { return cost_; }
-	void SetCost(unsigned long c) { cost_ = c; }
+	unsigned long GetCostToThisState() { return recent_move_cost_; }
+	void SetCost(unsigned long c) { 
+		total_move_cost_ = c;
+	}
 
 	std::vector<State*>* GetPossibleStates();
 	bool IsGoalState();
@@ -51,7 +53,8 @@ public:
 	//static std::vector<State*>* GetPossibleStatesFromBoard();
 
 private:
-	unsigned long cost_;
+	unsigned long recent_move_cost_;
+	unsigned long total_move_cost_;
 	int** board_;
 	int** solution_;
 	int n_;

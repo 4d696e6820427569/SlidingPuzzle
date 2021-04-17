@@ -46,7 +46,6 @@ public:
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				printf("Total moves: %lu\n", this->solution_path_length_);
-				printf("%s\n", front_state->CurrentStateToString().c_str());
 				break;
 			}
 			else {

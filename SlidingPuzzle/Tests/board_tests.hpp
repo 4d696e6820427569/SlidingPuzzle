@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <queue>
 
-#define STRATEGY Bfs
+#define STRATEGY Ucs
 
 namespace Test
 {
@@ -213,19 +213,19 @@ namespace Test
 
 		State* tmp_s = pq.top();
 		pq.pop();
-		assert(tmp_s->GetCostToThisState() == 0);
+		assert(tmp_s->GetTotalCostToThisState() == 0);
 
 		tmp_s = pq.top();
 		pq.pop();
-		assert(tmp_s->GetCostToThisState() == 3);
+		assert(tmp_s->GetTotalCostToThisState() == 3);
 
 		tmp_s = pq.top();
 		pq.pop();
-		assert(tmp_s->GetCostToThisState() == 4);
+		assert(tmp_s->GetTotalCostToThisState() == 4);
 
 		tmp_s = pq.top();
 		pq.pop();
-		assert(tmp_s->GetCostToThisState() == 6);
+		assert(tmp_s->GetTotalCostToThisState() == 6);
 
 		delete s3;
 		delete s4;
