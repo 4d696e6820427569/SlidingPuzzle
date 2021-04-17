@@ -13,6 +13,7 @@
 
 #include "state.h"
 #include "utils.hpp"
+#include "isearch.h"
 
 
 class StateComparator
@@ -52,7 +53,6 @@ public:
 		State* cur_visited_state = nullptr;
 
 		while (!states_queue.empty()) {
-			//printf("Queue size: %lu\n", states_queue.size());
 			State* front_state = states_queue.top();
 
 			states_queue.pop();
@@ -61,7 +61,9 @@ public:
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				this->solution_cost_ = front_state->GetTotalCostToThisState();
 				printf("Total moves: %lu\n", this->solution_path_length_);
+				printf("Maximum t");
 				printf("Solution cost: %d\n", this->solution_cost_);
+				
 				break;
 			}
 			else {
@@ -92,7 +94,6 @@ public:
 
 					auto visited_it = visited_and_cost.find(cur_state->GetStateId());
 
-					
 					if (visited_it == visited_and_cost.end()) {
 						// If it's not in the map.
 						visited_and_cost.insert(std::make_pair(cur_state_id, total_cost_to_cur_state));
@@ -108,8 +109,6 @@ public:
 							if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
 						}
 					}
-
-
 				}
 			}
 		}

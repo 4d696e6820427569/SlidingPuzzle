@@ -12,7 +12,7 @@
 
 #include "state.h"
 #include "utils.hpp"
-
+#include "isearch.h"
 
 class Bfs : public ISearch
 {

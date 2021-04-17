@@ -7,24 +7,17 @@
 #include "./Model/search_breadth_first.h"
 #include "./Model/search_depth_first.h"
 #include "./Model/search_uniform_cost.h"
+#include "./Model/search_greedy_best_first.h"
+#include "./Model/search_a_star.h"
+#include "./Model/search_iterative_deepening.h"
 
 #include <assert.h>
 #include <queue>
 
-#define STRATEGY Ucs
+#define STRATEGY AStarSearch
 
 namespace Test
 {
-
-	class StateComparator
-	{
-	public:
-		bool operator() (State* s1, State* s2)
-		{
-			return *s1 > *s2;
-		}
-	};
-
 	void ExtremelyEasyTest()
 	{
 		printf("Extremely easy problem:\n");
@@ -243,7 +236,7 @@ namespace Test
 		EasyWebTest();
 		MediumWebTest();
 		HardWebTest();
-		//ExtremelyHardProblem();
+		ExtremelyHardProblem();
 	}
 }
 

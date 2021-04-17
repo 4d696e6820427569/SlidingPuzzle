@@ -6,6 +6,8 @@
 #ifndef SLIDING_PUZZLE_MODEL_POINT_HPP_
 #define SLIDING_PUZZLE_MODEL_POINT_HPP_
 
+#include <cmath>
+
 class Point
 {
 public:
@@ -34,6 +36,10 @@ public:
 	inline int GetX() const { return this->x_; }
 	inline void SetY(int y) { this->y_ = y; }
 	inline int GetY() const { return this->y_; }
+	inline double GetManhattanDistance(const Point& p)
+	{
+		return abs(x_ - p.x_) + abs(y_ - p.y_);
+	}
 
 private:
 	int x_;

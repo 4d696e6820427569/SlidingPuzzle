@@ -2,6 +2,7 @@
 #define SLIDING_PUZZLE_MODEL_STATE_H_
 
 #include <vector>
+#include <unordered_map>
 
 #include "move.hpp"
 
@@ -49,6 +50,8 @@ public:
 	bool IsGoalState();
 	std::string CurrentStateToString();
 	unsigned long GetTotalCostToThisState();
+	int GetNumberOfMisplacedTiles();
+	double SumOfManhattanDistances();
 
 	//static std::vector<State*>* GetPossibleStatesFromBoard();
 
@@ -61,6 +64,7 @@ private:
 	Point blank_;
 	std::vector<Move> moves_;
 	std::string state_id_;
+	std::unordered_map<int, Point> coordinates_map_;
 	
 	int State::MoveBlank(const Move& m);
 	void State::ReverseMove(const Move& m);

@@ -333,7 +333,10 @@ void State::GenerateSolutionState()
 
 		// Fill out the top row.
 		for (int i = left; i <= right; i++) {
-			solution_[top][i] = arr[index++];
+			solution_[top][i] = arr[index];
+			coordinates_map_.insert(std::make_pair(solution_[top][i], Point(top, i)));
+			index++;
+
 		}
 		top++;
 
@@ -341,7 +344,9 @@ void State::GenerateSolutionState()
 
 		// Fil out the right column.
 		for (int i = top; i <= bottom; i++) {
-			solution_[i][right] = arr[index++];
+			solution_[i][right] = arr[index];
+			coordinates_map_.insert(std::make_pair(solution_[i][right], Point(i, right)));
+			index++;
 		}
 		right--;
 
@@ -349,7 +354,9 @@ void State::GenerateSolutionState()
 
 		// Fill out the bottom row.
 		for (int i = right; i >= left; i--) {
-			solution_[bottom][i] = arr[index++];
+			solution_[bottom][i] = arr[index];
+			coordinates_map_.insert(std::make_pair(solution_[bottom][i], Point(bottom, i)));
+			index++;
 		}
 		bottom--;
 		if (top > bottom) break;
@@ -363,4 +370,28 @@ void State::GenerateSolutionState()
 	}
 
 	delete[] arr;
+}
+
+int State::GetNumberOfMisplacedTiles()
+{
+	int num_misplaced_tiles = 0;
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			if (board_[i][j] != solution_[i][j])
+				num_misplaced_tiles++;
+		}
+	}
+
+	return num_misplaced_tiles;
+}
+
+double State::SumOfManhattanDistances()
+{
+	double sumMdist = 0;
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			sumMdist += coordinates_map_[board_[i][j]].GetManhattanDistance(Point(i, j));
+		}
+	}
+	return sumMdist;
 }

@@ -14,6 +14,7 @@
 
 #include "move.hpp"
 #include "utils.hpp"
+#include "isearch.h"
 
 class Dfs : public ISearch
 {
