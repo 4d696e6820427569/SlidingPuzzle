@@ -33,22 +33,19 @@ public:
 		auto start = std::chrono::high_resolution_clock::now();
 
 		std::priority_queue<State*, std::vector<State*>, ManhattanDistancesHeuristic> states_queue;
-		//std::set<std::string> visited;
-
 		std::unordered_map<std::string, unsigned long> visited_and_cost;
 
 		// Mark the current state as visited.
 		State* init_state = new State(*b);
-		//visited.insert(init_state->GetStateId());
-
 		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->SumOfManhattanDistances()));
+
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 
 		std::vector<State*>* cur_possible_states = nullptr;
 		State* cur_state = nullptr;
 		State* cur_visited_state = nullptr;
-
+		
 		while (!states_queue.empty()) {
 			State* front_state = states_queue.top();
 
@@ -62,15 +59,16 @@ public:
 				printf("Solution cost: %d\n", this->solution_cost_);
 				printf("Final state: \n");
 				printf("%s\n", front_state->CurrentStateToString().c_str());
+				delete front_state;
 				break;
 			}
 			else {
+				bool states_to_free[4] = { true, true, true, true };
 				cur_possible_states = front_state->GetPossibleStates();
 
-				for (std::vector<State*>::iterator it1 = cur_possible_states->begin();
-					it1 != cur_possible_states->end(); ++it1) {
+				for (int i = 0; i < cur_possible_states->size(); i++) {
 
-					cur_state = *it1;
+					cur_state = cur_possible_states->at(i);
 
 					// Check if it's already visited. If it is, don't add it to the queue.
 					//auto visited_it = visited.find(cur_state->GetStateId());
@@ -85,18 +83,17 @@ public:
 					//	states_queue.push(cur_state);
 					//	if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
 					//}
-
-
 					std::string cur_state_id = cur_state->GetStateId();
 					unsigned long total_cost_to_cur_state = cur_state->SumOfManhattanDistances();
 
 					auto visited_it = visited_and_cost.find(cur_state->GetStateId());
 
 					if (visited_it == visited_and_cost.end()) {
-						// If it's not in the map.
+						// If it's not in the visited map.
 						visited_and_cost.insert(std::make_pair(cur_state_id, total_cost_to_cur_state));
 						states_queue.push(cur_state);
 						if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
+						states_to_free[i] = false;
 					}
 					else {
 						// If it's in the visited map, check if the cost of the visited state is larger than
@@ -105,18 +102,29 @@ public:
 							visited_and_cost[visited_it->first] = total_cost_to_cur_state;
 							states_queue.push(cur_state);
 							if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
+							states_to_free[i] = false;
 						}
 					}
 				}
+
+				for (int i = 0; i < cur_possible_states->size(); i++) {
+					if (states_to_free[i]) delete cur_possible_states->at(i);
+				}
+				delete cur_possible_states;
 			}
+			delete front_state;
 		}
 
 		auto finish = std::chrono::high_resolution_clock::now();
 		this->time_ = std::chrono::duration_cast<sec>(finish - start).count();
 
 		// Clean up.
-		//DeleteObjectsVector(*cur_possible_states);
-		//DeleteObjectsVector(visited);
+		State* tmp = nullptr;
+		while (!states_queue.empty()) {
+			tmp = states_queue.top();
+			states_queue.pop();
+			delete tmp;
+		}
 	}
 private:
 };

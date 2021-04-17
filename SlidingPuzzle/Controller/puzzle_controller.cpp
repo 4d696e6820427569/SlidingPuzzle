@@ -26,6 +26,7 @@ PuzzleController::PuzzleController(State* b, ISearch* s)
 PuzzleController::~PuzzleController()
 {
 	if (strategy_ != nullptr) delete strategy_;
+	
 }
 
 

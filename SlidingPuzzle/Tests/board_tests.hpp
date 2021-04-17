@@ -48,12 +48,7 @@ namespace Test
 		PuzzleController controller_ez(&b_ez, new STRATEGY());
 		printf("%s\n", b_ez.CurrentStateToString().c_str());
 		controller_ez.Solve();
-		//DeleteIntArray(ez, 3);
-		for (int i = 0; i < 3; i++) {
-			delete[] ez[i];
-		}
-
-		delete[] ez;
+		DeleteIntArray(ez, 3);
 	}
 
 	void EasyTest2()
@@ -166,7 +161,6 @@ namespace Test
 	void ExtremelyHardProblem()
 	{
 		printf("\nRandom problem.\n");
-
 		State b_random(3, false);
 		PuzzleController controller_random(&b_random, new STRATEGY());
 		printf("%s\n", b_random.CurrentStateToString().c_str());
@@ -184,7 +178,6 @@ namespace Test
 		assert(s1 < s2);
 		assert(s1 > s2 == false);
 		assert((s1 == s2) == false);
-
 
 		State* s3 = new State(b_random);
 		State* s4 = new State(b_random);

@@ -106,6 +106,7 @@ State::State(State& s, const Move& m)
 			state_id_str.append(std::to_string(this->board_[i][j]));
 		}
 	}
+
 	this->state_id_ = state_id_str;
 	this->moves_.push_back(m);
 	GenerateSolutionState();
@@ -113,9 +114,12 @@ State::State(State& s, const Move& m)
 
 State& State::operator=(State& s)
 {
-	for (int i = 0; i < n_; i++)
+	for (int i = 0; i < n_; i++) {
 		delete board_[i];
+		delete solution_[i];
+	}
 	delete[] board_;
+	delete[] solution_;
 
 	this->n_ = s.n_;
 	board_ = new int* [n_];
@@ -138,6 +142,7 @@ State& State::operator=(State& s)
 	this->recent_move_cost_ = s.recent_move_cost_;
 	this->total_move_cost_ = s.total_move_cost_;
 
+	GenerateSolutionState();
 	return *this;
 }
 
@@ -336,7 +341,6 @@ void State::GenerateSolutionState()
 			solution_[top][i] = arr[index];
 			coordinates_map_.insert(std::make_pair(solution_[top][i], Point(top, i)));
 			index++;
-
 		}
 		top++;
 

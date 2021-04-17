@@ -79,6 +79,13 @@ public:
 		// Clean up.
 		//DeleteObjectsVector(*cur_possible_states);
 		//DeleteObjectsVector(visited);
+		// Clean up.
+		State* tmp = nullptr;
+		while (!states_stack.empty()) {
+			tmp = states_stack.top();
+			states_stack.pop();
+			delete tmp;
+		}
 	}
 
 };

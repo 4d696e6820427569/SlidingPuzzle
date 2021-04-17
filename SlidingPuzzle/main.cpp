@@ -13,6 +13,6 @@ int main()
 		if (DEBUG) Test::RunAllTests();
 		//printf("%llu\n", sizeof(Board));
 	}
-	//if (DEBUG) _CrtDumpMemoryLeaks();
+	if (DEBUG) _CrtDumpMemoryLeaks();
 	return 0;
 }

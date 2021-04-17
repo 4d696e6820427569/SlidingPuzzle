@@ -36,7 +36,7 @@ public:
 	inline int GetX() const { return this->x_; }
 	inline void SetY(int y) { this->y_ = y; }
 	inline int GetY() const { return this->y_; }
-	inline double GetManhattanDistance(const Point& p)
+	inline int GetManhattanDistance(const Point& p)
 	{
 		return abs(x_ - p.x_) + abs(y_ - p.y_);
 	}

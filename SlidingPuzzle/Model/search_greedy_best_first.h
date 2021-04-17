@@ -120,6 +120,13 @@ public:
 		// Clean up.
 		//DeleteObjectsVector(*cur_possible_states);
 		//DeleteObjectsVector(visited);
+		// Clean up.
+		State* tmp = nullptr;
+		while (!states_queue.empty()) {
+			tmp = states_queue.top();
+			states_queue.pop();
+			delete tmp;
+		}
 	}
 
 private:
