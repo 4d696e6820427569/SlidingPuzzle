@@ -1,5 +1,5 @@
-#include "state.h"
 #include "utils.hpp"
+#include "state.h"
 
 State::State(int n, bool solved)
 	: n_(n)
@@ -71,34 +71,34 @@ State::State(int** b, int n)
 	GenerateSolutionState();
 }
 
-State::State(const Board& b, const Move& m)
-{
-	std::string state_id_str("");
-	this->n_ = b.Size();
-	this->board_ = new int* [this->n_];
-	for (int i = 0; i < n_; i++) {
-		this->board_[i] = new int[n_];
-		for (int j = 0; j < n_; j++) {
-			this->board_[i][j] = b.GetBoard()[i][j];
-			if (this->board_[i][j] == 0) blank_ = Point(i, j);
-		}
-	}
-
-	//this->cost_ = this->MoveBlank(m);
-	this->MoveBlank(m);
-	this->cost_ = m.GetCost();
-
-	// Set the state ID.
-	for (int i = 0; i < n_; i++) {
-		for (int j = 0; j < n_; j++) {
-			state_id_str.append(std::to_string(this->board_[i][j]));
-		}
-	}
-
-	this->state_id_ = state_id_str;
-	this->moves_.push_back(m);
-	GenerateSolutionState();
-}
+//State::State(const Board& b, const Move& m)
+//{
+//	std::string state_id_str("");
+//	this->n_ = b.Size();
+//	this->board_ = new int* [this->n_];
+//	for (int i = 0; i < n_; i++) {
+//		this->board_[i] = new int[n_];
+//		for (int j = 0; j < n_; j++) {
+//			this->board_[i][j] = b.GetBoard()[i][j];
+//			if (this->board_[i][j] == 0) blank_ = Point(i, j);
+//		}
+//	}
+//
+//	//this->cost_ = this->MoveBlank(m);
+//	this->MoveBlank(m);
+//	this->cost_ = m.GetCost();
+//
+//	// Set the state ID.
+//	for (int i = 0; i < n_; i++) {
+//		for (int j = 0; j < n_; j++) {
+//			state_id_str.append(std::to_string(this->board_[i][j]));
+//		}
+//	}
+//
+//	this->state_id_ = state_id_str;
+//	this->moves_.push_back(m);
+//	GenerateSolutionState();
+//}
 
 State::State(State& s, const Move& m) 
 	: n_(s.n_)
@@ -198,22 +198,22 @@ State::~State()
 	delete[] solution_;
 }
 
-std::vector<State*>* State::GetPossibleStatesFromBoard(Board& b)
-{
-	std::vector<State*>* possible_states = new std::vector<State*>();
-
-	std::vector<Move> possible_moves = b.GetPossibleMoves();
-
-	// Need to also include the current state.
-
-	for (std::vector<Move>::iterator it = possible_moves.begin();
-		it != possible_moves.end(); ++it) {
-		Move cur_move = *it;
-		possible_states->push_back(new State(b, cur_move));
-	}
-
-	return possible_states;
-}
+//std::vector<State*>* State::GetPossibleStatesFromBoard(Board& b)
+//{
+//	std::vector<State*>* possible_states = new std::vector<State*>();
+//
+//	std::vector<Move> possible_moves = b.GetPossibleMoves();
+//
+//	// Need to also include the current state.
+//
+//	for (std::vector<Move>::iterator it = possible_moves.begin();
+//		it != possible_moves.end(); ++it) {
+//		Move cur_move = *it;
+//		possible_states->push_back(new State(b, cur_move));
+//	}
+//
+//	return possible_states;
+//}
 
 std::vector<State*>* State::GetPossibleStates()
 {

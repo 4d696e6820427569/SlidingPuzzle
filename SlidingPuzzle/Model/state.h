@@ -1,8 +1,10 @@
 #ifndef SLIDING_PUZZLE_MODEL_STATE_H_
 #define SLIDING_PUZZLE_MODEL_STATE_H_
 
+#include <vector>
+
 #include "move.hpp"
-#include "board.h"
+
 
 class State
 {
@@ -16,7 +18,7 @@ public:
 
 	// Constructor for constructing a state puzzle from a
 	// Board and a Move.
-	State(const Board&, const Move&);
+	//State(const Board&, const Move&);
 
 	// Constructor for constructing a state from another state
 	// with a Move.
@@ -46,7 +48,7 @@ public:
 	std::string CurrentStateToString();
 	unsigned long GetTotalCostToThisState();
 
-	static std::vector<State*>* GetPossibleStatesFromBoard(Board&);
+	//static std::vector<State*>* GetPossibleStatesFromBoard();
 
 private:
 	unsigned long cost_;
