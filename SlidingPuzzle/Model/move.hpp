@@ -22,23 +22,29 @@ class Move
 {
 public:
 	Move() = delete;
-	Move(int x1, int y1, int x2, int y2)
+	Move(int x1, int y1, int x2, int y2, unsigned long cost)
 		: start_(Point(x1, y1))
-		, end_(Point(x2, y2)) {}
+		, end_(Point(x2, y2))
+		, cost_(cost) {}
 	
 	Move(const Move& m)
 		: start_(m.start_)
-		, end_(m.end_) {}
+		, end_(m.end_)
+		, cost_(m.cost_){}
+
 	Move& operator=(const Move& m)
 	{
 		start_ = m.start_;
 		end_ = m.end_;
+		cost_ = m.cost_;
 	}
 
 	~Move() = default;
 
-	inline Point GetStartPoint() const { return this->start_; }
-	inline Point GetEndPoint() const { return this->end_;  }
+	Point GetStartPoint() const { return this->start_; }
+	Point GetEndPoint() const { return this->end_;  }
+	unsigned long GetCost() const { return this->cost_; }
+	void SetCost(unsigned long c) { this->cost_ = c; }
 
 	std::string ToString()
 	{
@@ -62,6 +68,7 @@ public:
 private:
 	Point start_;
 	Point end_;
+	unsigned long cost_;
 };
 
 #endif // SLIDING_PUZZLE_MODEL_MOVE_HPP_

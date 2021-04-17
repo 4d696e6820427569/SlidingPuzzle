@@ -2,7 +2,16 @@
 
 State::State()
 	: n_(0)
+	, cost_(0)
 	, board_(nullptr)
+{
+
+}
+
+State::State(int** b, int n)
+	: n_(n)
+	, board_(b)
+	, cost_(0)
 {
 
 }
@@ -20,7 +29,9 @@ State::State(const Board& b, const Move& m)
 		}
 	}
 
+	//this->cost_ = this->MoveBlank(m);
 	this->MoveBlank(m);
+	this->cost_ = m.GetCost();
 
 	// Set the state ID.
 	for (int i = 0; i < n_; i++) {
@@ -51,7 +62,9 @@ State::State(State& s, const Move& m)
 		it != s.moves_.end(); ++it)
 		this->moves_.push_back(*it);
 
+	//this->cost_ = this->MoveBlank(m);
 	this->MoveBlank(m);
+	this->cost_ = m.GetCost();
 
 	// Set the state ID.
 	for (int i = 0; i < n_; i++) {
@@ -141,19 +154,21 @@ std::vector<State*>* State::GetPossibleStates()
 	int blank_y = blank_.GetY();
 
 	if (blank_x > 0)
-		possible_moves->push_back(new State(*this, Move(blank_x, blank_y, blank_x - 1, blank_y)));
+		possible_moves->push_back(
+			new State(*this, Move(blank_x, blank_y, blank_x - 1, blank_y, 
+				board_[blank_x-1][blank_y])));
 
 	if (blank_x < n_ - 1)
 		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
-			blank_x + 1, blank_y)));
+			blank_x + 1, blank_y, board_[blank_x + 1][blank_y])));
 
 	if (blank_y > 0)
 		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
-			blank_x, blank_y - 1)));
+			blank_x, blank_y - 1, board_[blank_x][blank_y-1])));
 
 	if (blank_y < n_ - 1)
 		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
-			blank_x, blank_y + 1)));
+			blank_x, blank_y + 1, board_[blank_x][blank_y+1])));
 
 	return possible_moves;
 }
@@ -187,36 +202,25 @@ bool State::IsGoalState(Board& b)
 
 bool State::operator==(const State& s)
 {
-	/*
-	if (this->n_ != s.n_) return false;
-	for (int i = 0; i < n_; i++) {
-		for (int j = 0; j < n_; j++) {
-			if (board_[i][j] != s.board_[i][j])
-				return false;
-		}
-	}
-	return true;
-	*/
 	return (this->state_id_ == s.state_id_);
 }
 
 bool State::operator!=(const State& s)
 {
-	/*
-	if (this->n_ != s.n_) return true;
-	for (int i = 0; i < n_; i++) {
-		for (int j = 0; j < n_; j++) {
-			if (board_[i][j] != s.board_[i][j]) {
-				return true;
-			}
-		}
-	}
-	return false;
-	*/
 	return (this->state_id_ != s.state_id_);
 }
 
-void State::MoveBlank(const Move& m)
+bool State::operator>(const State& s)
+{
+	return this->cost_ > s.cost_;
+}
+
+bool State::operator<(const State& s)
+{
+	return this->cost_ < s.cost_;
+}
+
+int State::MoveBlank(const Move& m)
 {
 	int start_x = m.GetStartPoint().GetX();
 	int start_y = m.GetStartPoint().GetY();
@@ -225,9 +229,12 @@ void State::MoveBlank(const Move& m)
 	int end_y = m.GetEndPoint().GetY();
 
 	board_[start_x][start_y] = board_[end_x][end_y];
+	int cost = board_[end_x][end_y];
 	board_[end_x][end_y] = 0;
 	blank_.SetX(end_x);
 	blank_.SetY(end_y);
+
+	return cost;
 }
 
 void State::ReverseMove(const Move& m)
@@ -242,4 +249,13 @@ void State::ReverseMove(const Move& m)
 	board_[start_x][start_y] = 0;
 	blank_.SetX(start_x);
 	blank_.SetY(start_y);
+}
+
+unsigned long State::GetTotalCostToThisState()
+{
+	unsigned long total_cost = 0;
+	for (auto move : this->moves_) {
+		total_cost += move.GetCost();
+	}
+	return total_cost;
 }

@@ -3,21 +3,34 @@
 
 #include "../Model/board.h"
 #include "../Model/utils.hpp"
+
 #include <assert.h>
+#include <queue>
 
 namespace Test
 {
+
+	class StateComparator
+	{
+	public:
+		bool operator() (State* s1, State* s2)
+		{
+			return *s1 > *s2;
+		}
+	};
+
 	void ExtremelyEasyTest()
 	{
 		printf("Extremely easy problem:\n");
 		Board b(3, true);
-		PuzzleController controller(&b, new Bfs());
+		PuzzleController controller(&b, new Ucs());
 		printf("%s\n", b.CurrentBoardToString().c_str());
 		controller.Solve();
 	}
 
 	void EasyTest()
 	{
+		printf("Easy problem:\n");
 		int** ez = new int* [3];
 		for (int i = 0; i < 3; i++)
 			ez[i] = new int[3];
@@ -33,7 +46,7 @@ namespace Test
 		ez[1][1] = 8;
 
 		Board b_ez(ez, 3);
-		PuzzleController controller_ez(&b_ez, new Bfs());
+		PuzzleController controller_ez(&b_ez, new Ucs());
 		printf("%s\n", b_ez.CurrentBoardToString().c_str());
 		controller_ez.Solve();
 		//DeleteIntArray(ez, 3);
@@ -51,7 +64,6 @@ namespace Test
 		for (int i = 0; i < 3; i++)
 			ez1[i] = new int[3];
 
-
 		ez1[0][0] = 1;
 		ez1[0][1] = 3;
 		ez1[0][2] = 4;
@@ -63,7 +75,7 @@ namespace Test
 		ez1[1][1] = 6;
 
 		Board b_ez1(ez1, 3);
-		PuzzleController controller_ez1(&b_ez1, new Bfs());
+		PuzzleController controller_ez1(&b_ez1, new Ucs());
 		printf("%s\n", b_ez1.CurrentBoardToString().c_str());
 		controller_ez1.Solve();
 		DeleteIntArray(ez1, 3);
@@ -127,13 +139,78 @@ namespace Test
 		DeleteIntArray(h, 3);
 	}
 
+	void ExtremelyHardProblem()
+	{
+		printf("\nRandom problem.\n");
+
+		Board b_random(3, false);
+		PuzzleController controller_random(&b_random, new Bfs());
+		printf("%s\n", b_random.CurrentBoardToString().c_str());
+		controller_random.Solve();
+	}
+
+	void PriorityQueueComparingStates()
+	{
+		Board b_random(3, false);
+		Board b_random1(3, true);
+		State s1(b_random);
+		State s2(b_random1);
+		s1.SetCost(3);
+		s2.SetCost(4);
+		assert(s1 < s2);
+		assert(s1 > s2 == false);
+		assert((s1 == s2) == false);
+
+
+		State* s3 = new State(b_random);
+		State* s4 = new State(b_random);
+		State* s5 = new State(b_random);
+		State* s6 = new State(b_random);
+
+		s3->SetCost(3);
+		s4->SetCost(4);
+		s5->SetCost(6);
+		s6->SetCost(0);
+		std::priority_queue<State*, std::vector<State*>, StateComparator > pq;
+
+		pq.push(s4);
+		pq.push(s6);
+		pq.push(s3);
+		pq.push(s5);
+
+		assert(!pq.empty());
+
+		State* tmp_s = pq.top();
+		pq.pop();
+		assert(tmp_s->GetCostToThisState() == 0);
+
+		tmp_s = pq.top();
+		pq.pop();
+		assert(tmp_s->GetCostToThisState() == 3);
+
+		tmp_s = pq.top();
+		pq.pop();
+		assert(tmp_s->GetCostToThisState() == 4);
+
+		tmp_s = pq.top();
+		pq.pop();
+		assert(tmp_s->GetCostToThisState() == 6);
+
+		delete s3;
+		delete s4;
+		delete s5;
+		delete s6;
+	}
+
 	void RunTests()
 	{
+		PriorityQueueComparingStates();
 		ExtremelyEasyTest();
 		EasyTest();
 		EasyTest3();
-		MediumTest();
-		HardTest();
+		//MediumTest();
+		//HardTest();
+		//ExtremelyHardProblem();
 	}
 }
 

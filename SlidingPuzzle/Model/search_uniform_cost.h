@@ -1,32 +1,40 @@
 /*
 * Implementation of breadth first search alogrithm.
-* 
+*
 */
 
-#ifndef SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
-#define SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
+#ifndef SLIDING_PUZZLE_MODEL_SEARCH_UNIFORM_COST_H_
+#define SLIDING_PUZZLE_MODEL_SEARCH_UNIFORM_COST_H_
 
 #include <queue>
 #include <set>
 #include <chrono>
-
 
 #include "board.h"
 #include "state.h"
 #include "utils.hpp"
 
 
-class Bfs : public ISearch
+class StateComparator
 {
 public:
-	Bfs() = default;
+	bool operator() (State* s1, State* s2)
+	{
+		return *s1 > *s2;
+	}
+};
+
+class Ucs : public ISearch
+{
+public:
+	Ucs() = default;
 
 	void Execute(Board* b)
 	{
 		using sec = std::chrono::seconds;
 		auto start = std::chrono::high_resolution_clock::now();
 
-		std::queue<State*> states_queue;
+		std::priority_queue<State*, std::vector<State*>, StateComparator> states_queue;
 		std::set<std::string> visited;
 
 		// Mark the current state as visited.
@@ -34,20 +42,22 @@ public:
 		visited.insert(init_state->GetStateId());
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
-
+		
 		std::vector<State*>* cur_possible_states = nullptr;
 		State* cur_state = nullptr;
 		State* cur_visited_state = nullptr;
 
 		while (!states_queue.empty()) {
 			//printf("Queue size: %lu\n", states_queue.size());
-			State* front_state = states_queue.front();
+			State* front_state = states_queue.top();
 
 			states_queue.pop();
 
 			if (front_state->IsGoalState(*b)) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
+				this->solution_cost_ = front_state->GetTotalCostToThisState();
 				printf("Total moves: %lu\n", this->solution_path_length_);
+				printf("Solution cost: %d\n", this->solution_cost_);
 				printf("%s\n", front_state->ToString().c_str());
 				break;
 			}
@@ -73,7 +83,6 @@ public:
 		}
 
 		auto finish = std::chrono::high_resolution_clock::now();
-		this->solution_cost_ = 0;
 		this->time_ = std::chrono::duration_cast<sec>(finish - start).count();
 
 		// Clean up.
@@ -83,4 +92,5 @@ public:
 
 private:
 };
-#endif // SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
+
+#endif // SLIDING_PUZZLE_MODEL_SEARCH_UNIFORM_COST_H_

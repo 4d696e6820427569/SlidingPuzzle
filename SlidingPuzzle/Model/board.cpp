@@ -128,19 +128,19 @@ std::vector<Move> Board::GetPossibleMoves()
 	int blank_y = blank_.GetY();
 
 	if (blank_x > 0)
-		possible_moves.push_back(Move(blank_x, blank_y, blank_x - 1, blank_y));
+		possible_moves.push_back(Move(blank_x, blank_y, blank_x - 1, blank_y, board_[blank_x - 1][blank_y]));
 
 	if (blank_x < n_ - 1)
 		possible_moves.push_back(Move(blank_x, blank_y,
-			blank_x + 1, blank_y));
+			blank_x + 1, blank_y, board_[blank_x + 1][blank_y]));
 
 	if (blank_y > 0)
 		possible_moves.push_back(Move(blank_x, blank_y,
-			blank_x, blank_y - 1));
+			blank_x, blank_y - 1, board_[blank_x][blank_y - 1]));
 
 	if (blank_y < n_ - 1)
 		possible_moves.push_back(Move(blank_x, blank_y,
-			blank_x, blank_y + 1));
+			blank_x, blank_y + 1, board_[blank_x][blank_y + 1]));
 	
 	return possible_moves;
 }
