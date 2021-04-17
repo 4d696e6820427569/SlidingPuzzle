@@ -4,21 +4,21 @@
 
 
 PuzzleController::PuzzleController()
-	: board_(nullptr)
+	: state_(nullptr)
 	, strategy_(nullptr)
 {
 
 }
 
-PuzzleController::PuzzleController(Board* b)
-	: board_(b)
+PuzzleController::PuzzleController(State* b)
+	: state_(b)
 	, strategy_(nullptr)
 {
 
 }
 
-PuzzleController::PuzzleController(Board* b, ISearch* s)
-	: board_(b)
+PuzzleController::PuzzleController(State* b, ISearch* s)
+	: state_(b)
 	, strategy_(s){
 
 }
@@ -28,14 +28,6 @@ PuzzleController::~PuzzleController()
 	if (strategy_ != nullptr) delete strategy_;
 }
 
-void PuzzleController::GenerateNewBoard(int n)
-{
-	if (board_ != nullptr) {
-		delete board_;
-	}
-
-	board_ = new Board(n);
-}
 
 void PuzzleController::SetStrategy(ISearch* strategy)
 {
@@ -47,24 +39,17 @@ ISearch* PuzzleController::GetStrategy() const
 	return this->strategy_;
 }
 
-/*
-void PuzzleController::MoveBlankCell(const Move& move)
+void PuzzleController::Solve()
 {
-	moves_stack_->push(move);
-	board_->MoveBlank(move);
+	this->strategy_->Execute(state_);
+}
+
+void PuzzleController::MoveBlankCell(const Move&)
+{
+	
 }
 
 void PuzzleController::UndoMoveBlankCell()
 {
-	if (!moves_stack_->empty()) { 
-		board_->ReverseMove(moves_stack_->top());
-		moves_stack_->pop();
-	}
-}
-*/
 
-
-void PuzzleController::Solve()
-{
-	this->strategy_->Execute(board_);
 }

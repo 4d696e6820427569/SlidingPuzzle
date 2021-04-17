@@ -1,19 +1,74 @@
 #include "state.h"
+#include "utils.hpp"
 
-State::State()
-	: n_(0)
+State::State(int n, bool solved)
+	: n_(n)
 	, cost_(0)
 	, board_(nullptr)
+	, solution_(nullptr)
 {
+	std::string state_id_str("");
+	board_ = new int* [n_];
 
+	// Temporary solution: Generate a random permutation of an array of size n_ * n_
+	// 	containing numbers from 0 to (n_ * n_ - 1) and copy them to the board_.
+	// 	   A better solution would be extending a random permutation of an 2d array of
+	// 	   dimension n_ x n_. But this should do for now.
+	// Masked off with 64 - bits to avoid overflow.
+	GenerateSolutionState();
+	if (solved) {
+		for (int i = 0; i < n_; i++) {
+			board_[i] = new int[n_];
+			for (int j = 0; j < n_; j++) {
+				board_[i][j] = solution_[i][j];
+				if (board_[i][j] == 0) blank_ = Point(i, j);
+			}
+		}
+	}
+	else {
+		int* random_array = RandomPermutation(n_ * n_);
+
+		// PrintIntArray(random_array, (size_t) (n_ * n_ & 0xFFFFFFFF));
+
+		for (int i = 0; i < n_; i++) {
+			board_[i] = new int[n_];
+			for (int j = 0; j < n_; j++) {
+				board_[i][j] = random_array[i * n_ + j];
+				if (random_array[i * n_ + j] == 0) blank_ = Point(i, j);
+			}
+		}
+
+		delete[] random_array;
+	}
+
+
+	// Set the state ID.
+	for (int i = 0; i < n_; i++) {
+		for (int j = 0; j < n_; j++) {
+			state_id_str.append(std::to_string(this->board_[i][j]));
+		}
+	}
+
+	this->state_id_ = state_id_str;
 }
 
 State::State(int** b, int n)
 	: n_(n)
-	, board_(b)
+	, board_(nullptr)
+	, solution_(nullptr)
 	, cost_(0)
 {
-
+	std::string state_id_str("");
+	board_ = new int* [n_];
+	for (int i = 0; i < n; i++) {
+		board_[i] = new int[n_];
+		for (int j = 0; j < n; j++) {
+			board_[i][j] = b[i][j];
+			state_id_str.append(std::to_string(this->board_[i][j]));
+		}
+	}
+	this->state_id_ = state_id_str;
+	GenerateSolutionState();
 }
 
 State::State(const Board& b, const Move& m)
@@ -42,12 +97,16 @@ State::State(const Board& b, const Move& m)
 
 	this->state_id_ = state_id_str;
 	this->moves_.push_back(m);
+	GenerateSolutionState();
 }
 
-State::State(State& s, const Move& m)
+State::State(State& s, const Move& m) 
+	: n_(s.n_)
+	, cost_(0)
+	, board_(nullptr)
+	, solution_(nullptr)
 {
 	std::string state_id_str("");
-	this->n_ = s.n_;
 	this->board_ = new int* [this->n_];
 	for (int i = 0; i < n_; i++) {
 		this->board_[i] = new int[n_];
@@ -75,6 +134,7 @@ State::State(State& s, const Move& m)
 	this->state_id_ = state_id_str;
 
 	this->moves_.push_back(m);
+	GenerateSolutionState();
 }
 
 State& State::operator=(State& s)
@@ -105,28 +165,37 @@ State& State::operator=(State& s)
 	return *this;
 }
 
-State::State(const Board& b)
+State::State(const State& b)
+	: n_(b.n_)
+	, board_(nullptr)
+	, solution_(nullptr)
+	, cost_(0)
 {
 	std::string state_id_str("");
-	this->n_ = b.Size();
 	this->board_ = new int* [this->n_];
 	for (int i = 0; i < n_; i++) {
 		this->board_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
-			this->board_[i][j] = b.GetBoard()[i][j];
+			this->board_[i][j] = b.board_[i][j];
 			if (this->board_[i][j] == 0) blank_ = Point(i, j);
 			state_id_str.append(std::to_string(this->board_[i][j]));
 		}
 	}
 	this->state_id_ = state_id_str;
+	GenerateSolutionState();
 }
 
 State::~State()
 {
-	for (int i = 0; i < this->n_; i++) {
-		delete [] board_[i];
-	}
+	for (int i = 0; i < n_; i++)
+		delete[] board_[i];
+
 	delete[] board_;
+
+	for (int i = 0; i < n_; i++)
+		delete[] solution_[i];
+
+	delete[] solution_;
 }
 
 std::vector<State*>* State::GetPossibleStatesFromBoard(Board& b)
@@ -174,7 +243,7 @@ std::vector<State*>* State::GetPossibleStates()
 }
 
 
-std::string State::ToString()
+std::string State::CurrentStateToString()
 {
 	std::string result("");
 
@@ -188,12 +257,11 @@ std::string State::ToString()
 	return result;
 }
 
-bool State::IsGoalState(Board& b)
+bool State::IsGoalState()
 {
-	int** solution = b.GetSolutionBoard();
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
-			if (board_[i][j] != solution[i][j])
+			if (board_[i][j] != solution_[i][j])
 				return false;
 		}
 	}
@@ -258,4 +326,65 @@ unsigned long State::GetTotalCostToThisState()
 		total_cost += move.GetCost();
 	}
 	return total_cost;
+}
+
+void State::GenerateSolutionState()
+{
+	int totalSize = n_ * n_;
+	int top = 0;
+	int bottom = n_ - 1;
+	int left = 0;
+	int right = n_ - 1;
+	int index = 0;
+
+	// Initialize
+	int* arr = new int[totalSize];
+	for (int i = 0; i < totalSize; i++)
+		arr[i] = i + 1;
+	arr[totalSize - 1] = 0;
+
+	// Initialize solution board if it's not already initialized.
+	solution_ = new int* [n_];
+	for (int i = 0; i < n_; i++) {
+		solution_[i] = new int[n_];
+		for (int j = 0; j < n_; j++) {
+			solution_[i][j] = 0;
+		}
+	}
+
+	while (true) {
+		if (left > right) break;
+
+		// Fill out the top row.
+		for (int i = left; i <= right; i++) {
+			solution_[top][i] = arr[index++];
+		}
+		top++;
+
+		if (top > bottom) break;
+
+		// Fil out the right column.
+		for (int i = top; i <= bottom; i++) {
+			solution_[i][right] = arr[index++];
+		}
+		right--;
+
+		if (left > right) break;
+
+		// Fill out the bottom row.
+		for (int i = right; i >= left; i--) {
+			solution_[bottom][i] = arr[index++];
+		}
+		bottom--;
+		if (top > bottom) break;
+
+		// Fill out the left column.
+		for (int i = bottom; i >= top; i--) {
+			solution_[i][left] = arr[index++];
+		}
+		left++;
+
+	}
+
+	delete[] arr;
 }

@@ -3,7 +3,7 @@
 
 #include <stack>
 
-#include "../Model/board.h"
+#include "../Model/state.h"
 #include "../Model/isearch.h"
 
 
@@ -11,8 +11,8 @@ class PuzzleController
 {
 public:
 	PuzzleController();
-	PuzzleController(Board*);
-	PuzzleController(Board*, ISearch*);
+	PuzzleController(State*);
+	PuzzleController(State*, ISearch*);
 	~PuzzleController();
 
 	// Move cells according to Move object.
@@ -23,13 +23,13 @@ public:
 	inline ISearch* GetStrategy() const;
 
 	// Generate new instance of the puzzle.
-	void GenerateNewBoard(int n = 3);
+	//void GenerateNewBoard(int n = 3);
 
 	// Solve the puzzle.
 	void Solve();
 
 private:
-	Board* board_;
+	State* state_;
 	ISearch* strategy_;
 	//std::stack<Move>* moves_stack_;
 };

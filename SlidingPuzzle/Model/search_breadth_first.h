@@ -10,8 +10,6 @@
 #include <set>
 #include <chrono>
 
-
-#include "board.h"
 #include "state.h"
 #include "utils.hpp"
 
@@ -21,7 +19,7 @@ class Bfs : public ISearch
 public:
 	Bfs() = default;
 
-	void Execute(Board* b)
+	void Execute(State* b)
 	{
 		using sec = std::chrono::seconds;
 		auto start = std::chrono::high_resolution_clock::now();
@@ -45,10 +43,10 @@ public:
 
 			states_queue.pop();
 
-			if (front_state->IsGoalState(*b)) {
+			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				printf("Total moves: %lu\n", this->solution_path_length_);
-				printf("%s\n", front_state->ToString().c_str());
+				printf("%s\n", front_state->CurrentStateToString().c_str());
 				break;
 			}
 			else {

@@ -8,7 +8,7 @@ class State
 {
 public:
 	// Constructors section.
-	State();
+	State() = delete;
 
 	// Constructor for constructing a state puzzle from a n x n
 	// 2d array.
@@ -24,7 +24,9 @@ public:
 
 	// Constructor for constructing a state puzzle from a
 	// Board.
-	State(const Board&);
+	State(const State&);
+
+	State(int n = 3, bool solved = false);
 
 	~State();
 
@@ -40,8 +42,8 @@ public:
 	void SetCost(unsigned long c) { cost_ = c; }
 
 	std::vector<State*>* GetPossibleStates();
-	bool IsGoalState(Board& b);
-	std::string ToString();
+	bool IsGoalState();
+	std::string CurrentStateToString();
 	unsigned long GetTotalCostToThisState();
 
 	static std::vector<State*>* GetPossibleStatesFromBoard(Board&);
@@ -49,6 +51,7 @@ public:
 private:
 	unsigned long cost_;
 	int** board_;
+	int** solution_;
 	int n_;
 	Point blank_;
 	std::vector<Move> moves_;
@@ -56,7 +59,7 @@ private:
 	
 	int State::MoveBlank(const Move& m);
 	void State::ReverseMove(const Move& m);
-	
+	void State::GenerateSolutionState();
 };
 
 #endif // SLIDING_PUZZLE_MODEL_STATE_H_

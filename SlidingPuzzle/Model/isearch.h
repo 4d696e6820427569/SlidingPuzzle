@@ -13,7 +13,7 @@ public:
 
 	virtual ~ISearch() = default;
 
-	virtual void Execute(Board* b) = 0;
+	virtual void Execute(State* b) = 0;
 
 	virtual unsigned int GetSolutionPathLength() { return solution_path_length_; }
 	virtual unsigned int GetSolutionCost() { return solution_cost_; }

@@ -5,13 +5,6 @@
 #define DEBUG 1
 #include <stdlib.h>
 #include <crtdbg.h>
-
-#include "./Controller/puzzle_controller.h"
-#include "./Model/search_breadth_first.h"
-#include "./Model/isearch.h"
-#include "./Model/search_depth_first.h"
-#include "./Model/search_uniform_cost.h"
-#include "./Model/utils.hpp"
 #include "./Tests/puzzle_tests.hpp"
 
 int main()

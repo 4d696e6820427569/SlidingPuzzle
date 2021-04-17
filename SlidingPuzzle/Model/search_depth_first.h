@@ -20,7 +20,7 @@ class Dfs : public ISearch
 public:
 	Dfs() = default;
 
-	void Execute(Board * b)
+	void Execute(State * b)
 	{
 		using sec = std::chrono::seconds;
 		auto start = std::chrono::high_resolution_clock::now();
@@ -43,7 +43,7 @@ public:
 			
 			State* cur_state;
 			State* cur_visited_state = nullptr;
-			if (front_state->IsGoalState(*b)) {
+			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				printf("Total moves: %d\n", this->solution_path_length_);
 				break;
