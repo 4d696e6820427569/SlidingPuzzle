@@ -43,7 +43,7 @@ public:
 		State* init_state = new State(*b);
 
 		// Mark the current state as visited.
-		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetNumberOfMisplacedTiles()));
+		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 
@@ -73,7 +73,7 @@ public:
 					cur_state = cur_possible_states->at(i);
 
 					std::string cur_state_id = cur_state->GetStateId();
-					unsigned long total_cost_to_cur_state = cur_state->GetNumberOfMisplacedTiles();
+					unsigned long total_cost_to_cur_state = cur_state->GetTotalCostToThisState();
 
 					auto visited_it = visited_and_cost.find(cur_state->GetStateId());
 
@@ -81,26 +81,33 @@ public:
 						// If it's not in the map.
 						visited_and_cost.insert(std::make_pair(cur_state_id, total_cost_to_cur_state));
 						states_queue.push(cur_state);
-						if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
+						
 						states_to_free[i] = false;
 					}
 					else {
 						// If it's in the visited map, check if the cost of the visited state is larger than
 						// the expanded state's total cost. If it's larger, push the expanded state onto the stack.
-						//if (visited_it->second > total_cost_to_cur_state) {
-						//	visited_and_cost[visited_it->first] = total_cost_to_cur_state;
-						//	states_queue.push(cur_state);
-						//	if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
-						//	states_to_free[i] = false;
-						//}
+						if (visited_it->second > total_cost_to_cur_state) {
+							visited_and_cost[visited_it->first] = total_cost_to_cur_state;
+							states_queue.push(cur_state);
+							states_to_free[i] = false;
+						}
 					}
-					for (int i = 0; i < cur_possible_states->size(); i++) {
-						if (states_to_free[i]) delete cur_possible_states->at(i);
-					}
-					delete cur_possible_states;
+
 				}
-				delete front_state;
+
+				// Update the maximum queue size.
+				if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
+
+				// Free-ing up irrelevant states.
+				for (int i = 0; i < cur_possible_states->size(); i++) {
+					if (states_to_free[i]) delete cur_possible_states->at(i);
+				}
+				delete cur_possible_states;
+
 			}
+
+			delete front_state;
 		}
 
 		auto finish = std::chrono::high_resolution_clock::now();

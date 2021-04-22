@@ -21,6 +21,7 @@ class ManhattanDistancesHeuristic
 public:
 	bool operator() (State* s1, State* s2)
 	{
+		//printf("%f %f\n", s1->SumOfManhattanDistances(), s2->SumOfManhattanDistances());
 		return s1->SumOfManhattanDistances() > s2->SumOfManhattanDistances();
 	}
 };
@@ -69,19 +70,6 @@ public:
 
 					cur_state = cur_possible_states->at(i);
 
-					// Check if it's already visited. If it is, don't add it to the queue.
-					//auto visited_it = visited.find(cur_state->GetStateId());
-
-					//auto visited_it_map = visited_and_cost.find(cur_state->GetStateId());
-					//if (visited _it != visited.end()) {
-					//	// If this state has been visited, check for the current expanded state's cost.
-					//	// If it's less than the visited one's cost, add it to the priority queue.
-					//}
-					//else {
-					//	visited.insert(cur_state->GetStateId());
-					//	states_queue.push(cur_state);
-					//	if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
-					//}
 					std::string cur_state_id = cur_state->GetStateId();
 					unsigned long total_cost_to_cur_state = cur_state->SumOfManhattanDistances();
 
@@ -91,7 +79,6 @@ public:
 						// If it's not in the visited map.
 						visited_and_cost.insert(std::make_pair(cur_state_id, total_cost_to_cur_state));
 						states_queue.push(cur_state);
-						if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
 						states_to_free[i] = false;
 					}
 					else {
@@ -100,12 +87,15 @@ public:
 						if (visited_it->second > total_cost_to_cur_state) {
 							visited_and_cost[visited_it->first] = total_cost_to_cur_state;
 							states_queue.push(cur_state);
-							if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
 							states_to_free[i] = false;
 						}
 					}
 				}
+
+				// Update the maximum queue size.
+				if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
 				
+				// Free-ing up the states that are irrelevant.
 				for (int i = 0; i < cur_possible_states->size(); i++) {
 					if (states_to_free[i]) delete cur_possible_states->at(i);
 				}
