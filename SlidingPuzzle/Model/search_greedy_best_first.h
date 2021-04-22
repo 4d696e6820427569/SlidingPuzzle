@@ -43,7 +43,8 @@ public:
 		State* init_state = new State(*b);
 
 		// Mark the current state as visited.
-		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
+		//visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
+		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetNumberOfMisplacedTiles()));
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 
@@ -73,7 +74,8 @@ public:
 					cur_state = cur_possible_states->at(i);
 
 					std::string cur_state_id = cur_state->GetStateId();
-					unsigned long total_cost_to_cur_state = cur_state->GetTotalCostToThisState();
+					//unsigned long total_cost_to_cur_state = cur_state->GetTotalCostToThisState();
+					unsigned long total_cost_to_cur_state = cur_state->GetNumberOfMisplacedTiles();
 
 					auto visited_it = visited_and_cost.find(cur_state->GetStateId());
 

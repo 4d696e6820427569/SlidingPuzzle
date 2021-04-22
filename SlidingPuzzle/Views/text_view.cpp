@@ -58,8 +58,9 @@ void TextView::Run()
 			printf("1. Breadth first search\n");
 			printf("2. Depth first search\n");
 			printf("3. Uniform cost search\n");
-			printf("4. A* Search\n");
-			printf("5. Greedy best first search\n");
+			printf("4. Greedy best first search\n");
+			printf("5. A* Search with No. of misplaced tiles as heuristic\n");
+			printf("6. A* Search with Sum of Manhattan distances of tiles as heuristic\n");
 
 			while (strategy[0] <= '0' || strategy[1] >= '6') {
 				std::cin >> strategy;
@@ -74,10 +75,13 @@ void TextView::Run()
 					puzzle_controller_->SetStrategy("UCS");
 					break;
 				case '4':
-					puzzle_controller_->SetStrategy("AStarS");
+					puzzle_controller_->SetStrategy("GBFS");
 					break;
 				case '5':
-					puzzle_controller_->SetStrategy("GBFS");
+					puzzle_controller_->SetStrategy("AStar1");
+					break;
+				case '6':
+					puzzle_controller_->SetStrategy("AStar2");
 					break;
 				default:
 					break;

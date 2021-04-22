@@ -16,31 +16,57 @@
 #include "utils.hpp"
 #include "isearch.h"
 
-class ManhattanDistancesHeuristic
+class ManhattanDistancesHeuristic1
+{
+public:
+	bool operator() (State* s1, State* s2)
+	{
+		return (s1->GetTotalCostToThisState() + s1->GetNumberOfMisplacedTiles()) >
+			(s2->GetTotalCostToThisState() +
+				s2->GetNumberOfMisplacedTiles());
+	}
+};
+
+
+class ManhattanDistancesHeuristic2
 {
 public:
 	bool operator() (State* s1, State* s2)
 	{
 		//printf("%f %f\n", s1->SumOfManhattanDistances(), s2->SumOfManhattanDistances());
-		return s1->SumOfManhattanDistances() > s2->SumOfManhattanDistances();
+		return (s1->GetTotalCostToThisState() + s1->SumOfManhattanDistances()) > 
+			(s2->GetTotalCostToThisState() +
+			s2->SumOfManhattanDistances());
 	}
 };
 
 class AStarSearch : public ISearch
 {
 public:
-	AStarSearch() = default;
-	void Execute( State* b)
+	AStarSearch(bool useTwoStars): twoStars_(useTwoStars) {}
+
+	void Execute( State* b )
 	{
 		using sec = std::chrono::seconds;
 		auto start = std::chrono::high_resolution_clock::now();
 
-		std::priority_queue<State*, std::vector<State*>, ManhattanDistancesHeuristic> states_queue;
+
+		std::priority_queue<State*, std::vector<State*>, ManhattanDistancesHeuristic1> states_queue;
+
+		if (twoStars_)
+			std::priority_queue<State*, std::vector<State*>, ManhattanDistancesHeuristic2> states_queue;
+
 		std::unordered_map<std::string, unsigned long> visited_and_cost;
 
 		// Mark the current state as visited.
 		State* init_state = new State(*b);
-		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->SumOfManhattanDistances()));
+
+		if (twoStars_)
+			visited_and_cost.insert(std::make_pair(init_state->GetStateId(), 
+				init_state->GetTotalCostToThisState() + init_state->SumOfManhattanDistances()));
+		else
+			visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState() 
+			+ init_state->SumOfManhattanDistances()));
 
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
@@ -71,7 +97,13 @@ public:
 					cur_state = cur_possible_states->at(i);
 
 					std::string cur_state_id = cur_state->GetStateId();
-					unsigned long total_cost_to_cur_state = cur_state->SumOfManhattanDistances();
+
+					unsigned long total_cost_to_cur_state = 0;
+					if (twoStars_)
+						total_cost_to_cur_state =
+						cur_state->GetTotalCostToThisState() + cur_state->SumOfManhattanDistances();
+					else
+						total_cost_to_cur_state = cur_state->GetTotalCostToThisState() + cur_state->GetNumberOfMisplacedTiles();
 
 					auto visited_it = visited_and_cost.find(cur_state->GetStateId());
 
@@ -118,6 +150,7 @@ public:
 		if (!solution_found_) printf("Failure.\n");
 	}
 private:
+	bool twoStars_;
 	void AStarSearch::PrintExecutionStats(State* goal)
 	{
 		printf("Total moves: %lu\n", this->solution_path_length_);

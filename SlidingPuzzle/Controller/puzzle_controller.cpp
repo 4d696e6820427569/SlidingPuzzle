@@ -13,10 +13,11 @@ PuzzleController::PuzzleController()
 	strategies_["BFS"] = new Bfs();
 	strategies_["DFS"] = new Dfs();
 	strategies_["UCS"] = new Ucs();
-	strategies_["AStarS"] = new AStarSearch();
+	strategies_["AStar1"] = new AStarSearch(false);
+	strategies_["AStar2"] = new AStarSearch(true);
 	strategies_["GBFS"] = new GreedyBestFirst();
-	strategy_ = strategies_["AStarS"];
-	cur_strategy_ = "AStarS";
+	strategy_ = strategies_["AStar2"];
+	cur_strategy_ = "AStar2";
 }
 
 PuzzleController::PuzzleController(State* b)
@@ -26,10 +27,11 @@ PuzzleController::PuzzleController(State* b)
 	strategies_["BFS"] = new Bfs();
 	strategies_["DFS"] = new Dfs();
 	strategies_["UCS"] = new Ucs();
-	strategies_["AStarS"] = new AStarSearch();
+	strategies_["AStar1"] = new AStarSearch(false);
+	strategies_["AStar2"] = new AStarSearch(true);
 	strategies_["GBFS"] = new GreedyBestFirst();
-	strategy_ = strategies_["AStarS"];
-	cur_strategy_ = "AStarS";
+	strategy_ = strategies_["AStar2"];
+	cur_strategy_ = "AStar2";
 }
 
 PuzzleController::~PuzzleController()
@@ -68,6 +70,8 @@ void PuzzleController::SetStrategy(std::string strategy)
 		cur_strategy_ = strategy;
 	}
 }
+
+
 
 std::string PuzzleController::AvailableStrategies()
 {
