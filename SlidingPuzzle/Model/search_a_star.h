@@ -9,6 +9,8 @@
 #include <queue>
 #include <unordered_map>
 #include <chrono>
+#include <utility>  
+
 
 #include "state.h"
 #include "utils.hpp"
@@ -54,11 +56,8 @@ public:
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				this->solution_cost_ = front_state->GetTotalCostToThisState();
-				printf("Total moves: %lu\n", this->solution_path_length_);
-				printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
-				printf("Solution cost: %d\n", this->solution_cost_);
-				printf("Final state: \n");
-				printf("%s\n", front_state->CurrentStateToString().c_str());
+				this->solution_found_ = true;
+				this->PrintExecutionStats(front_state);
 				delete front_state;
 				break;
 			}
@@ -126,7 +125,16 @@ public:
 			states_queue.pop();
 			delete tmp;
 		}
+		if (!solution_found_) printf("Failure.\n");
 	}
 private:
+	void AStarSearch::PrintExecutionStats(State* goal)
+	{
+		printf("Total moves: %lu\n", this->solution_path_length_);
+		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
+		printf("Solution cost: %d\n", this->solution_cost_);
+		printf("Final state: \n");
+		printf("%s\n", goal->CurrentStateToString().c_str());
+	}
 };
 #endif // EIGHT_PUZZLE_MODEL_SEARCH_A_STAR_H_

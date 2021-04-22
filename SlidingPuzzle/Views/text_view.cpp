@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "text_view.h"
 #include "../Tests/board_tests.hpp"
 
@@ -9,14 +11,14 @@ TextView::TextView()
 }
 
 TextView::TextView(PuzzleController* c, State* is)
-	: puzzle_controler_(c)
+	: puzzle_controller_(c)
 	, init_state_(is)
 {
 
 }
 
 TextView::TextView(PuzzleController* c)
-	: puzzle_controler_(c)
+	: puzzle_controller_(c)
 	, init_state_(nullptr)
 {
 
@@ -32,49 +34,50 @@ TextView::~TextView()
 void TextView::Run()
 {
 
-	PrintUsage();
-
+	PrintHeader();
 
 	std::string cmd;
 	std::string strategy;
+	std::string custom;
 
 	while (cmd != "quit") {
-		printf("Available commands: \n");
-		printf("1. Set strategy. The default strategy is A* search.\n");
+		printf("\nAvailable commands: \n");
+		printf("1. Set strategy. Current strategy: ");
+		printf("%s\n", puzzle_controller_->GetCurrentStrategy().c_str());
 		printf("2. Run easy test case: 1 3 4 8 6 2 7 0 5\n");
 		printf("3. Run medium test case: 2 8 1 0 4 3 7 6 5\n");
 		printf("4. Run hard test case: 5 6 7 4 0 8 3 2 1\n");
 		printf("5. Run custom test case.\n");
 		printf("6. Quit\n");
-		
+
 		std::cin >> cmd;
 
 		switch (cmd[0]) {
 		case '1':
-			printf("Available strategies:\n");
+			printf("\nAvailable strategies:\n");
 			printf("1. Breadth first search\n");
 			printf("2. Depth first search\n");
 			printf("3. Uniform cost search\n");
 			printf("4. A* Search\n");
 			printf("5. Greedy best first search\n");
-			
+
 			while (strategy[0] <= '0' || strategy[1] >= '6') {
 				std::cin >> strategy;
 				switch (strategy[0]) {
 				case '1':
-					controller_->SetStrategy("BFS");
+					puzzle_controller_->SetStrategy("BFS");
 					break;
 				case '2':
-					controller_->SetStrategy("DFS");
+					puzzle_controller_->SetStrategy("DFS");
 					break;
 				case '3':
-					controller_->SetStrategy("UCS");
+					puzzle_controller_->SetStrategy("UCS");
 					break;
 				case '4':
-					controller_->SetStrategy("AStarS");
+					puzzle_controller_->SetStrategy("AStarS");
 					break;
 				case '5':
-					controller_->SetStrategy("GBFS");
+					puzzle_controller_->SetStrategy("GBFS");
 					break;
 				default:
 					break;
@@ -82,27 +85,30 @@ void TextView::Run()
 			}
 			break;
 		case '2':
-			Test::EasyTest(puzzle_controller_);
+			Test::EasyTest(*puzzle_controller_);
 			break;
 		case '3':
-			Test::MediumWebTest(puzzle_controller_);
+			Test::MediumWebTest(*puzzle_controller_);
 			break;
-		}
+
 		case '4':
-			Test::HardWebTest(puzzle_controller_);
+			Test::HardWebTest(*puzzle_controller_);
 			break;
 		case '5':
 			PrintUsage();
-			std::string custom;
 			std::cin >> custom;
-			Test::CustomProblem(puzzle_controller_, custom);
+			Test::CustomProblem(*puzzle_controller_, custom);
 			break;
 		case '6':
 			return;
 		default:
 			break;
+		}
+
+		cmd = "";
+		strategy = "";
+
 	}
-	
 }
 
 void TextView::PrintHeader()

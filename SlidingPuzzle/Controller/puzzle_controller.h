@@ -27,10 +27,14 @@ public:
 	void SetState(State* s);
 
 	std::string AvailableStrategies();
+	std::string GetCurrentStrategy() {
+		return cur_strategy_;
+	}
 
 private:
 	State* state_;
 	ISearch* strategy_;
+	std::string cur_strategy_;
 	std::unordered_map<std::string, ISearch*> strategies_;
 };
 

@@ -27,6 +27,9 @@ public:
 		std::queue<State*> states_queue;
 		std::set<std::string> visited;
 
+		// Another separate set that contains state's IDs that are currently in states_queue.
+		std::set<std::string> states_stack_ids;
+
 		// Mark the current state as visited.
 		State* init_state = new State(*b);
 		visited.insert(init_state->GetStateId());
@@ -38,16 +41,14 @@ public:
 		State* cur_visited_state = nullptr;
 
 		while (!states_queue.empty()) {
-			//printf("Queue size: %lu\n", states_queue.size());
 			State* front_state = states_queue.front();
 
 			states_queue.pop();
 
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
-				printf("Total moves: %lu\n", this->solution_path_length_);
-				printf("Final state: \n");
-				printf("%s\n", front_state->CurrentStateToString().c_str());
+				this->solution_found_ = true;
+				this->PrintExecutionStats(front_state);
 				delete front_state;
 				break;
 			}
@@ -79,13 +80,12 @@ public:
 			delete front_state;
 		}
 
+
+		// Stop the timer.
 		auto finish = std::chrono::high_resolution_clock::now();
 		this->solution_cost_ = 0;
 		this->time_ = std::chrono::duration_cast<sec>(finish - start).count();
 
-		// Clean up.
-		//DeleteObjectsVector(*cur_possible_states);
-		//DeleteObjectsVector(visited);
 		// Clean up.
 		State* tmp = nullptr;
 		while (!states_queue.empty()) {
@@ -93,8 +93,15 @@ public:
 			states_queue.pop();
 			delete tmp;
 		}
+		if (!solution_found_) printf("Failure.\n");
 	}
 
 private:
+	void Bfs::PrintExecutionStats(State* goal)
+	{
+		printf("Total moves: %d\n", this->solution_path_length_);
+		printf("Final state: \n");
+		printf("%s\n", goal->CurrentStateToString().c_str());
+	}
 };
 #endif // SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_

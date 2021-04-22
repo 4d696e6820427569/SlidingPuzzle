@@ -8,6 +8,7 @@
 
 #include "../Controller/puzzle_controller.h"
 #include "../Model/state.h"
+#include "iview.h"
 
 class TextView : public IView
 {
@@ -19,9 +20,8 @@ public:
 
 	void Run();
 
-	
 private:
-	PuzzleController *controller_;
+	PuzzleController *puzzle_controller_;
 	State* init_state_;
 
 	void PrintUsage();

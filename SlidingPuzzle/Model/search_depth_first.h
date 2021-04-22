@@ -12,6 +12,7 @@
 #include <thread>
 #include <algorithm>
 #include <set>
+#include <deque>
 
 #include "move.hpp"
 #include "utils.hpp"
@@ -29,28 +30,37 @@ public:
 
 		std::stack<State*> states_stack;
 		std::set<std::string> visited;
+
+		// Another separate set that contains state's IDs that are currently in states_stack.
+		std::set<std::string> states_stack_ids;
 		
 		states_stack.push(new State(*b));
+		states_stack_ids.insert(states_stack.top()->GetStateId());
 		this->queue_size_ = 1;
 
 		std::vector<State*>* cur_possible_states;
 		State* front_state = nullptr;
 		
 		while (!states_stack.empty()) {		
-			//printf("Stack size: %d\n", static_cast<int>(states_stack.size()));
+			
+			// Pop the top state pointer.
 			front_state = states_stack.top();
-
 			states_stack.pop();
+			
+			// Need to also pop the corresponding state ID from the states_stack_ids.
+			auto popping_id = states_stack_ids.find(front_state->GetStateId());
+			states_stack_ids.erase(popping_id);
 
+			// Insert into visited.
 			visited.insert(front_state->GetStateId());
 			
 			State* cur_state;
 			State* cur_visited_state = nullptr;
+
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
-				printf("Total moves: %d\n", this->solution_path_length_);
-				printf("Final state: \n");
-				printf("%s\n", front_state->CurrentStateToString().c_str());
+				this->solution_found_ = true;
+				this->PrintExecutionStats(front_state);
 				delete front_state;
 				break;
 			}
@@ -64,16 +74,29 @@ public:
 					cur_state = cur_possible_states->at(i);
 
 					auto cur_visited_state = visited.find(cur_state->GetStateId());
-					if (cur_visited_state != visited.end()) {
+					auto state_id_is_on_stack = states_stack_ids.find(cur_state->GetStateId());
+					
+					// Check if it's already visited OR if it's currently on the stack.
+					if (cur_visited_state != visited.end() ||
+						state_id_is_on_stack != states_stack_ids.end()) {
 
 					}
 					else {
+						// Push the state on the stack states.
 						states_stack.push(cur_state);
+
+						// Also push the state's ID on the stack IDs
+						states_stack_ids.insert(cur_state->GetStateId());
+
+						// Update the maximum queue/stack size.
 						if (states_stack.size() > this->queue_size_) this->queue_size_ = states_stack.size();
+
+						// Mark this state to not be freed.
 						states_to_free[i] = false;
 					}
 				}
 
+				// Free-ing up the states that are irrelevant.
 				for (int i = 0; i < cur_possible_states->size(); i++) {
 					if (states_to_free[i]) delete cur_possible_states->at(i);
 				}
@@ -84,21 +107,28 @@ public:
 
 		this->solution_cost_ = 0;
 		
+		// Stop the timer.
 		auto finish = std::chrono::high_resolution_clock::now();
 		this->solution_cost_ = 0;
 		this->time_ = std::chrono::duration_cast<sec>(finish - start).count();
 
-		// Clean up.
-		//DeleteObjectsVector(*cur_possible_states);
-		//DeleteObjectsVector(visited);
-		// Clean up.
-		
+		// Clean up.		
 		State* tmp = nullptr;
 		while (!states_stack.empty()) {
 			tmp = states_stack.top();
 			states_stack.pop();
 			delete tmp;
 		}
+
+		if (!solution_found_) printf("Failure.\n");
+	}
+
+private:
+	void Dfs::PrintExecutionStats(State* goal)
+	{
+		printf("Total moves: %d\n", this->solution_path_length_);
+		printf("Final state: \n");
+		printf("%s\n", goal->CurrentStateToString().c_str());		
 	}
 
 };

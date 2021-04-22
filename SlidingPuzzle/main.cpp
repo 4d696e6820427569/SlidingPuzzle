@@ -5,7 +5,7 @@
 #define DEBUG 1
 #include <stdlib.h>
 #include <crtdbg.h>
-#include "./Tests/puzzle_tests.hpp"
+
 #include "Views/iview.h"
 #include "Views/text_view.h"
 

@@ -10,8 +10,14 @@
 class IView
 {
 public:
-	virtual ~IView() = 0;
-	virtual void Run() = 0;
+	virtual ~IView() {};
+	// Forbid copying
+	IView(IView const&) = delete;
+	IView& operator=(IView const&) = delete;
+
+protected:
+	IView() {};
+
 private:
 };
 

@@ -10,6 +10,7 @@
 #include <queue>
 #include <unordered_map>
 #include <chrono>
+#include <utility>  
 
 #include "state.h"
 #include "isearch.h"
@@ -36,14 +37,12 @@ public:
 		auto start = std::chrono::high_resolution_clock::now();
 
 		std::priority_queue<State*, std::vector<State*>, MisplacedTilesHeuristic> states_queue;
-		//std::set<std::string> visited;
 
 		std::unordered_map<std::string, unsigned long> visited_and_cost;
 
-		// Mark the current state as visited.
 		State* init_state = new State(*b);
-		//visited.insert(init_state->GetStateId());
 
+		// Mark the current state as visited.
 		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetNumberOfMisplacedTiles()));
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
@@ -55,17 +54,13 @@ public:
 
 		while (!states_queue.empty()) {
 			front_state = states_queue.top();
-
 			states_queue.pop();
 
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				this->solution_cost_ = front_state->GetTotalCostToThisState();
-				printf("Total moves: %lu\n", this->solution_path_length_);
-				printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
-				printf("Solution cost: %d\n", this->solution_cost_);
-				printf("Final state: \n");
-				printf("%s\n", front_state->CurrentStateToString().c_str());
+				this->solution_found_ = true;
+				this->PrintExecutionStats(front_state);
 				delete front_state;
 				break;
 			}
@@ -76,21 +71,6 @@ public:
 				for (int i = 0; i < cur_possible_states->size(); i++) {
 
 					cur_state = cur_possible_states->at(i);
-
-					// Check if it's already visited. If it is, don't add it to the queue.
-					//auto visited_it = visited.find(cur_state->GetStateId());
-
-					//auto visited_it_map = visited_and_cost.find(cur_state->GetStateId());
-					//if (visited_it != visited.end()) {
-					//	// If this state has been visited, check for the current expanded state's cost.
-					//	// If it's less than the visited one's cost, add it to the priority queue.
-					//}
-					//else {
-					//	visited.insert(cur_state->GetStateId());
-					//	states_queue.push(cur_state);
-					//	if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
-					//}
-
 
 					std::string cur_state_id = cur_state->GetStateId();
 					unsigned long total_cost_to_cur_state = cur_state->GetNumberOfMisplacedTiles();
@@ -137,9 +117,18 @@ public:
 			states_queue.pop();
 			delete tmp;
 		}
-		printf("Failure\n");
+		if (!solution_found_) printf("Failure.\n");
 	}
 
 private:
+	void GreedyBestFirst::PrintExecutionStats(State* goal)
+	{
+		printf("Total moves: %lu\n", this->solution_path_length_);
+		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
+		printf("Solution cost: %d\n", this->solution_cost_);
+		printf("Final state: \n");
+		printf("%s\n", goal->CurrentStateToString().c_str());
+	}
+
 };
 #endif // SLIDING_PUZZLE_MODEL_SEARCH_GREEDY_BEST_FIRST_H_

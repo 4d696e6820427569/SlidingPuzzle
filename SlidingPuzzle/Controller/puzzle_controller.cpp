@@ -16,6 +16,7 @@ PuzzleController::PuzzleController()
 	strategies_["AStarS"] = new AStarSearch();
 	strategies_["GBFS"] = new GreedyBestFirst();
 	strategy_ = strategies_["AStarS"];
+	cur_strategy_ = "AStarS";
 }
 
 PuzzleController::PuzzleController(State* b)
@@ -28,6 +29,7 @@ PuzzleController::PuzzleController(State* b)
 	strategies_["AStarS"] = new AStarSearch();
 	strategies_["GBFS"] = new GreedyBestFirst();
 	strategy_ = strategies_["AStarS"];
+	cur_strategy_ = "AStarS";
 }
 
 PuzzleController::~PuzzleController()
@@ -40,7 +42,6 @@ PuzzleController::~PuzzleController()
 
 void PuzzleController::SetState(State* s)
 {
-	if (state_ != nullptr) delete state_;
 	state_ = s;
 }
 
@@ -64,6 +65,7 @@ void PuzzleController::SetStrategy(std::string strategy)
 {
 	if (this->strategies_.find(strategy) != this->strategies_.end()) {
 		this->strategy_ = this->strategies_[strategy];
+		cur_strategy_ = strategy;
 	}
 }
 

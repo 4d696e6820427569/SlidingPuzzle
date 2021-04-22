@@ -2,14 +2,14 @@
 #define State_TESTS_H_
 
 #include "../Model/utils.hpp"
-#include "./Controller/puzzle_controller.h"
-#include "./Model/isearch.h"
-#include "./Model/search_breadth_first.h"
-#include "./Model/search_depth_first.h"
-#include "./Model/search_uniform_cost.h"
-#include "./Model/search_greedy_best_first.h"
-#include "./Model/search_a_star.h"
-#include "./Model/search_iterative_deepening.h"
+#include "../Controller/puzzle_controller.h"
+#include "../Model/isearch.h"
+#include "../Model/search_breadth_first.h"
+#include "../Model/search_depth_first.h"
+#include "../Model/search_uniform_cost.h"
+#include "../Model/search_greedy_best_first.h"
+#include "../Model/search_a_star.h"
+#include "../Model/search_iterative_deepening.h"
 
 #include <assert.h>
 #include <queue>
