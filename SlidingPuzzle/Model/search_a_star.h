@@ -74,7 +74,7 @@ public:
 					//auto visited_it = visited.find(cur_state->GetStateId());
 
 					//auto visited_it_map = visited_and_cost.find(cur_state->GetStateId());
-					//if (visited_it != visited.end()) {
+					//if (visited _it != visited.end()) {
 					//	// If this state has been visited, check for the current expanded state's cost.
 					//	// If it's less than the visited one's cost, add it to the priority queue.
 					//}
@@ -106,10 +106,11 @@ public:
 						}
 					}
 				}
-
+				
 				for (int i = 0; i < cur_possible_states->size(); i++) {
 					if (states_to_free[i]) delete cur_possible_states->at(i);
 				}
+				
 				delete cur_possible_states;
 			}
 			delete front_state;

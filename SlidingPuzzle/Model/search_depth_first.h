@@ -11,6 +11,7 @@
 #include <chrono>
 #include <thread>
 #include <algorithm>
+#include <set>
 
 #include "move.hpp"
 #include "utils.hpp"
@@ -33,10 +34,11 @@ public:
 		this->queue_size_ = 1;
 
 		std::vector<State*>* cur_possible_states;
+		State* front_state = nullptr;
 		
 		while (!states_stack.empty()) {		
 			//printf("Stack size: %d\n", static_cast<int>(states_stack.size()));
-			State* front_state = states_stack.top();
+			front_state = states_stack.top();
 
 			states_stack.pop();
 
@@ -47,16 +49,19 @@ public:
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				printf("Total moves: %d\n", this->solution_path_length_);
+				printf("Final state: \n");
+				printf("%s\n", front_state->CurrentStateToString().c_str());
+				delete front_state;
 				break;
 			}
 			else {
+				bool states_to_free[4] = { true, true, true, true };
 				cur_possible_states = front_state->GetPossibleStates();
 
 				// Check for visited states. If they are visited, don't add it to the stack.
-				for (std::vector<State*>::iterator it1 = cur_possible_states->begin();
-					it1 != cur_possible_states->end(); ++it1) {
+				for (int i = 0; i < cur_possible_states->size(); i++) {
 
-					cur_state = *it1;
+					cur_state = cur_possible_states->at(i);
 
 					auto cur_visited_state = visited.find(cur_state->GetStateId());
 					if (cur_visited_state != visited.end()) {
@@ -65,9 +70,16 @@ public:
 					else {
 						states_stack.push(cur_state);
 						if (states_stack.size() > this->queue_size_) this->queue_size_ = states_stack.size();
+						states_to_free[i] = false;
 					}
 				}
+
+				for (int i = 0; i < cur_possible_states->size(); i++) {
+					if (states_to_free[i]) delete cur_possible_states->at(i);
+				}
+				delete cur_possible_states;
 			}
+			delete front_state;
 		}
 
 		this->solution_cost_ = 0;
@@ -80,6 +92,7 @@ public:
 		//DeleteObjectsVector(*cur_possible_states);
 		//DeleteObjectsVector(visited);
 		// Clean up.
+		
 		State* tmp = nullptr;
 		while (!states_stack.empty()) {
 			tmp = states_stack.top();

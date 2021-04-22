@@ -7,9 +7,9 @@
 
 namespace Test
 {
-	void RunAllTests()
+	void RunAllTests(PuzzleController &c)
 	{
-		Test::RunTests();
+		Test::RunTests(c);
 	}
 }
 

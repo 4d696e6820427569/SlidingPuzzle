@@ -46,15 +46,18 @@ public:
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				printf("Total moves: %lu\n", this->solution_path_length_);
+				printf("Final state: \n");
+				printf("%s\n", front_state->CurrentStateToString().c_str());
+				delete front_state;
 				break;
 			}
 			else {
+				bool states_to_free[4] = { true, true, true, true };
 				cur_possible_states = front_state->GetPossibleStates();
 
-				for (std::vector<State*>::iterator it1 = cur_possible_states->begin();
-					it1 != cur_possible_states->end(); ++it1) {
+				for (int i = 0; i < cur_possible_states->size(); i++) {
 
-					cur_state = *it1;
+					cur_state = cur_possible_states->at(i);
 
 					// Check if it's already visited. If it is, don't add it to the queue.
 					auto visited_it = visited.find(cur_state->GetStateId());
@@ -64,9 +67,16 @@ public:
 						visited.insert(cur_state->GetStateId());
 						states_queue.push(cur_state);
 						if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
+						states_to_free[i] = false;
 					}
 				}
+
+				for (int i = 0; i < cur_possible_states->size(); i++) {
+					if (states_to_free[i]) delete cur_possible_states->at(i);
+				}
+				delete cur_possible_states;
 			}
+			delete front_state;
 		}
 
 		auto finish = std::chrono::high_resolution_clock::now();

@@ -11,6 +11,7 @@ class IView
 {
 public:
 	virtual ~IView() = 0;
+	virtual void Run() = 0;
 private:
 };
 

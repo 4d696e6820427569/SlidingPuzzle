@@ -14,20 +14,18 @@
 #include <assert.h>
 #include <queue>
 
-#define STRATEGY AStarSearch
-
 namespace Test
 {
-	void ExtremelyEasyTest()
+	void ExtremelyEasyTest(PuzzleController &c)
 	{
 		printf("Extremely easy problem:\n");
 		State b(3, true);
-		PuzzleController controller(&b, new STRATEGY());
+		c.SetState(&b);
 		printf("%s\n", b.CurrentStateToString().c_str());
-		controller.Solve();
+		c.Solve();
 	}
 
-	void EasyTest()
+	void EasyTest(PuzzleController &c)
 	{
 		printf("Easy problem:\n");
 		int** ez = new int* [3];
@@ -45,13 +43,14 @@ namespace Test
 		ez[1][1] = 8;
 
 		State b_ez(ez, 3);
-		PuzzleController controller_ez(&b_ez, new STRATEGY());
+		//PuzzleController c(&b_ez);
+		c.SetState(&b_ez);
 		printf("%s\n", b_ez.CurrentStateToString().c_str());
-		controller_ez.Solve();
+		c.Solve();
 		DeleteIntArray(ez, 3);
 	}
 
-	void EasyTest2()
+	void EasyTest2(PuzzleController& c)
 	{
 		printf("\nAnother easy problem:\n");
 		int** ez1 = new int* [3];
@@ -69,22 +68,24 @@ namespace Test
 		ez1[1][1] = 6;
 
 		State b_ez1(ez1, 3);
-		PuzzleController controller_ez1(&b_ez1, new STRATEGY());
+		//PuzzleController controller_ez1(&b_ez1);
+		c.SetState(&b_ez1);
 		printf("%s\n", b_ez1.CurrentStateToString().c_str());
-		controller_ez1.Solve();
+		c.Solve();
 		DeleteIntArray(ez1, 3);
 	}
 
-	void EasyTest4x4()
+	void EasyTest4x4(PuzzleController& c)
 	{
 		printf("4x4 easy problem:\n");
 		State b(4, true);
-		PuzzleController controller(&b, new STRATEGY());
+		//PuzzleController controller(&b);
+		c.SetState(&b);
 		printf("%s\n", b.CurrentStateToString().c_str());
-		controller.Solve();
+		c.Solve();
 	}
 
-	void EasyWebTest()
+	void EasyWebTest(PuzzleController& c)
 	{
 		printf("\nEasy web problem.\n");
 		int** m = new int* [3];
@@ -103,13 +104,14 @@ namespace Test
 		m[1][1] = 6;
 
 		State b_m(m, 3);
-		PuzzleController controller_m(&b_m, new STRATEGY());
+		//PuzzleController controller_m(&b_m);
+		c.SetState(&b_m);
 		printf("%s\n", b_m.CurrentStateToString().c_str());
-		controller_m.Solve();
+		c.Solve();
 		DeleteIntArray(m, 3);
 	}
 
-	void MediumWebTest()
+	void MediumWebTest(PuzzleController& c)
 	{
 		printf("\nMedium Web problem.\n");
 		int** m = new int* [3];
@@ -128,13 +130,14 @@ namespace Test
 		m[1][1] = 4;
 
 		State b_m(m, 3);
-		PuzzleController controller_m(&b_m, new STRATEGY());
+		//PuzzleController controller_m(&b_m);
+		c.SetState(&b_m);
 		printf("%s\n", b_m.CurrentStateToString().c_str());
-		controller_m.Solve();
+		c.Solve();
 		DeleteIntArray(m, 3);
 	}
 
-	void HardWebTest()
+	void HardWebTest(PuzzleController& c)
 	{
 		printf("\nHard web problem.\n");
 		int** h = new int* [3];
@@ -152,19 +155,26 @@ namespace Test
 		h[1][1] = 0;
 
 		State b_h(h, 3);
-		PuzzleController controller_h(&b_h, new STRATEGY());
+		//PuzzleController controller_h(&b_h);
+		c.SetState(&b_h);
 		printf("%s\n", b_h.CurrentStateToString().c_str());
-		controller_h.Solve();
+		c.Solve();
 		DeleteIntArray(h, 3);
 	}
 
-	void ExtremelyHardProblem()
+	void ExtremelyHardProblem(PuzzleController& c)
 	{
 		printf("\nRandom problem.\n");
 		State b_random(3, false);
-		PuzzleController controller_random(&b_random, new STRATEGY());
+		//PuzzleController controller_random(&b_random);
+		c.SetState(&b_random);
 		printf("%s\n", b_random.CurrentStateToString().c_str());
-		controller_random.Solve();
+		c.Solve();
+	}
+
+	void CustomProblem(PuzzleController& c, std::string board_str)
+	{
+
 	}
 
 	void PriorityQueueComparingStates()
@@ -219,17 +229,16 @@ namespace Test
 		delete s6;
 	}
 
-	void RunTests()
+	void RunTests(PuzzleController &c)
 	{
-
 		PriorityQueueComparingStates();
-		ExtremelyEasyTest();
-		EasyTest();
-		EasyTest4x4();
-		EasyWebTest();
-		MediumWebTest();
-		HardWebTest();
-		ExtremelyHardProblem();
+		ExtremelyEasyTest(c);
+		EasyTest(c);
+		EasyTest4x4(c);
+		EasyWebTest(c);
+		MediumWebTest(c);
+		HardWebTest(c);
+		ExtremelyHardProblem(c);
 	}
 }
 

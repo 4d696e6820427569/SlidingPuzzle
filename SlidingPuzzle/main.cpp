@@ -6,11 +6,16 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 #include "./Tests/puzzle_tests.hpp"
+#include "Views/iview.h"
+#include "Views/text_view.h"
 
 int main()
 {
 	{
-		if (DEBUG) Test::RunAllTests();
+		PuzzleController mainController;
+		TextView textView(&mainController);
+		textView.Run();
+		//if (DEBUG) Test::RunAllTests();
 		//printf("%llu\n", sizeof(Board));
 	}
 	if (DEBUG) _CrtDumpMemoryLeaks();

@@ -1,26 +1,21 @@
 #ifndef SLIDING_PUZZLE_CONTROLLER_PUZZLE_CONTROLLER_H_
 #define SLIDING_PUZZLE_CONTROLLER_PUZZLE_CONTROLLER_H_
 
-#include <stack>
+#include <unordered_map>
 
 #include "../Model/state.h"
 #include "../Model/isearch.h"
-
 
 class PuzzleController
 {
 public:
 	PuzzleController();
 	PuzzleController(State*);
-	PuzzleController(State*, ISearch*);
 	~PuzzleController();
 
 	// Move cells according to Move object.
 	void MoveBlankCell(const Move&);
 	void UndoMoveBlankCell();
-	inline void SetStrategy(ISearch*);
-
-	inline ISearch* GetStrategy() const;
 
 	// Generate new instance of the puzzle.
 	//void GenerateNewBoard(int n = 3);
@@ -28,10 +23,15 @@ public:
 	// Solve the puzzle.
 	void Solve();
 
+	void SetStrategy(std::string);
+	void SetState(State* s);
+
+	std::string AvailableStrategies();
+
 private:
 	State* state_;
 	ISearch* strategy_;
-	//std::stack<Move>* moves_stack_;
+	std::unordered_map<std::string, ISearch*> strategies_;
 };
 
 #endif // EIGHT_PUZZLE_CONTROLLER_PUZZLE_CONTROLLER_H_
