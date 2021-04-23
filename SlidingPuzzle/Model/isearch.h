@@ -22,10 +22,7 @@ public:
 	virtual unsigned long GetSolutionCost() { return solution_cost_; }
 	virtual unsigned long GetTime() { return time_; }
 	virtual unsigned long GetMaxQueueSize() { return queue_size_; }
-	virtual void PrintExecutionStats() {
 
-	}
-	
 	void ResetStats()
 	{
 		solution_path_length_ = 0;

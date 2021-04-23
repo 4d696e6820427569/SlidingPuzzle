@@ -133,11 +133,11 @@ private:
 	void PrintExecutionStats(State* goal)
 	{
 		printf("Total moves: %lu\n", this->solution_path_length_);
-		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
+		printf("Maximum queue size: %lu\n", this->queue_size_);
 		printf("Number of nodes popped: %lu\n", this->time_);
 		
 		if (goal != nullptr) {
-			printf("Solution cost: %d\n", this->solution_cost_);
+			printf("Solution cost: %lu\n", this->solution_cost_);
 			printf("Final state: \n");
 			printf("%s\n", goal->CurrentStateToString().c_str());
 			// Print directions.

@@ -98,7 +98,7 @@ private:
 	void PrintExecutionStats(State* goal)
 	{
 		printf("Total moves: %lu\n", this->solution_path_length_);
-		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
+		printf("Maximum queue size: %lu\n", this->queue_size_);
 		printf("Number of nodes popped: %lu\n", this->time_);
 
 		if (goal != nullptr) {
