@@ -24,7 +24,7 @@ void PrintIntArray(int* arr, size_t n);
 template <typename T>
 void PrintVector(std::vector<T> v)
 {
-	for (std::vector<T>::iterator it = v.begin(); it != v.end(); ++it) {
+	for (typedef typename std::vector<T>::iterator it = v.begin(); it != v.end(); ++it) {
 		printf("%s\n", (**it).ToString().c_str());
 	}
 	printf("\n");
@@ -33,7 +33,7 @@ void PrintVector(std::vector<T> v)
 template <typename T>
 void DeleteObjectsVector(std::vector<T*> v)
 {
-	for (std::vector<T*>::iterator it = v.begin(); it != v.end(); ++it) {
+	for (typedef typename std::vector<T*>::iterator it = v.begin(); it != v.end(); ++it) {
 		delete *it;
 	}
 }

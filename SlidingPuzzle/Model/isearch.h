@@ -18,10 +18,10 @@ public:
 
 	virtual void Execute(State* b) = 0;
 
-	virtual unsigned int GetSolutionPathLength() { return solution_path_length_; }
-	virtual unsigned int GetSolutionCost() { return solution_cost_; }
-	virtual unsigned int GetTime() { return time_; }
-	virtual unsigned int GetMaxQueueSize() { return queue_size_; }
+	virtual unsigned long GetSolutionPathLength() { return solution_path_length_; }
+	virtual unsigned long GetSolutionCost() { return solution_cost_; }
+	virtual unsigned long GetTime() { return time_; }
+	virtual unsigned long GetMaxQueueSize() { return queue_size_; }
 	virtual void PrintExecutionStats() {
 
 	}
