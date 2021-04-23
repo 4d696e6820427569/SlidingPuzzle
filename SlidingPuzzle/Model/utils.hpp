@@ -36,9 +36,9 @@ void DeleteObjectsVector(std::vector<T*> v)
 {
 	typedef typename std::vector<T*>::iterator it;
 	for (it = v.begin(); it != v.end(); ++it) {
-		delete *it;
+		delete* it;
 	}
-}
+};
 
 std::string& ltrim(std::string& str);
 
