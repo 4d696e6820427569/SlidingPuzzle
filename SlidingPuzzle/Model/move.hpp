@@ -42,6 +42,7 @@ public:
 		end_ = m.end_;
 		cost_ = m.cost_;
 		direction_ = m.direction_;
+		return *this;
 	}
 
 	~Move() = default;

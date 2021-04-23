@@ -122,7 +122,7 @@ public:
 	}
 
 private:
-	void Dfs::PrintExecutionStats(State* goal)
+	void PrintExecutionStats(State* goal)
 	{
 		printf("Total moves: %d\n", this->solution_path_length_);
 		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());

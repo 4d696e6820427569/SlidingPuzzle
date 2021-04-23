@@ -66,9 +66,9 @@ private:
 	std::string state_id_;
 	std::unordered_map<int, Point> coordinates_map_;
 	
-	int State::MoveBlank(const Move& m);
-	void State::ReverseMove(const Move& m);
-	void State::GenerateSolutionState();
+	int MoveBlank(const Move& m);
+	void ReverseMove(const Move& m);
+	void GenerateSolutionState();
 };
 
 #endif // SLIDING_PUZZLE_MODEL_STATE_H_

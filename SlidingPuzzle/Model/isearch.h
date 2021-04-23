@@ -36,10 +36,10 @@ public:
 	}
 
 protected:
-	unsigned int solution_path_length_;
-	unsigned int solution_cost_;
-	unsigned int time_;
-	unsigned int queue_size_;
+	unsigned long solution_path_length_;
+	unsigned long solution_cost_;
+	unsigned long time_;
+	unsigned long queue_size_;
 	bool solution_found_;
 };
 

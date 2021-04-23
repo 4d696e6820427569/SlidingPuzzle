@@ -133,7 +133,7 @@ public:
 	}
 
 private:
-	void GreedyBestFirst::PrintExecutionStats(State* goal)
+	void PrintExecutionStats(State* goal)
 	{
 		printf("Total moves: %lu\n", this->solution_path_length_);
 		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
