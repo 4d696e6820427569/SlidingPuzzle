@@ -1,6 +1,8 @@
 #ifndef SLIDING_PUZZLE_MODEL_ISEARCH_H_
 #define SLIDING_PUZZLE_MODEL_ISEARCH_H_
 
+#include "state.h"
+
 class ISearch
 {
 public:
