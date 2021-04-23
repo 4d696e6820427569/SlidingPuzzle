@@ -1,5 +1,5 @@
 # SlidingPuzzle
-Implementation of various search algorithms to solve the sliding puzzle
+### CMake minimum requirement: 3.8
 
 On UNIX system, after cloning, to compile:
 
