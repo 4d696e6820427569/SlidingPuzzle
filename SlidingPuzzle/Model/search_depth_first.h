@@ -25,6 +25,7 @@ public:
 
 	void Execute(State * b)
 	{
+		this->ResetStats();
 		std::stack<State*> states_stack;
 		std::set<std::string> visited;
 

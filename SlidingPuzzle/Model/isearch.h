@@ -25,6 +25,15 @@ public:
 	virtual void PrintExecutionStats() {
 
 	}
+	
+	void ResetStats()
+	{
+		solution_path_length_ = 0;
+		solution_cost_ = 0;
+		time_ = 0;
+		queue_size_ = 0;
+		solution_found_ = false;
+	}
 
 protected:
 	unsigned int solution_path_length_;

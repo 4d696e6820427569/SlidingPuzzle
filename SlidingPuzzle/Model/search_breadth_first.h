@@ -21,6 +21,7 @@ public:
 
 	void Execute(State* b)
 	{
+		this->ResetStats();
 		std::queue<State*> states_queue;
 		std::set<std::string> visited;
 

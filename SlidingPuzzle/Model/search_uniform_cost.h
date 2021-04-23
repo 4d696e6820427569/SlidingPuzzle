@@ -32,6 +32,7 @@ public:
 
 	void Execute(State* b)
 	{
+		this->ResetStats();
 		std::priority_queue<State*, std::vector<State*>, StateComparator> states_queue;
 		//std::set<std::string> visited;
 

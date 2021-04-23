@@ -44,7 +44,7 @@ public:
 
 	void Execute( State* b )
 	{
-
+		this->ResetStats();
 		std::priority_queue<State*, std::vector<State*>, MisplacedTilesHeuristicStar> states_queue;
 
 		if (twoStars_)

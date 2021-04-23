@@ -33,6 +33,7 @@ public:
 
 	void Execute(State* b)
 	{
+		this->ResetStats();
 		std::priority_queue<State*, std::vector<State*>, MisplacedTilesHeuristic> states_queue;
 
 		std::unordered_map<std::string, unsigned long long> visited_and_cost;
