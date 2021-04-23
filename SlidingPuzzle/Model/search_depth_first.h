@@ -25,9 +25,6 @@ public:
 
 	void Execute(State * b)
 	{
-		using sec = std::chrono::seconds;
-		auto start = std::chrono::high_resolution_clock::now();
-
 		std::stack<State*> states_stack;
 		std::set<std::string> visited;
 
@@ -46,7 +43,8 @@ public:
 			// Pop the top state pointer.
 			front_state = states_stack.top();
 			states_stack.pop();
-			
+			this->time_++;
+
 			// Need to also pop the corresponding state ID from the states_stack_ids.
 			auto popping_id = states_stack_ids.find(front_state->GetStateId());
 			states_stack_ids.erase(popping_id);
@@ -106,11 +104,6 @@ public:
 		}
 
 		this->solution_cost_ = 0;
-		
-		// Stop the timer.
-		auto finish = std::chrono::high_resolution_clock::now();
-		this->solution_cost_ = 0;
-		this->time_ = std::chrono::duration_cast<sec>(finish - start).count();
 
 		// Clean up.		
 		State* tmp = nullptr;
@@ -120,15 +113,29 @@ public:
 			delete tmp;
 		}
 
-		if (!solution_found_) printf("Failure.\n");
+
+		if (!solution_found_) {
+			printf("Failure.\n");
+			PrintExecutionStats(nullptr);
+		}
 	}
 
 private:
 	void Dfs::PrintExecutionStats(State* goal)
 	{
 		printf("Total moves: %d\n", this->solution_path_length_);
-		printf("Final state: \n");
-		printf("%s\n", goal->CurrentStateToString().c_str());		
+		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
+		printf("Number of nodes popped: %lu\n", this->time_);
+
+		if (goal != nullptr) {
+			printf("Final state: \n");
+			printf("%s\n", goal->CurrentStateToString().c_str());
+			// Print directions.
+			for (auto m : goal->TotalMoves()) {
+				printf("%s, ", m.Direction().c_str());
+			}
+		}
+		printf("\n");
 	}
 
 };

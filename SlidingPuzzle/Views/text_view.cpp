@@ -48,7 +48,8 @@ void TextView::Run()
 		printf("3. Run medium test case: 2 8 1 0 4 3 7 6 5\n");
 		printf("4. Run hard test case: 5 6 7 4 0 8 3 2 1\n");
 		printf("5. Run custom test case.\n");
-		printf("6. Quit\n");
+		printf("6. Run a random test case.\n");
+		printf("7. Quit\n");
 
 		std::cin >> cmd;
 
@@ -98,12 +99,18 @@ void TextView::Run()
 		case '4':
 			Test::HardWebTest(*puzzle_controller_);
 			break;
+
 		case '5':
 			PrintUsage();
-			std::cin >> custom;
+			std::cin.ignore();
+			std::getline(std::cin, custom);
 			Test::CustomProblem(*puzzle_controller_, custom);
 			break;
+
 		case '6':
+			Test::ExtremelyHardProblem(*puzzle_controller_);
+			break;
+		case '7':
 			return;
 		default:
 			break;
@@ -111,7 +118,8 @@ void TextView::Run()
 
 		cmd = "";
 		strategy = "";
-
+		custom = "";
+		std::cin.ignore();
 	}
 }
 

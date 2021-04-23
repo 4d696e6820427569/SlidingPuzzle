@@ -13,6 +13,7 @@
 
 #include <assert.h>
 #include <queue>
+#include <iostream>
 
 namespace Test
 {
@@ -174,7 +175,42 @@ namespace Test
 
 	void CustomProblem(PuzzleController& c, std::string board_str)
 	{
+		std::string delimiter = " ";
 
+		board_str = trim_copy(board_str);
+
+		printf("\nCustom problem.\n");
+		int** r = new int* [3];
+		for (int i = 0; i < 3; i++)
+			r[i] = new int[3];
+
+		//size_t pos = 0;
+		int tokens[9];
+		/*size_t i = 0;
+		while ((pos = board_str.find(delimiter)) != std::string::npos) {
+			tokens[i++] = board_str.substr(0, pos)[0] - '0';
+			board_str.erase(0, pos + delimiter.length());
+		}*/
+
+		size_t k = 0;
+		for (size_t i = 0; i < board_str.length(); i += 2) {
+			tokens[k++] = board_str[i] - '0';
+		}
+
+		r[0][0] = tokens[0];
+		r[0][1] = tokens[1];
+		r[0][2] = tokens[2];
+		r[1][2] = tokens[5];
+		r[2][2] = tokens[8];
+		r[2][1] = tokens[7];
+		r[2][0] = tokens[6];
+		r[1][0] = tokens[3];
+		r[1][1] = tokens[4];
+
+		State r_s(r, 3);
+		c.SetState(&r_s);
+		printf("%s\n", r_s.CurrentStateToString().c_str());
+		c.Solve();
 	}
 
 	void PriorityQueueComparingStates()
@@ -232,14 +268,14 @@ namespace Test
 	void RunTests(PuzzleController &c)
 	{
 		PriorityQueueComparingStates();
-		ExtremelyEasyTest(c);
+		/*ExtremelyEasyTest(c);
 		EasyTest(c);
 		EasyTest4x4(c);
 		EasyWebTest(c);
 		MediumWebTest(c);
 		HardWebTest(c);
-		ExtremelyHardProblem(c);
+		ExtremelyHardProblem(c);*/
 	}
 }
 
-#endif State_TESTS_H_
+#endif // State_TESTS_H_

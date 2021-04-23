@@ -49,15 +49,15 @@ public:
 	std::vector<State*>* GetPossibleStates();
 	bool IsGoalState();
 	std::string CurrentStateToString();
-	unsigned long GetTotalCostToThisState();
+	unsigned long long GetTotalCostToThisState();
 	int GetNumberOfMisplacedTiles();
-	double SumOfManhattanDistances();
+	unsigned long long SumOfManhattanDistances();
 
 	//static std::vector<State*>* GetPossibleStatesFromBoard();
 
 private:
-	unsigned long recent_move_cost_;
-	unsigned long total_move_cost_;
+	unsigned long long recent_move_cost_;
+	unsigned long long total_move_cost_;
 	int** board_;
 	int** solution_;
 	int n_;

@@ -33,12 +33,9 @@ public:
 
 	void Execute(State* b)
 	{
-		using sec = std::chrono::seconds;
-		auto start = std::chrono::high_resolution_clock::now();
-
 		std::priority_queue<State*, std::vector<State*>, MisplacedTilesHeuristic> states_queue;
 
-		std::unordered_map<std::string, unsigned long> visited_and_cost;
+		std::unordered_map<std::string, unsigned long long> visited_and_cost;
 
 		State* init_state = new State(*b);
 
@@ -56,6 +53,10 @@ public:
 		while (!states_queue.empty()) {
 			front_state = states_queue.top();
 			states_queue.pop();
+			this->time_++;
+
+			// Mark the state expanded.
+			visited_and_cost.insert(std::make_pair(front_state->GetStateId(), front_state->GetNumberOfMisplacedTiles()));
 
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
@@ -75,13 +76,13 @@ public:
 
 					std::string cur_state_id = cur_state->GetStateId();
 					//unsigned long total_cost_to_cur_state = cur_state->GetTotalCostToThisState();
-					unsigned long total_cost_to_cur_state = cur_state->GetNumberOfMisplacedTiles();
+					unsigned long long total_cost_to_cur_state = cur_state->GetNumberOfMisplacedTiles();
 
 					auto visited_it = visited_and_cost.find(cur_state->GetStateId());
 
 					if (visited_it == visited_and_cost.end()) {
 						// If it's not in the map.
-						visited_and_cost.insert(std::make_pair(cur_state_id, total_cost_to_cur_state));
+						// visited_and_cost.insert(std::make_pair(cur_state_id, total_cost_to_cur_state));
 						states_queue.push(cur_state);
 						
 						states_to_free[i] = false;
@@ -112,9 +113,6 @@ public:
 			delete front_state;
 		}
 
-		auto finish = std::chrono::high_resolution_clock::now();
-		this->time_ = std::chrono::duration_cast<sec>(finish - start).count();
-
 		// Clean up.
 		//DeleteObjectsVector(*cur_possible_states);
 		//DeleteObjectsVector(visited);
@@ -126,7 +124,11 @@ public:
 			states_queue.pop();
 			delete tmp;
 		}
-		if (!solution_found_) printf("Failure.\n");
+
+		if (!solution_found_) {
+			printf("Failure.\n");
+			PrintExecutionStats(nullptr);
+		}
 	}
 
 private:
@@ -134,9 +136,18 @@ private:
 	{
 		printf("Total moves: %lu\n", this->solution_path_length_);
 		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
-		printf("Solution cost: %d\n", this->solution_cost_);
-		printf("Final state: \n");
-		printf("%s\n", goal->CurrentStateToString().c_str());
+		printf("Number of nodes popped: %lu\n", this->time_);
+		
+		if (goal != nullptr) {
+			printf("Solution cost: %d\n", this->solution_cost_);
+			printf("Final state: \n");
+			printf("%s\n", goal->CurrentStateToString().c_str());
+			// Print directions.
+			for (auto m : goal->TotalMoves()) {
+				printf("%s, ", m.Direction().c_str());
+			}
+		}
+		printf("\n");
 	}
 
 };

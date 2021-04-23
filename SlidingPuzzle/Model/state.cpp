@@ -209,19 +209,19 @@ std::vector<State*>* State::GetPossibleStates()
 	if (blank_x > 0)
 		possible_moves->push_back(
 			new State(*this, Move(blank_x, blank_y, blank_x - 1, blank_y, 
-				board_[blank_x-1][blank_y])));
+				board_[blank_x-1][blank_y], "UP")));
 
 	if (blank_x < n_ - 1)
 		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
-			blank_x + 1, blank_y, board_[blank_x + 1][blank_y])));
+			blank_x + 1, blank_y, board_[blank_x + 1][blank_y], "DOWN")));
 
 	if (blank_y > 0)
 		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
-			blank_x, blank_y - 1, board_[blank_x][blank_y-1])));
+			blank_x, blank_y - 1, board_[blank_x][blank_y-1], "LEFT")));
 
 	if (blank_y < n_ - 1)
 		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
-			blank_x, blank_y + 1, board_[blank_x][blank_y+1])));
+			blank_x, blank_y + 1, board_[blank_x][blank_y+1], "RIGHT")));
 
 	return possible_moves;
 }
@@ -304,7 +304,7 @@ void State::ReverseMove(const Move& m)
 	blank_.SetY(start_y);
 }
 
-unsigned long State::GetTotalCostToThisState()
+unsigned long long State::GetTotalCostToThisState()
 {
 	return this->total_move_cost_;
 }
@@ -389,7 +389,7 @@ int State::GetNumberOfMisplacedTiles()
 	return num_misplaced_tiles;
 }
 
-double State::SumOfManhattanDistances()
+unsigned long long State::SumOfManhattanDistances()
 {
 	double sumMdist = 0;
 	for (int i = 0; i < n_; i++) {

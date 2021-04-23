@@ -9,13 +9,14 @@
 #include "Views/iview.h"
 #include "Views/text_view.h"
 
+
 int main()
 {
 	{
 		PuzzleController mainController;
 		TextView textView(&mainController);
 		textView.Run();
-		//if (DEBUG) Test::RunAllTests();
+		//if (DEBUG) Test::RunAllTests(mainController);
 		//printf("%llu\n", sizeof(Board));
 	}
 	if (DEBUG) _CrtDumpMemoryLeaks();

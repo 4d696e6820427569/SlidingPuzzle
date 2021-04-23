@@ -2,6 +2,7 @@
 #define SLIDING_PUZZLE_MODEL_UTILS_HPP_
 
 #include <vector>
+#include <string>
 
 /*
 * Swap(a, b) --
@@ -36,6 +37,12 @@ void DeleteObjectsVector(std::vector<T*> v)
 		delete *it;
 	}
 }
+
+std::string& ltrim(std::string& str);
+
+std::string& rtrim(std::string& str);
+
+std::string trim_copy(std::string const& str);
 
 void DeleteIntArray(int** arr, size_t n);
 #endif // SLIDING_PUZZLE_MODEL_UTILS_HPP_

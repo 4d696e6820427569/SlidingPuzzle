@@ -21,9 +21,6 @@ public:
 
 	void Execute(State* b)
 	{
-		using sec = std::chrono::seconds;
-		auto start = std::chrono::high_resolution_clock::now();
-
 		std::queue<State*> states_queue;
 		std::set<std::string> visited;
 
@@ -44,6 +41,9 @@ public:
 			State* front_state = states_queue.front();
 
 			states_queue.pop();
+			this->time_++;
+
+			visited.insert(front_state->GetStateId());
 
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
@@ -65,7 +65,6 @@ public:
 					if (visited_it != visited.end()) {
 					}
 					else {
-						visited.insert(cur_state->GetStateId());
 						states_queue.push(cur_state);
 						if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
 						states_to_free[i] = false;
@@ -80,12 +79,6 @@ public:
 			delete front_state;
 		}
 
-
-		// Stop the timer.
-		auto finish = std::chrono::high_resolution_clock::now();
-		this->solution_cost_ = 0;
-		this->time_ = std::chrono::duration_cast<sec>(finish - start).count();
-
 		// Clean up.
 		State* tmp = nullptr;
 		while (!states_queue.empty()) {
@@ -93,15 +86,29 @@ public:
 			states_queue.pop();
 			delete tmp;
 		}
-		if (!solution_found_) printf("Failure.\n");
+
+		if (!solution_found_) {
+			printf("Failure.\n");
+			PrintExecutionStats(nullptr);
+		}
 	}
 
 private:
 	void Bfs::PrintExecutionStats(State* goal)
 	{
 		printf("Total moves: %d\n", this->solution_path_length_);
-		printf("Final state: \n");
-		printf("%s\n", goal->CurrentStateToString().c_str());
+		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());
+		printf("Number of nodes popped: %lu\n", this->time_);
+
+		if (goal != nullptr) {
+			printf("Final state: \n");
+			printf("%s\n", goal->CurrentStateToString().c_str());
+			// Print directions.
+			for (auto m : goal->TotalMoves()) {
+				printf("%s, ", m.Direction().c_str());
+			}
+		}
+		printf("\n");
 	}
 };
 #endif // SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
