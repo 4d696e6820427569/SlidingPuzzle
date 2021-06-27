@@ -34,17 +34,15 @@ public:
 	~State();
 
 	State& operator=(State&);
-	bool operator==(const State&);
-	bool operator!=(const State&);
-	bool operator>(const State&);
-	bool operator<(const State&);
+	bool operator==(const State&) const;
+	bool operator!=(const State&) const;
+	bool operator>(const State&) const;
+	bool operator<(const State&) const;
 
 	std::vector<Move> TotalMoves() const { return moves_; }
 	std::string GetStateId() const { return this->state_id_; }
 	unsigned long GetCostToThisState() { return recent_move_cost_; }
-	void SetCost(unsigned long c) { 
-		total_move_cost_ = c;
-	}
+	void SetCost(unsigned long c) { total_move_cost_ = c; }
 
 	std::vector<State*>* GetPossibleStates();
 	bool IsGoalState();

@@ -253,22 +253,22 @@ bool State::IsGoalState()
 	return true;
 }
 
-bool State::operator==(const State& s)
+bool State::operator==(const State& s) const
 {
 	return (this->state_id_ == s.state_id_);
 }
 
-bool State::operator!=(const State& s)
+bool State::operator!=(const State& s) const
 {
 	return (this->state_id_ != s.state_id_);
 }
 
-bool State::operator>(const State& s)
+bool State::operator>(const State& s) const
 {
 	return this->total_move_cost_ > s.total_move_cost_;
 }
 
-bool State::operator<(const State& s)
+bool State::operator<(const State& s) const
 {
 	return this->total_move_cost_ < s.total_move_cost_;
 }

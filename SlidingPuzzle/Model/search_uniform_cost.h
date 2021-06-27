@@ -15,6 +15,11 @@
 #include "utils.hpp"
 #include "isearch.h"
 
+using std::priority_queue;
+using std::unordered_map;
+using std::vector;
+using std::string;
+using std::make_pair;
 
 class StateComparator
 {
@@ -30,25 +35,24 @@ class Ucs : public ISearch
 public:
 	Ucs() = default;
 
-	void Execute(State* b)
+	void Execute(shared_ptr<State>& b)
 	{
 		this->ResetStats();
-		std::priority_queue<State*, std::vector<State*>, StateComparator> states_queue;
+		priority_queue<State*, vector<State*>, StateComparator> states_queue;
 		//std::set<std::string> visited;
 
-		std::unordered_map<std::string, unsigned long long> visited_and_cost;
+		unordered_map<string, unsigned long long> visited_and_cost;
 
 		// Mark the current state as visited.
 		State* init_state = new State(*b);
 		//visited.insert(init_state->GetStateId());
 
-		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
+		visited_and_cost.insert(make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 		
-		std::vector<State*>* cur_possible_states = nullptr;
+		vector<State*>* cur_possible_states = nullptr;
 		State* cur_state = nullptr;
-		State* cur_visited_state = nullptr;
 		State* front_state = nullptr;
 
 		while (!states_queue.empty()) {

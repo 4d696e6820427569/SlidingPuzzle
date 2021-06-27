@@ -10,41 +10,37 @@ PuzzleController::PuzzleController()
 	: state_(nullptr)
 	, strategy_(nullptr)
 {
-	strategies_["BFS"] = new Bfs();
-	strategies_["DFS"] = new Dfs();
-	strategies_["UCS"] = new Ucs();
-	strategies_["AStar1"] = new AStarSearch(false);
-	strategies_["AStar2"] = new AStarSearch(true);
-	strategies_["GBFS"] = new GreedyBestFirst();
-	strategy_ = strategies_["AStar2"];
-	cur_strategy_ = "AStar2";
+	strategies_["BFS"]		= make_shared<Bfs>();
+	strategies_["DFS"]		= make_shared<Dfs>();
+	strategies_["UCS"]		= make_shared<Ucs>();
+	strategies_["AStar1"]	= make_shared<AStarSearch>(AStarSearch(false));
+	strategies_["AStar2"]	= make_shared<AStarSearch>(AStarSearch(true));
+	strategies_["GBFS"]		= make_shared<GreedyBestFirst>();
+	strategy_				= strategies_["AStar2"];
+	cur_strategy_			= "AStar2";
 }
 
 PuzzleController::PuzzleController(State* b)
-	: state_(b)
-	, strategy_(nullptr)
+	: strategy_(nullptr)
 {
-	strategies_["BFS"] = new Bfs();
-	strategies_["DFS"] = new Dfs();
-	strategies_["UCS"] = new Ucs();
-	strategies_["AStar1"] = new AStarSearch(false);
-	strategies_["AStar2"] = new AStarSearch(true);
-	strategies_["GBFS"] = new GreedyBestFirst();
-	strategy_ = strategies_["AStar2"];
-	cur_strategy_ = "AStar2";
+	state_.reset(b);
+	strategies_["BFS"]		= make_shared<Bfs>();
+	strategies_["DFS"]		= make_shared<Dfs>();
+	strategies_["UCS"]		= make_shared<Ucs>();
+	strategies_["AStar1"]	= make_shared<AStarSearch>(AStarSearch(false));
+	strategies_["AStar2"]	= make_shared<AStarSearch>(AStarSearch(true));
+	strategies_["GBFS"]		= make_shared<GreedyBestFirst>();
+	strategy_				= strategies_["AStar2"];
+	cur_strategy_			= "AStar2";
 }
 
 PuzzleController::~PuzzleController()
 {
-	for (auto strategy : strategies_) {
-		delete strategies_[strategy.first];
-	}
 }
-
 
 void PuzzleController::SetState(State* s)
 {
-	state_ = s;
+	state_.reset(s);
 }
 
 
@@ -76,7 +72,7 @@ void PuzzleController::SetStrategy(std::string strategy)
 std::string PuzzleController::AvailableStrategies()
 {
 	std::string result("Available strategies:\n");
-	for (auto strategy : strategies_) {
+	for (const auto& strategy : strategies_) {
 		result += "\t" + strategy.first + "\n";
 	}
 	return result;

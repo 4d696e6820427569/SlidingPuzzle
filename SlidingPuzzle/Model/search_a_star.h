@@ -14,6 +14,12 @@
 #include "utils.hpp"
 #include "isearch.h"
 
+using std::priority_queue;
+using std::unordered_map;
+using std::vector;
+using std::string;
+using std::make_pair;
+
 class MisplacedTilesHeuristicStar
 {
 public:
@@ -24,7 +30,6 @@ public:
 				s2->GetNumberOfMisplacedTiles());
 	}
 };
-
 
 class ManhattanDistancesHeuristic
 {
@@ -42,15 +47,15 @@ class AStarSearch : public ISearch
 public:
 	AStarSearch(bool useTwoStars): twoStars_(useTwoStars) {}
 
-	void Execute( State* b )
+	void Execute(shared_ptr<State>& b )
 	{
 		this->ResetStats();
-		std::priority_queue<State*, std::vector<State*>, MisplacedTilesHeuristicStar> states_queue;
+		priority_queue<State*, vector<State*>, MisplacedTilesHeuristicStar> states_queue;
 
 		if (twoStars_)
-			std::priority_queue<State*, std::vector<State*>, ManhattanDistancesHeuristic> states_queue;
+			priority_queue<State*, vector<State*>, ManhattanDistancesHeuristic> states_queue;
 
-		std::unordered_map<std::string, unsigned long long> visited_and_cost;
+		unordered_map<string, unsigned long long> visited_and_cost;
 
 		// Mark the current state as visited.
 		State* init_state = new State(*b);
@@ -58,9 +63,8 @@ public:
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 
-		std::vector<State*>* cur_possible_states = nullptr;
+		vector<State*>* cur_possible_states = nullptr;
 		State* cur_state = nullptr;
-		State* cur_visited_state = nullptr;
 		
 		while (!states_queue.empty()) {
 			State* front_state = states_queue.top();
@@ -70,10 +74,10 @@ public:
 
 			// Mark the state expanded.
 			if (twoStars_)
-				visited_and_cost.insert(std::make_pair(front_state->GetStateId(), 
+				visited_and_cost.insert(make_pair(front_state->GetStateId(), 
 				front_state->GetTotalCostToThisState() + front_state->SumOfManhattanDistances()));
 			else
-				visited_and_cost.insert(std::make_pair(front_state->GetStateId(),
+				visited_and_cost.insert(make_pair(front_state->GetStateId(),
 					front_state->GetTotalCostToThisState() + front_state->GetNumberOfMisplacedTiles()));
 
 			if (front_state->IsGoalState()) {
@@ -92,7 +96,7 @@ public:
 
 					cur_state = cur_possible_states->at(i);
 
-					std::string cur_state_id = cur_state->GetStateId();
+					string cur_state_id = cur_state->GetStateId();
 
 					double total_cost_to_cur_state = 0;
 					if (twoStars_)

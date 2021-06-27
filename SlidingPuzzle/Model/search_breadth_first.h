@@ -14,19 +14,24 @@
 #include "utils.hpp"
 #include "isearch.h"
 
+using std::set;
+using std::queue;
+using std::vector;
+using std::string;
+
 class Bfs : public ISearch
 {
 public:
 	Bfs() = default;
 
-	void Execute(State* b)
+	void Execute(shared_ptr<State>& b)
 	{
 		this->ResetStats();
-		std::queue<State*> states_queue;
-		std::set<std::string> visited;
+		queue<State*> states_queue;
+		set<string> visited;
 
 		// Another separate set that contains state's IDs that are currently in states_queue.
-		std::set<std::string> states_stack_ids;
+		set<string> states_stack_ids;
 
 		// Mark the current state as visited.
 		State* init_state = new State(*b);
@@ -34,9 +39,8 @@ public:
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 
-		std::vector<State*>* cur_possible_states = nullptr;
+		vector<State*>* cur_possible_states = nullptr;
 		State* cur_state = nullptr;
-		State* cur_visited_state = nullptr;
 
 		while (!states_queue.empty()) {
 			State* front_state = states_queue.front();

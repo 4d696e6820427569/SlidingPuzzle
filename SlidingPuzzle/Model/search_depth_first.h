@@ -18,25 +18,30 @@
 #include "utils.hpp"
 #include "isearch.h"
 
+using std::set;
+using std::stack;
+using std::vector;
+using std::string;
+
 class Dfs : public ISearch
 {
 public:
 	Dfs() = default;
 
-	void Execute(State * b)
+	void Execute(shared_ptr<State>& b)
 	{
 		this->ResetStats();
-		std::stack<State*> states_stack;
-		std::set<std::string> visited;
+		stack<State*> states_stack;
+		set<string> visited;
 
 		// Another separate set that contains state's IDs that are currently in states_stack.
-		std::set<std::string> states_stack_ids;
+		set<string> states_stack_ids;
 		
 		states_stack.push(new State(*b));
 		states_stack_ids.insert(states_stack.top()->GetStateId());
 		this->queue_size_ = 1;
 
-		std::vector<State*>* cur_possible_states;
+		vector<State*>* cur_possible_states;
 		State* front_state = nullptr;
 		
 		while (!states_stack.empty()) {		
@@ -54,7 +59,6 @@ public:
 			visited.insert(front_state->GetStateId());
 			
 			State* cur_state;
-			State* cur_visited_state = nullptr;
 
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();

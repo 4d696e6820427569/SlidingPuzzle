@@ -16,6 +16,11 @@
 #include "isearch.h"
 #include "utils.hpp"
 
+using std::priority_queue;
+using std::unordered_map;
+using std::vector;
+using std::string;
+using std::make_pair;
 
 class MisplacedTilesHeuristic
 {
@@ -31,24 +36,23 @@ class GreedyBestFirst : public ISearch
 public:
 	GreedyBestFirst() = default;
 
-	void Execute(State* b)
+	void Execute(shared_ptr<State>& b)
 	{
 		this->ResetStats();
-		std::priority_queue<State*, std::vector<State*>, MisplacedTilesHeuristic> states_queue;
+		priority_queue<State*, vector<State*>, MisplacedTilesHeuristic> states_queue;
 
-		std::unordered_map<std::string, unsigned long long> visited_and_cost;
+		unordered_map<string, unsigned long long> visited_and_cost;
 
 		State* init_state = new State(*b);
 
 		// Mark the current state as visited.
 		//visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
-		visited_and_cost.insert(std::make_pair(init_state->GetStateId(), init_state->GetNumberOfMisplacedTiles()));
+		visited_and_cost.insert(make_pair(init_state->GetStateId(), init_state->GetNumberOfMisplacedTiles()));
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 
 		std::vector<State*>* cur_possible_states = nullptr;
 		State* cur_state = nullptr;
-		State* cur_visited_state = nullptr;
 		State* front_state = nullptr;
 
 		while (!states_queue.empty()) {
