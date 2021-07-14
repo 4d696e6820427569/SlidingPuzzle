@@ -5,6 +5,9 @@
 #include <string>
 #include <algorithm>
 
+using std::vector;
+using std::string;
+
 /*
 * Swap(a, b) --
 *
@@ -20,12 +23,14 @@ void Swap(int* a, int* b);
 */
 int* RandomPermutation(int n);
 
+void RandomPermutation(const int&, vector<int>&);
+
 void PrintIntArray(int* arr, size_t n);
 
 template <typename T>
-void PrintVector(std::vector<T> v)
+void PrintVector(vector<T> v)
 {
-	typename std::vector<T>::iterator it;
+	typename vector<T>::iterator it;
 	for (it = v.begin(); it != v.end(); ++it) {
 		printf("%s\n", (**it).ToString().c_str());
 	}
@@ -33,19 +38,19 @@ void PrintVector(std::vector<T> v)
 };
 
 template <typename T>
-void DeleteObjectsVector(std::vector<T*> v)
+void DeleteObjectsVector(vector<T*> v)
 {
-	typename std::vector<T*>::iterator it;
+	typename vector<T*>::iterator it;
 	for (it = v.begin(); it != v.end(); ++it) {
 		delete* it;
 	}
 };
 
-std::string& ltrim(std::string& str);
+string& ltrim(string& str);
 
-std::string& rtrim(std::string& str);
+string& rtrim(string& str);
 
-std::string trim_copy(std::string const& str);
+string trim_copy(string const& str);
 
 void DeleteIntArray(int** arr, size_t n);
 #endif // SLIDING_PUZZLE_MODEL_UTILS_HPP_

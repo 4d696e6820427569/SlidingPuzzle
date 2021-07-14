@@ -43,7 +43,6 @@ void PuzzleController::SetState(State* s)
 	state_.reset(s);
 }
 
-
 void PuzzleController::Solve()
 {
 	this->strategy_->Execute(state_);
@@ -66,8 +65,6 @@ void PuzzleController::SetStrategy(std::string strategy)
 		cur_strategy_ = strategy;
 	}
 }
-
-
 
 std::string PuzzleController::AvailableStrategies()
 {

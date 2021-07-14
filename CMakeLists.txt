@@ -7,5 +7,7 @@ set (CMAKE_CXX_STANDARD 11)
 
 project ("SlidingPuzzle")
 
+#find_package(Qt6 COMPONENTS Widgets REQUIRED)
+
 # Include sub-projects.
 add_subdirectory ("SlidingPuzzle")

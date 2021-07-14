@@ -35,9 +35,9 @@ public:
 
 		// Mark the current state as visited.
 		State* init_state = new State(*b);
-		visited.insert(init_state->GetStateId());
+		
 		states_queue.push(init_state);
-		this->queue_size_ = 1;
+		this->queue_size_ = states_queue.size();
 
 		vector<State*>* cur_possible_states = nullptr;
 		State* cur_state = nullptr;

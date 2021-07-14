@@ -6,6 +6,9 @@
 
 #include "move.hpp"
 
+using std::vector;
+using std::unordered_map;
+using std::string;
 
 class State
 {
@@ -54,19 +57,21 @@ public:
 	//static std::vector<State*>* GetPossibleStatesFromBoard();
 
 private:
+	int MoveBlank(const Move& m);
+	void ReverseMove(const Move& m);
+	void GenerateSolutionState();
+
 	unsigned long long recent_move_cost_;
 	unsigned long long total_move_cost_;
 	int** board_;
 	int** solution_;
 	int n_;
+
 	Point blank_;
-	std::vector<Move> moves_;
-	std::string state_id_;
-	std::unordered_map<int, Point> coordinates_map_;
-	
-	int MoveBlank(const Move& m);
-	void ReverseMove(const Move& m);
-	void GenerateSolutionState();
+	vector<Move> moves_;
+	string state_id_;
+	unordered_map<int, Point> coordinates_map_;
+
 };
 
 #endif // SLIDING_PUZZLE_MODEL_STATE_H_
