@@ -6,6 +6,8 @@
 #include "../Model/search_uniform_cost.h"
 #include "../Model/isearch.h"
 
+using std::string;
+
 PuzzleController::PuzzleController()
 	: state_(nullptr)
 	, strategy_(nullptr)
@@ -68,7 +70,7 @@ void PuzzleController::SetStrategy(std::string strategy)
 
 std::string PuzzleController::AvailableStrategies()
 {
-	std::string result("Available strategies:\n");
+	string result("Available strategies:\n");
 	for (const auto& strategy : strategies_) {
 		result += "\t" + strategy.first + "\n";
 	}

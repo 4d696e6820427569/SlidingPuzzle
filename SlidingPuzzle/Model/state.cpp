@@ -8,7 +8,7 @@ State::State(int n, bool solved)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
-	std::string state_id_str("");
+	string state_id_str("");
 	board_ = new int* [n_];
 
 	// Temporary solution: Generate a random permutation of an array of size n_ * n_
@@ -60,7 +60,7 @@ State::State(int** b, int n)
 	, recent_move_cost_(0)
 	, total_move_cost_(0)
 {
-	std::string state_id_str("");
+	string state_id_str("");
 	board_ = new int* [n_];
 	for (int i = 0; i < n; i++) {
 		board_[i] = new int[n_];
@@ -80,7 +80,7 @@ State::State(State& s, const Move& m)
 	, board_(nullptr)
 	, solution_(nullptr)
 {
-	std::string state_id_str("");
+	string state_id_str("");
 	this->board_ = new int* [this->n_];
 	for (int i = 0; i < n_; i++) {
 		this->board_[i] = new int[n_];
@@ -91,7 +91,7 @@ State::State(State& s, const Move& m)
 	}
 
 	// Copy the previous moves onto this state's move to keep track of the path.
-	for (std::vector<Move>::iterator it = s.moves_.begin();
+	for (vector<Move>::iterator it = s.moves_.begin();
 		it != s.moves_.end(); ++it)
 		this->moves_.push_back(*it);
 
@@ -133,7 +133,7 @@ State& State::operator=(State& s)
 
 	moves_.clear();
 	
-	for (std::vector<Move>::iterator it = s.moves_.begin();
+	for (vector<Move>::iterator it = s.moves_.begin();
 		it != s.moves_.end(); ++it) {
 		moves_.push_back(*it);
 	}
@@ -153,7 +153,7 @@ State::State(const State& b)
 	, recent_move_cost_(0)
 	, total_move_cost_(0)
 {
-	std::string state_id_str("");
+	string state_id_str("");
 	this->board_ = new int* [this->n_];
 	for (int i = 0; i < n_; i++) {
 		this->board_[i] = new int[n_];

@@ -36,6 +36,8 @@ public:
 		solution_found_ = false;
 	}
 
+	virtual void PrintExecutionStats(State* goal) {}
+
 protected:
 	unsigned long	solution_path_length_;
 	unsigned long	solution_cost_;
