@@ -40,9 +40,9 @@ PuzzleController::~PuzzleController()
 {
 }
 
-void PuzzleController::SetState(State* s)
+void PuzzleController::SetState(shared_ptr<State>& s)
 {
-	state_.reset(s);
+	state_ = s;
 }
 
 void PuzzleController::Solve()

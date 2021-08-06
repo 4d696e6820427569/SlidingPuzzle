@@ -20,10 +20,9 @@ using std::vector;
 using std::string;
 using std::make_pair;
 
-class MisplacedTilesHeuristicStar
+struct MisplacedTilesHeuristicStar
 {
-public:
-	bool operator() (State* s1, State* s2)
+	bool operator() (const shared_ptr<State>& s1, const shared_ptr<State>& s2) const
 	{
 		return (s1->GetTotalCostToThisState() + s1->GetNumberOfMisplacedTiles()) >
 			(s2->GetTotalCostToThisState() +
@@ -31,10 +30,9 @@ public:
 	}
 };
 
-class ManhattanDistancesHeuristic
+struct ManhattanDistancesHeuristic
 {
-public:
-	bool operator() (State* s1, State* s2)
+	bool operator() (const shared_ptr<State>& s1, const shared_ptr<State>& s2) const
 	{
 		return (s1->GetTotalCostToThisState() + s1->SumOfManhattanDistances()) > 
 			(s2->GetTotalCostToThisState() +
@@ -50,34 +48,34 @@ public:
 	void Execute(shared_ptr<State>& b )
 	{
 		this->ResetStats();
-		priority_queue<State*, vector<State*>, MisplacedTilesHeuristicStar> states_queue;
+		priority_queue<shared_ptr<State>, vector<shared_ptr<State>>, MisplacedTilesHeuristicStar> states_queue;
 
 		if (twoStars_)
-			priority_queue<State*, vector<State*>, ManhattanDistancesHeuristic> states_queue;
+			priority_queue<shared_ptr<State>, vector<shared_ptr<State>>, ManhattanDistancesHeuristic> states_queue;
 
 		unordered_map<string, unsigned long long> visited_and_cost;
 
 		// Mark the current state as visited.
-		State* init_state = new State(*b);
+		shared_ptr<State> init_state(make_shared<State>(*b));
 
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 
-		vector<State*>* cur_possible_states = nullptr;
-		State* cur_state = nullptr;
+		vector<shared_ptr<State>> cur_possible_states;
+		shared_ptr<State> cur_state = nullptr;
 		
 		while (!states_queue.empty()) {
-			State* front_state = states_queue.top();
+			shared_ptr<State> front_state = states_queue.top();
 			
 			states_queue.pop();
 			this->time_++;
 
 			// Mark the state expanded.
 			if (twoStars_)
-				visited_and_cost.insert(make_pair(front_state->GetStateId(), 
+				visited_and_cost.emplace(make_pair(front_state->GetStateId(), 
 				front_state->GetTotalCostToThisState() + front_state->SumOfManhattanDistances()));
 			else
-				visited_and_cost.insert(make_pair(front_state->GetStateId(),
+				visited_and_cost.emplace(make_pair(front_state->GetStateId(),
 					front_state->GetTotalCostToThisState() + front_state->GetNumberOfMisplacedTiles()));
 
 			if (front_state->IsGoalState()) {
@@ -85,16 +83,15 @@ public:
 				this->solution_cost_ = front_state->GetTotalCostToThisState();
 				this->solution_found_ = true;
 				this->PrintExecutionStats(front_state);
-				delete front_state;
 				break;
 			}
 			else {
 				bool states_to_free[4] = { true, true, true, true };
 				cur_possible_states = front_state->GetPossibleStates();
 
-				for (int i = 0; i < cur_possible_states->size(); i++) {
+				for (int i = 0; i < cur_possible_states.size(); i++) {
 
-					cur_state = cur_possible_states->at(i);
+					cur_state = cur_possible_states.at(i);
 
 					string cur_state_id = cur_state->GetStateId();
 
@@ -126,26 +123,15 @@ public:
 				}
 
 				// Update the maximum queue size.
-				if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
+				if (states_queue.size() > this->queue_size_) 
+					this->queue_size_ = states_queue.size();
+
 				
-				// Free-ing up the states that are irrelevant.
-				for (int i = 0; i < cur_possible_states->size(); i++) {
-					if (states_to_free[i]) delete cur_possible_states->at(i);
-				}
-				
-				delete cur_possible_states;
 			}
-			delete front_state;
+			
 		}
 
 		// Clean up.
-		State* tmp = nullptr;
-		while (!states_queue.empty()) {
-			tmp = states_queue.top();
-			states_queue.pop();
-			delete tmp;
-		}
-
 		if (!solution_found_) {
 			printf("Failure.\n");
 			PrintExecutionStats(nullptr);
@@ -153,7 +139,7 @@ public:
 	}
 private:
 	bool twoStars_;
-	void PrintExecutionStats(State* goal)
+	void PrintExecutionStats(const shared_ptr<State>& goal)
 	{
 		printf("Total moves: %lu\n", this->solution_path_length_);
 		printf("Maximum queue size: %lu\n", this->GetMaxQueueSize());

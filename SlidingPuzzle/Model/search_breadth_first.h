@@ -7,14 +7,14 @@
 #define SLIDING_PUZZLE_MODEL_SEARCH_BREADTH_FIRST_H_
 
 #include <queue>
-#include <set>
+#include <unordered_set>
 #include <chrono>
 
 #include "state.h"
 #include "utils.hpp"
 #include "isearch.h"
 
-using std::set;
+using std::unordered_set;
 using std::queue;
 using std::vector;
 using std::string;
@@ -27,23 +27,23 @@ public:
 	void Execute(shared_ptr<State>& b)
 	{
 		this->ResetStats();
-		queue<State*> states_queue;
-		set<string> visited;
+		queue<shared_ptr<State>> states_queue;
+		unordered_set<string> visited;
 
 		// Another separate set that contains state's IDs that are currently in states_queue.
-		set<string> states_stack_ids;
+		unordered_set<string> states_stack_ids;
 
 		// Mark the current state as visited.
-		State* init_state = new State(*b);
-		
-		states_queue.push(init_state);
+		shared_ptr<State> init_state(make_shared<State>(*b));
+
+		states_queue.emplace(init_state);
 		this->queue_size_ = states_queue.size();
 
-		vector<State*>* cur_possible_states = nullptr;
-		State* cur_state = nullptr;
+		vector<shared_ptr<State>> cur_possible_states;
+		shared_ptr<State> cur_state;
 
 		while (!states_queue.empty()) {
-			State* front_state = states_queue.front();
+			shared_ptr<State> front_state = states_queue.front();
 
 			states_queue.pop();
 			this->time_++;
@@ -54,16 +54,15 @@ public:
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				this->solution_found_ = true;
 				this->PrintExecutionStats(front_state);
-				delete front_state;
 				break;
 			}
 			else {
 				bool states_to_free[4] = { true, true, true, true };
 				cur_possible_states = front_state->GetPossibleStates();
 
-				for (int i = 0; i < cur_possible_states->size(); i++) {
+				for (int i = 0; i < cur_possible_states.size(); i++) {
 
-					cur_state = cur_possible_states->at(i);
+					cur_state = cur_possible_states.at(i);
 
 					// Check if it's already visited. If it is, don't add it to the queue.
 					auto visited_it = visited.find(cur_state->GetStateId());
@@ -75,31 +74,17 @@ public:
 						states_to_free[i] = false;
 					}
 				}
-
-				for (int i = 0; i < cur_possible_states->size(); i++) {
-					if (states_to_free[i]) delete cur_possible_states->at(i);
-				}
-				delete cur_possible_states;
 			}
-			delete front_state;
-		}
 
-		// Clean up.
-		State* tmp = nullptr;
-		while (!states_queue.empty()) {
-			tmp = states_queue.front();
-			states_queue.pop();
-			delete tmp;
-		}
-
-		if (!solution_found_) {
-			printf("Failure.\n");
-			PrintExecutionStats(nullptr);
+			if (!solution_found_) {
+				printf("Failure.\n");
+				PrintExecutionStats(nullptr);
+			}
 		}
 	}
 
 private:
-	void PrintExecutionStats(State* goal)
+	void PrintExecutionStats(const shared_ptr<State>& goal)
 	{
 		printf("Total moves: %lu\n", this->solution_path_length_);
 		printf("Maximum queue size: %lu\n", this->queue_size_);

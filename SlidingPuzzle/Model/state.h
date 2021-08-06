@@ -3,12 +3,15 @@
 
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 #include "move.hpp"
 
 using std::vector;
 using std::unordered_map;
 using std::string;
+using std::shared_ptr;
+using std::make_shared;
 
 class State
 {
@@ -47,7 +50,7 @@ public:
 	unsigned long GetCostToThisState() { return recent_move_cost_; }
 	void SetCost(unsigned long c) { total_move_cost_ = c; }
 
-	std::vector<State*>* GetPossibleStates();
+	std::vector<shared_ptr<State>> GetPossibleStates();
 	bool IsGoalState();
 	std::string CurrentStateToString();
 	unsigned long long GetTotalCostToThisState();
@@ -61,17 +64,15 @@ private:
 	void ReverseMove(const Move& m);
 	void GenerateSolutionState();
 
+	int n_;
 	unsigned long long recent_move_cost_;
 	unsigned long long total_move_cost_;
-	int** board_;
-	int** solution_;
-	int n_;
-
-	Point blank_;
+	vector<vector<int>> board_;
+	vector<vector<int>> solution_;
 	vector<Move> moves_;
-	string state_id_;
 	unordered_map<int, Point> coordinates_map_;
-
+	Point blank_;
+	string state_id_;
 };
 
 #endif // SLIDING_PUZZLE_MODEL_STATE_H_

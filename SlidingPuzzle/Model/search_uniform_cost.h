@@ -21,10 +21,9 @@ using std::vector;
 using std::string;
 using std::make_pair;
 
-class StateComparator
+struct StateComparator
 {
-public:
-	bool operator() (State* s1, State* s2)
+	bool operator() (const shared_ptr<State> s1, const shared_ptr<State> s2) const
 	{
 		return *s1 > *s2;
 	}
@@ -38,22 +37,20 @@ public:
 	void Execute(shared_ptr<State>& b)
 	{
 		this->ResetStats();
-		priority_queue<State*, vector<State*>, StateComparator> states_queue;
-		//std::set<std::string> visited;
+		priority_queue<shared_ptr<State>, vector<shared_ptr<State>>, StateComparator> states_queue;
 
 		unordered_map<string, unsigned long long> visited_and_cost;
 
 		// Mark the current state as visited.
-		State* init_state = new State(*b);
-		//visited.insert(init_state->GetStateId());
+		shared_ptr<State> init_state(make_shared<State>(*b));
 
-		visited_and_cost.insert(make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
+		visited_and_cost.emplace(make_pair(init_state->GetStateId(), init_state->GetTotalCostToThisState()));
 		states_queue.push(init_state);
 		this->queue_size_ = 1;
 		
-		vector<State*>* cur_possible_states = nullptr;
-		State* cur_state = nullptr;
-		State* front_state = nullptr;
+		vector<shared_ptr<State>> cur_possible_states;
+		shared_ptr<State> cur_state = nullptr;
+		shared_ptr<State> front_state = nullptr;
 
 		while (!states_queue.empty()) {
 			front_state = states_queue.top();
@@ -61,14 +58,13 @@ public:
 			states_queue.pop();
 			this->time_++;
 
-			visited_and_cost.insert(std::make_pair(front_state->GetStateId(), front_state->GetTotalCostToThisState()));
+			visited_and_cost.emplace(std::make_pair(front_state->GetStateId(), front_state->GetTotalCostToThisState()));
 
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
 				this->solution_cost_ = front_state->GetTotalCostToThisState();
 				this->solution_found_ = true;
 				this->PrintExecutionStats(front_state);
-				delete front_state;
 				break;
 			}
 			else {
@@ -76,9 +72,9 @@ public:
 				cur_possible_states = front_state->GetPossibleStates();
 
 				// Check for visited states. If they are visited, don't add it to the stack.
-				for (int i = 0; i < cur_possible_states->size(); i++) {
+				for (int i = 0; i < cur_possible_states.size(); i++) {
 
-					cur_state = cur_possible_states->at(i);
+					cur_state = cur_possible_states.at(i);
 
 					std::string cur_state_id = cur_state->GetStateId();
 					unsigned long total_cost_to_cur_state = cur_state->GetTotalCostToThisState();
@@ -88,7 +84,7 @@ public:
 					if (visited_it == visited_and_cost.end()) {
 						// If it's not in the map.
 						
-						states_queue.push(cur_state);
+						states_queue.emplace(cur_state);
 						states_to_free[i] = false;
 					}
 					else {
@@ -96,7 +92,7 @@ public:
 						// the expanded state's total cost. If it's larger, push the expanded state onto the stack.
 						if (visited_it->second > total_cost_to_cur_state) {
 							visited_and_cost[visited_it->first] = total_cost_to_cur_state;
-							states_queue.push(cur_state);
+							states_queue.emplace(cur_state);
 							states_to_free[i] = false;
 						}
 					}
@@ -104,28 +100,10 @@ public:
 
 				// Update the maximum queue size.
 				if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
-				
-				// Free-ing up irrelevant states.
-				for (int i = 0; i < cur_possible_states->size(); i++) {
-					if (states_to_free[i]) delete cur_possible_states->at(i);
-				}
-
-				delete cur_possible_states;
 			}
-			delete front_state;
+			
 		}
 
-		// Clean up.
-		//DeleteObjectsVector(*cur_possible_states);
-		//DeleteObjectsVector(visited);
-		// Clean up.
-		
-		State* tmp = nullptr;
-		while (!states_queue.empty()) {
-			tmp = states_queue.top();
-			states_queue.pop();
-			delete tmp;
-		}
 
 		if (!solution_found_) {
 			printf("Failure.\n");
@@ -134,7 +112,7 @@ public:
 	}
 
 private:
-	void PrintExecutionStats(State* goal)
+	void PrintExecutionStats(const shared_ptr<State>& goal)
 	{
 		printf("Total moves: %lu\n", this->solution_path_length_);
 		printf("Maximum queue size: %lu\n", this->queue_size_);

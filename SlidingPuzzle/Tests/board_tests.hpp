@@ -20,9 +20,9 @@ namespace Test
 	void ExtremelyEasyTest(PuzzleController &c)
 	{
 		printf("Extremely easy problem:\n");
-		State b(3, true);
-		c.SetState(&b);
-		printf("%s\n", b.CurrentStateToString().c_str());
+		shared_ptr<State> b(make_shared<State>(3, true));
+		c.SetState(b);
+		printf("%s\n", b->CurrentStateToString().c_str());
 		c.Solve();
 	}
 
@@ -43,10 +43,10 @@ namespace Test
 		ez[1][0] = 0;
 		ez[1][1] = 8;
 
-		State b_ez(ez, 3);
+		shared_ptr<State> b_ez(make_shared<State>(ez, 3));
 		//PuzzleController c(&b_ez);
-		c.SetState(&b_ez);
-		printf("%s\n", b_ez.CurrentStateToString().c_str());
+		c.SetState(b_ez);
+		printf("%s\n", b_ez->CurrentStateToString().c_str());
 		c.Solve();
 		DeleteIntArray(ez, 3);
 	}
@@ -68,10 +68,10 @@ namespace Test
 		ez1[1][0] = 8;
 		ez1[1][1] = 6;
 
-		State b_ez1(ez1, 3);
+		shared_ptr<State> b_ez1(make_shared<State>(ez1, 3));
 		//PuzzleController controller_ez1(&b_ez1);
-		c.SetState(&b_ez1);
-		printf("%s\n", b_ez1.CurrentStateToString().c_str());
+		c.SetState(b_ez1);
+		printf("%s\n", b_ez1->CurrentStateToString().c_str());
 		c.Solve();
 		DeleteIntArray(ez1, 3);
 	}
@@ -79,10 +79,10 @@ namespace Test
 	void EasyTest4x4(PuzzleController& c)
 	{
 		printf("4x4 easy problem:\n");
-		State b(4, true);
+		shared_ptr<State> b(make_shared<State>(4, true));
 		//PuzzleController controller(&b);
-		c.SetState(&b);
-		printf("%s\n", b.CurrentStateToString().c_str());
+		c.SetState(b);
+		printf("%s\n", b->CurrentStateToString().c_str());
 		c.Solve();
 	}
 
@@ -104,10 +104,10 @@ namespace Test
 		m[1][0] = 8;
 		m[1][1] = 6;
 
-		State b_m(m, 3);
+		shared_ptr<State> b_m(make_shared<State>(m, 3));
 		//PuzzleController controller_m(&b_m);
-		c.SetState(&b_m);
-		printf("%s\n", b_m.CurrentStateToString().c_str());
+		c.SetState(b_m);
+		printf("%s\n", b_m->CurrentStateToString().c_str());
 		c.Solve();
 		DeleteIntArray(m, 3);
 	}
@@ -130,10 +130,11 @@ namespace Test
 		m[1][0] = 0;
 		m[1][1] = 4;
 
-		State b_m(m, 3);
+		
+		shared_ptr<State> b_m(make_shared<State>(m, 3));
 		//PuzzleController controller_m(&b_m);
-		c.SetState(&b_m);
-		printf("%s\n", b_m.CurrentStateToString().c_str());
+		c.SetState(b_m);
+		printf("%s\n", b_m->CurrentStateToString().c_str());
 		c.Solve();
 		DeleteIntArray(m, 3);
 	}
@@ -155,10 +156,10 @@ namespace Test
 		h[1][0] = 4;
 		h[1][1] = 0;
 
-		State b_h(h, 3);
+		shared_ptr<State> b_h(make_shared<State>(h, 3));
 		//PuzzleController controller_h(&b_h);
-		c.SetState(&b_h);
-		printf("%s\n", b_h.CurrentStateToString().c_str());
+		c.SetState(b_h);
+		printf("%s\n", b_h->CurrentStateToString().c_str());
 		c.Solve();
 		DeleteIntArray(h, 3);
 	}
@@ -166,10 +167,10 @@ namespace Test
 	void ExtremelyHardProblem(PuzzleController& c)
 	{
 		printf("\nRandom problem.\n");
-		State b_random(3, false);
+		shared_ptr<State> b_random(make_shared<State>(3, false));
 		//PuzzleController controller_random(&b_random);
-		c.SetState(&b_random);
-		printf("%s\n", b_random.CurrentStateToString().c_str());
+		c.SetState(b_random);
+		printf("%s\n", b_random->CurrentStateToString().c_str());
 		c.Solve();
 	}
 
@@ -207,9 +208,9 @@ namespace Test
 		r[1][0] = tokens[3];
 		r[1][1] = tokens[4];
 
-		State r_s(r, 3);
-		c.SetState(&r_s);
-		printf("%s\n", r_s.CurrentStateToString().c_str());
+		shared_ptr<State> r_s(make_shared<State>(r, 3));
+		c.SetState(r_s);
+		printf("%s\n", r_s->CurrentStateToString().c_str());
 		c.Solve();
 	}
 

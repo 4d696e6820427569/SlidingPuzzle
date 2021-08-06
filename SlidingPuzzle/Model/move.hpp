@@ -60,15 +60,15 @@ public:
 		// This is so bad. Temporary solution.
 		string result("");
 		result.append("(");
-		result.append(std::to_string(start_.GetX()));
+		result.append(std::to_string(start_.x_));
 		result.append(", ");
-		result.append(std::to_string(start_.GetY()));
+		result.append(std::to_string(start_.y_));
 		result.append(") to ");
 		
 		result.append("(");
-		result.append(std::to_string(end_.GetX()));
+		result.append(std::to_string(end_.x_));
 		result.append(", ");
-		result.append(std::to_string(end_.GetY()));
+		result.append(std::to_string(end_.y_));
 		result.append(")\n");
 
 		return result;

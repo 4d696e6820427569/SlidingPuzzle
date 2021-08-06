@@ -36,7 +36,7 @@ public:
 		solution_found_ = false;
 	}
 
-	virtual void PrintExecutionStats(State* goal) {}
+	virtual void PrintExecutionStats(const shared_ptr<State>& goal) {}
 
 protected:
 	unsigned long	solution_path_length_;

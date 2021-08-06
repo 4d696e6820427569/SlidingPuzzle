@@ -32,7 +32,7 @@ public:
 	void Solve();
 
 	void SetStrategy(string);
-	void SetState(State* s);
+	void SetState(shared_ptr<State>& s);
 
 	string AvailableStrategies();
 	string GetCurrentStrategy() const { return cur_strategy_; }

@@ -5,11 +5,10 @@ State::State(int n, bool solved)
 	: n_(n)
 	, recent_move_cost_(0)
 	, total_move_cost_(0)
-	, board_(nullptr)
-	, solution_(nullptr)
+	, board_(n, vector<int>(n, 0))
+	, solution_(n, vector<int>(n, 0))
 {
 	string state_id_str("");
-	board_ = new int* [n_];
 
 	// Temporary solution: Generate a random permutation of an array of size n_ * n_
 	// 	containing numbers from 0 to (n_ * n_ - 1) and copy them to the board_.
@@ -19,7 +18,6 @@ State::State(int n, bool solved)
 	GenerateSolutionState();
 	if (solved) {
 		for (int i = 0; i < n_; i++) {
-			board_[i] = new int[n_];
 			for (int j = 0; j < n_; j++) {
 				board_[i][j] = solution_[i][j];
 				if (board_[i][j] == 0) blank_ = Point(i, j);
@@ -32,7 +30,6 @@ State::State(int n, bool solved)
 		// PrintIntArray(random_array, (size_t) (n_ * n_ & 0xFFFFFFFF));
 
 		for (int i = 0; i < n_; i++) {
-			board_[i] = new int[n_];
 			for (int j = 0; j < n_; j++) {
 				board_[i][j] = random_array[i * n_ + j];
 				if (random_array[i * n_ + j] == 0) blank_ = Point(i, j);
@@ -55,15 +52,13 @@ State::State(int n, bool solved)
 
 State::State(int** b, int n)
 	: n_(n)
-	, board_(nullptr)
-	, solution_(nullptr)
 	, recent_move_cost_(0)
 	, total_move_cost_(0)
+	, board_(n, vector<int>(n, 0))
+	, solution_(n, vector<int>(n, 0))
 {
 	string state_id_str("");
-	board_ = new int* [n_];
 	for (int i = 0; i < n; i++) {
-		board_[i] = new int[n_];
 		for (int j = 0; j < n; j++) {
 			board_[i][j] = b[i][j];
 			state_id_str.append(std::to_string(this->board_[i][j]));
@@ -77,13 +72,11 @@ State::State(State& s, const Move& m)
 	: n_(s.n_)
 	, recent_move_cost_(0)
 	, total_move_cost_(0)
-	, board_(nullptr)
-	, solution_(nullptr)
+	, board_(s.n_, vector<int>(s.n_, 0))
+	, solution_(s.n_, vector<int>(s.n_, 0))
 {
 	string state_id_str("");
-	this->board_ = new int* [this->n_];
 	for (int i = 0; i < n_; i++) {
-		this->board_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
 			this->board_[i][j] = s.board_[i][j];
 			if (this->board_[i][j] == 0) blank_ = Point(i, j);
@@ -114,17 +107,8 @@ State::State(State& s, const Move& m)
 
 State& State::operator=(State& s)
 {
-	for (int i = 0; i < n_; i++) {
-		delete board_[i];
-		delete solution_[i];
-	}
-	delete[] board_;
-	delete[] solution_;
-
 	this->n_ = s.n_;
-	board_ = new int* [n_];
 	for (int i = 0; i < n_; i++) {
-		board_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) { 
 			board_[i][j] = s.board_[i][j];
 			if (this->board_[i][j] == 0) blank_ = Point(i, j);
@@ -148,15 +132,12 @@ State& State::operator=(State& s)
 
 State::State(const State& b)
 	: n_(b.n_)
-	, board_(nullptr)
-	, solution_(nullptr)
 	, recent_move_cost_(0)
 	, total_move_cost_(0)
 {
 	string state_id_str("");
-	this->board_ = new int* [this->n_];
+	
 	for (int i = 0; i < n_; i++) {
-		this->board_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
 			this->board_[i][j] = b.board_[i][j];
 			if (this->board_[i][j] == 0) blank_ = Point(i, j);
@@ -171,56 +152,32 @@ State::State(const State& b)
 
 State::~State()
 {
-	for (int i = 0; i < n_; i++)
-		delete[] board_[i];
 
-	delete[] board_;
-
-	for (int i = 0; i < n_; i++)
-		delete[] solution_[i];
-
-	delete[] solution_;
 }
 
-//std::vector<State*>* State::GetPossibleStatesFromBoard(Board& b)
-//{
-//	std::vector<State*>* possible_states = new std::vector<State*>();
-//
-//	std::vector<Move> possible_moves = b.GetPossibleMoves();
-//
-//	// Need to also include the current state.
-//
-//	for (std::vector<Move>::iterator it = possible_moves.begin();
-//		it != possible_moves.end(); ++it) {
-//		Move cur_move = *it;
-//		possible_states->push_back(new State(b, cur_move));
-//	}
-//
-//	return possible_states;
-//}
 
-std::vector<State*>* State::GetPossibleStates()
+std::vector<shared_ptr<State>> State::GetPossibleStates()
 {
-	std::vector<State*>* possible_moves = new std::vector<State*>();
+	std::vector<shared_ptr<State>> possible_moves;
 
-	int blank_x = blank_.GetX();
-	int blank_y = blank_.GetY();
+	int blank_x = blank_.x_;
+	int blank_y = blank_.y_;
 
 	if (blank_x > 0)
-		possible_moves->push_back(
-			new State(*this, Move(blank_x, blank_y, blank_x - 1, blank_y, 
+		possible_moves.emplace_back(
+			make_shared<State>(*this, Move(blank_x, blank_y, blank_x - 1, blank_y, 
 				board_[blank_x-1][blank_y], "UP")));
 
 	if (blank_x < n_ - 1)
-		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
+		possible_moves.emplace_back(make_shared<State>(*this, Move(blank_x, blank_y,
 			blank_x + 1, blank_y, board_[blank_x + 1][blank_y], "DOWN")));
 
 	if (blank_y > 0)
-		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
+		possible_moves.emplace_back(make_shared<State>(*this, Move(blank_x, blank_y,
 			blank_x, blank_y - 1, board_[blank_x][blank_y-1], "LEFT")));
 
 	if (blank_y < n_ - 1)
-		possible_moves->push_back(new State(*this, Move(blank_x, blank_y,
+		possible_moves.emplace_back(make_shared<State>(*this, Move(blank_x, blank_y,
 			blank_x, blank_y + 1, board_[blank_x][blank_y+1], "RIGHT")));
 
 	return possible_moves;
@@ -243,7 +200,7 @@ std::string State::CurrentStateToString()
 
 bool State::IsGoalState()
 {
-	if (solution_ == nullptr) GenerateSolutionState();
+	if (solution_.empty()) GenerateSolutionState();
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) {
 			if (board_[i][j] != solution_[i][j])
@@ -275,33 +232,33 @@ bool State::operator<(const State& s) const
 
 int State::MoveBlank(const Move& m)
 {
-	int start_x = m.GetStartPoint().GetX();
-	int start_y = m.GetStartPoint().GetY();
+	int start_x = m.GetStartPoint().x_;
+	int start_y = m.GetStartPoint().y_;
 
-	int end_x = m.GetEndPoint().GetX();
-	int end_y = m.GetEndPoint().GetY();
+	int end_x = m.GetEndPoint().x_;
+	int end_y = m.GetEndPoint().y_;
 
 	board_[start_x][start_y] = board_[end_x][end_y];
 	int cost = board_[end_x][end_y];
 	board_[end_x][end_y] = 0;
-	blank_.SetX(end_x);
-	blank_.SetY(end_y);
+	blank_.x_ = end_x;
+	blank_.y_ = end_y;
 
 	return cost;
 }
 
 void State::ReverseMove(const Move& m)
 {
-	int start_x = m.GetStartPoint().GetX();
-	int start_y = m.GetStartPoint().GetY();
+	int start_x = m.GetStartPoint().x_;
+	int start_y = m.GetStartPoint().y_;
 
-	int end_x = m.GetEndPoint().GetX();
-	int end_y = m.GetEndPoint().GetY();
+	int end_x = m.GetEndPoint().x_;
+	int end_y = m.GetEndPoint().y_;
 
 	board_[end_x][end_y] = board_[start_x][start_y];
 	board_[start_x][start_y] = 0;
-	blank_.SetX(start_x);
-	blank_.SetY(start_y);
+	blank_.x_ = start_x;
+	blank_.y_ = start_y;
 }
 
 unsigned long long State::GetTotalCostToThisState()
@@ -325,9 +282,7 @@ void State::GenerateSolutionState()
 	arr[totalSize - 1] = 0;
 
 	// Initialize solution board if it's not already initialized.
-	solution_ = new int* [n_];
 	for (int i = 0; i < n_; i++) {
-		solution_[i] = new int[n_];
 		for (int j = 0; j < n_; j++) {
 			solution_[i][j] = 0;
 		}
@@ -339,7 +294,7 @@ void State::GenerateSolutionState()
 		// Fill out the top row.
 		for (int i = left; i <= right; i++) {
 			solution_[top][i] = arr[index];
-			coordinates_map_.insert(std::make_pair(solution_[top][i], Point(top, i)));
+			coordinates_map_.emplace(std::make_pair(solution_[top][i], Point(top, i)));
 			index++;
 		}
 		top++;
@@ -349,7 +304,7 @@ void State::GenerateSolutionState()
 		// Fil out the right column.
 		for (int i = top; i <= bottom; i++) {
 			solution_[i][right] = arr[index];
-			coordinates_map_.insert(std::make_pair(solution_[i][right], Point(i, right)));
+			coordinates_map_.emplace(std::make_pair(solution_[i][right], Point(i, right)));
 			index++;
 		}
 		right--;
@@ -359,7 +314,7 @@ void State::GenerateSolutionState()
 		// Fill out the bottom row.
 		for (int i = right; i >= left; i--) {
 			solution_[bottom][i] = arr[index];
-			coordinates_map_.insert(std::make_pair(solution_[bottom][i], Point(bottom, i)));
+			coordinates_map_.emplace(std::make_pair(solution_[bottom][i], Point(bottom, i)));
 			index++;
 		}
 		bottom--;
