@@ -22,7 +22,6 @@ public:
 
 private:
 	PuzzleController *puzzle_controller_;
-	State* init_state_;
 
 	void PrintUsage();
 	void PrintHeader();

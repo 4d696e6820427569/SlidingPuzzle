@@ -86,7 +86,7 @@ public:
 					if (visited_it == visited_and_cost.end()) {
 						// If it's not in the map.
 						// visited_and_cost.insert(std::make_pair(cur_state_id, total_cost_to_cur_state));
-						states_queue.push(cur_state);
+						states_queue.emplace(cur_state);
 						
 						states_to_free[i] = false;
 					}
@@ -95,7 +95,7 @@ public:
 						// the expanded state's total cost. If it's larger, push the expanded state onto the stack.
 						if (visited_it->second > total_cost_to_cur_state) {
 							visited_and_cost[visited_it->first] = total_cost_to_cur_state;
-							states_queue.push(cur_state);
+							states_queue.emplace(cur_state);
 							states_to_free[i] = false;
 						}
 					}

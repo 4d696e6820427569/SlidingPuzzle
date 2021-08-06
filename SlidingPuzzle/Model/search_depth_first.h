@@ -34,11 +34,9 @@ public:
 		stack<shared_ptr<State>> states_stack;
 		unordered_set<string> visited;
 
-		// Another separate set that contains state's IDs that are currently in states_stack.
-		unordered_set<string> states_stack_ids;
 
 		states_stack.emplace(make_shared<State>(*b));
-		states_stack_ids.emplace(states_stack.top()->GetStateId());
+		visited.emplace(states_stack.top()->GetStateId());
 		this->queue_size_ = 1;
 
 		vector<shared_ptr<State>> cur_possible_states;
@@ -51,13 +49,6 @@ public:
 			states_stack.pop();
 			this->time_++;
 
-			// Need to also pop the corresponding state ID from the states_stack_ids.
-			auto popping_id = states_stack_ids.find(front_state->GetStateId());
-			states_stack_ids.erase(popping_id);
-
-			// Insert into visited.
-			visited.emplace(front_state->GetStateId());
-
 			shared_ptr<State> cur_state;
 
 			if (front_state->IsGoalState()) {
@@ -67,7 +58,6 @@ public:
 				break;
 			}
 			else {
-				bool states_to_free[4] = { true, true, true, true };
 				cur_possible_states = front_state->GetPossibleStates();
 
 				// Check for visited states. If they are visited, don't add it to the stack.
@@ -76,34 +66,18 @@ public:
 					cur_state = cur_possible_states[i];
 
 					auto cur_visited_state = visited.find(cur_state->GetStateId());
-					auto state_id_is_on_stack = states_stack_ids.find(cur_state->GetStateId());
 
 					// Check if it's already visited OR if it's currently on the stack.
-					if (cur_visited_state != visited.end() ||
-						state_id_is_on_stack != states_stack_ids.end()) {
-
-					}
-					else {
+					if (cur_visited_state == visited.end()) {
 						// Push the state on the stack states.
 						states_stack.push(cur_state);
 
-						// Also push the state's ID on the stack IDs
-						states_stack_ids.emplace(cur_state->GetStateId());
+						visited.emplace(cur_state->GetStateId());
 
 						// Update the maximum queue/stack size.
 						if (states_stack.size() > this->queue_size_) this->queue_size_ = states_stack.size();
-
-						// Mark this state to not be freed.
-						states_to_free[i] = false;
 					}
 				}
-			}
-
-			this->solution_cost_ = 0;
-
-			if (!solution_found_) {
-				printf("Failure.\n");
-				PrintExecutionStats(nullptr);
 			}
 		}
 	}

@@ -108,6 +108,7 @@ State::State(State& s, const Move& m)
 State& State::operator=(State& s)
 {
 	this->n_ = s.n_;
+	
 	for (int i = 0; i < n_; i++) {
 		for (int j = 0; j < n_; j++) { 
 			board_[i][j] = s.board_[i][j];
@@ -134,6 +135,8 @@ State::State(const State& b)
 	: n_(b.n_)
 	, recent_move_cost_(0)
 	, total_move_cost_(0)
+	, board_(b.n_, vector<int>(b.n_, 0))
+	, solution_(b.n_, vector<int>(b.n_, 0))
 {
 	string state_id_str("");
 	

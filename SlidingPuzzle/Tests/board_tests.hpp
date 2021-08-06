@@ -214,61 +214,10 @@ namespace Test
 		c.Solve();
 	}
 
-	void PriorityQueueComparingStates()
-	{
-		State b_random(3, false);
-		State b_random1(3, true);
-		State s1(b_random);
-		State s2(b_random1);
-		s1.SetCost(3);
-		s2.SetCost(4);
-		assert(s1 < s2);
-		assert(s1 > s2 == false);
-		assert((s1 == s2) == false);
-
-		State* s3 = new State(b_random);
-		State* s4 = new State(b_random);
-		State* s5 = new State(b_random);
-		State* s6 = new State(b_random);
-
-		s3->SetCost(3);
-		s4->SetCost(4);
-		s5->SetCost(6);
-		s6->SetCost(0);
-		std::priority_queue<State*, std::vector<State*>, StateComparator > pq;
-
-		pq.push(s4);
-		pq.push(s6);
-		pq.push(s3);
-		pq.push(s5);
-
-		assert(!pq.empty());
-
-		State* tmp_s = pq.top();
-		pq.pop();
-		assert(tmp_s->GetTotalCostToThisState() == 0);
-
-		tmp_s = pq.top();
-		pq.pop();
-		assert(tmp_s->GetTotalCostToThisState() == 3);
-
-		tmp_s = pq.top();
-		pq.pop();
-		assert(tmp_s->GetTotalCostToThisState() == 4);
-
-		tmp_s = pq.top();
-		pq.pop();
-		assert(tmp_s->GetTotalCostToThisState() == 6);
-
-		delete s3;
-		delete s4;
-		delete s5;
-		delete s6;
-	}
 
 	void RunTests(PuzzleController &c)
 	{
-		PriorityQueueComparingStates();
+		//PriorityQueueComparingStates();
 		/*ExtremelyEasyTest(c);
 		EasyTest(c);
 		EasyTest4x4(c);

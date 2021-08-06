@@ -42,13 +42,14 @@ public:
 		vector<shared_ptr<State>> cur_possible_states;
 		shared_ptr<State> cur_state;
 
+		visited.emplace(init_state->GetStateId());
+
 		while (!states_queue.empty()) {
 			shared_ptr<State> front_state = states_queue.front();
 
 			states_queue.pop();
 			this->time_++;
 
-			visited.insert(front_state->GetStateId());
 
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();
@@ -57,7 +58,6 @@ public:
 				break;
 			}
 			else {
-				bool states_to_free[4] = { true, true, true, true };
 				cur_possible_states = front_state->GetPossibleStates();
 
 				for (int i = 0; i < cur_possible_states.size(); i++) {
@@ -66,19 +66,12 @@ public:
 
 					// Check if it's already visited. If it is, don't add it to the queue.
 					auto visited_it = visited.find(cur_state->GetStateId());
-					if (visited_it != visited.end()) {
-					}
-					else {
-						states_queue.push(cur_state);
+					if (visited_it == visited.end()) {
+						states_queue.emplace(cur_state);
+						visited.emplace(cur_state->GetStateId());
 						if (states_queue.size() > this->queue_size_) this->queue_size_ = states_queue.size();
-						states_to_free[i] = false;
 					}
 				}
-			}
-
-			if (!solution_found_) {
-				printf("Failure.\n");
-				PrintExecutionStats(nullptr);
 			}
 		}
 	}

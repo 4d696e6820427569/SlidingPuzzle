@@ -48,17 +48,19 @@ public:
 	void Execute(shared_ptr<State>& b )
 	{
 		this->ResetStats();
-		priority_queue<shared_ptr<State>, vector<shared_ptr<State>>, MisplacedTilesHeuristicStar> states_queue;
+		priority_queue<shared_ptr<State>, vector<shared_ptr<State>>, MisplacedTilesHeuristicStar> 
+			states_queue;
 
 		if (twoStars_)
-			priority_queue<shared_ptr<State>, vector<shared_ptr<State>>, ManhattanDistancesHeuristic> states_queue;
+			priority_queue<shared_ptr<State>, vector<shared_ptr<State>>, ManhattanDistancesHeuristic> 
+				states_queue;
 
 		unordered_map<string, unsigned long long> visited_and_cost;
 
 		// Mark the current state as visited.
 		shared_ptr<State> init_state(make_shared<State>(*b));
 
-		states_queue.push(init_state);
+		states_queue.emplace(init_state);
 		this->queue_size_ = 1;
 
 		vector<shared_ptr<State>> cur_possible_states;
@@ -86,7 +88,6 @@ public:
 				break;
 			}
 			else {
-				bool states_to_free[4] = { true, true, true, true };
 				cur_possible_states = front_state->GetPossibleStates();
 
 				for (int i = 0; i < cur_possible_states.size(); i++) {
@@ -107,7 +108,6 @@ public:
 					if (visited_it == visited_and_cost.end()) {
 						// If it's not in the visited map.
 						states_queue.push(cur_state);
-						states_to_free[i] = false;
 					}
 					else {
 						// If it's in the visited map, check if the cost of the visited state is larger than
@@ -116,7 +116,6 @@ public:
 						if (visited_it->second > total_cost_to_cur_state) {
 							visited_and_cost[visited_it->first] = total_cost_to_cur_state;
 							states_queue.push(cur_state);
-							states_to_free[i] = false;
 						}
 						
 					}
@@ -126,7 +125,6 @@ public:
 				if (states_queue.size() > this->queue_size_) 
 					this->queue_size_ = states_queue.size();
 
-				
 			}
 			
 		}

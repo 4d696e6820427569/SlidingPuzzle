@@ -5,21 +5,21 @@
 
 TextView::TextView()
 	: puzzle_controller_(nullptr)
-	, init_state_(nullptr)
+
 {
 
 }
 
 TextView::TextView(PuzzleController* c, State* is)
 	: puzzle_controller_(c)
-	, init_state_(is)
+	
 {
 
 }
 
 TextView::TextView(PuzzleController* c)
 	: puzzle_controller_(c)
-	, init_state_(nullptr)
+	
 {
 
 }
