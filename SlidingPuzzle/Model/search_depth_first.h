@@ -34,7 +34,6 @@ public:
 		stack<shared_ptr<State>> states_stack;
 		unordered_set<string> visited;
 
-
 		states_stack.emplace(make_shared<State>(*b));
 		visited.emplace(states_stack.top()->GetStateId());
 		this->queue_size_ = 1;

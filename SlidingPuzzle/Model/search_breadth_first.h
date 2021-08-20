@@ -30,26 +30,21 @@ public:
 		queue<shared_ptr<State>> states_queue;
 		unordered_set<string> visited;
 
-		// Another separate set that contains state's IDs that are currently in states_queue.
-		unordered_set<string> states_stack_ids;
-
 		// Mark the current state as visited.
 		shared_ptr<State> init_state(make_shared<State>(*b));
 
 		states_queue.emplace(init_state);
+		visited.emplace(init_state->GetStateId());
 		this->queue_size_ = states_queue.size();
 
 		vector<shared_ptr<State>> cur_possible_states;
 		shared_ptr<State> cur_state;
 
-		visited.emplace(init_state->GetStateId());
-
 		while (!states_queue.empty()) {
 			shared_ptr<State> front_state = states_queue.front();
-
 			states_queue.pop();
-			this->time_++;
 
+			this->time_++;
 
 			if (front_state->IsGoalState()) {
 				this->solution_path_length_ = front_state->TotalMoves().size();

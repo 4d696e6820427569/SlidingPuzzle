@@ -45,7 +45,7 @@ class AStarSearch : public ISearch
 public:
 	AStarSearch(bool useTwoStars): twoStars_(useTwoStars) {}
 
-	void Execute(shared_ptr<State>& b )
+	void Execute(shared_ptr<State>& b)
 	{
 		this->ResetStats();
 		priority_queue<shared_ptr<State>, vector<shared_ptr<State>>, MisplacedTilesHeuristicStar> 
@@ -97,6 +97,7 @@ public:
 					string cur_state_id = cur_state->GetStateId();
 
 					double total_cost_to_cur_state = 0;
+
 					if (twoStars_)
 						total_cost_to_cur_state =
 						cur_state->GetTotalCostToThisState() + cur_state->SumOfManhattanDistances();
@@ -107,12 +108,11 @@ public:
 
 					if (visited_it == visited_and_cost.end()) {
 						// If it's not in the visited map.
-						states_queue.push(cur_state);
+						states_queue.emplace(cur_state);
 					}
 					else {
 						// If it's in the visited map, check if the cost of the visited state is larger than
 						// the expanded state's total cost. If it's larger, push the expanded state onto the stack.
-						
 						if (visited_it->second > total_cost_to_cur_state) {
 							visited_and_cost[visited_it->first] = total_cost_to_cur_state;
 							states_queue.push(cur_state);
