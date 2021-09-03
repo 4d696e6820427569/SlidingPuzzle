@@ -5,8 +5,11 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("SlidingPuzzle")
 
-set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+
 # Include sub-projects.
-add_subdirectory ("SlidingPuzzle")
+add_subdirectory ("SlidingPuzzle" "./build/SlidingPuzzle")
