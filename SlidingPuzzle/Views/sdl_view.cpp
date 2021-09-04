@@ -49,6 +49,7 @@ SDLView::SDLView(PuzzleController* c, State* is)
     , renderer_(nullptr)
     , success_(false)
     , error_(false)
+    , quit_(false)
 {
 
 }
@@ -59,6 +60,7 @@ SDLView::SDLView(PuzzleController* c)
     , renderer_(nullptr)
     , success_(false)
     , error_(false)
+    , quit_(false)
 {
 }
 
@@ -71,5 +73,9 @@ SDLView::~SDLView()
 
 void SDLView::Run()
 {
-    
+    if (success_) {
+        while ( !quit_ ) {
+            
+        }
+    }    
 }

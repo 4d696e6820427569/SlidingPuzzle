@@ -33,6 +33,7 @@ private:
     static constexpr int kScreenHeight = 480;
     bool success_;
     bool error_;
+    bool quit_;
 };
 
 #endif // SLIDING_PUZZLE_VIEWS_SDL_VIEW_H

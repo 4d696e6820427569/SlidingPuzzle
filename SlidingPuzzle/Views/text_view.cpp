@@ -126,9 +126,7 @@ void TextView::Run()
 void TextView::PrintHeader()
 {
 	printf("#########################################\n");
-	printf("#   CSC 480 Artificial Intelligence I   #\n");
-	printf("#     Assignment 1 : 8-puzzle solver	#\n");
-	printf("#				Minh Bui			    #\n");
+	printf("#             8-puzzle solver	        #\n");
 	printf("#########################################\n");
 }
 

@@ -7,19 +7,26 @@
 	#define _CRTDBG_MAP_ALLOC
 	#include <crtdbg.h>
 #endif
-#include <stdlib.h>
+#include <cstdlib>
 
 
 #include "Views/iview.h"
 #include "Views/text_view.h"
-
+#include "Views/sdl_view.h"
+#include "Views/sfml_view.h"
 
 int main()
 {
 	{
 		PuzzleController mainController;
-		TextView textView(&mainController);
-		textView.Run();
+		//TextView textView(&mainController);
+		//textView.Run();
+        
+        //SDLView sdlView;
+        //
+        SFMLView sfmlView;
+        sfmlView.Run();
+
 		//if (DEBUG) Test::RunAllTests(mainController);
 		//printf("%llu\n", sizeof(Board));
 	}

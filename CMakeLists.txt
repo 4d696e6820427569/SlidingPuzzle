@@ -11,5 +11,7 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
+find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
+
 # Include sub-projects.
 add_subdirectory ("SlidingPuzzle" "./build/SlidingPuzzle")
