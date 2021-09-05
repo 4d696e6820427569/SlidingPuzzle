@@ -12,4 +12,5 @@ add_executable (SlidingPuzzle
     "Controller/puzzle_controller.h" "Controller/puzzle_controller.cpp")
 target_link_libraries(SlidingPuzzle ${SDL2_LIBRARIES} sfml-graphics sfml-window sfml-system)
 
+
 # TODO: Add tests and install targets if needed.
